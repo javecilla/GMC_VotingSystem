@@ -1,19 +1,26 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\SessionController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+|-------------------------------------------------------------------------
+ */
+Route::middleware(['web', 'guest'])->group(function () {
+	Route::post('/validate/user', [LoginController::class, 'store']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+	Route::delete('/session/delete/{sessionName}', [SessionController::class, 'destroy']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Voting System [ADMIN PANEL] API Routes
+|--------------------------------------------------------------------------
+ */
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
+	Route::post('/logout/user', [LogoutController::class, 'destroy']);
 });

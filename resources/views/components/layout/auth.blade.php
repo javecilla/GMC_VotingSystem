@@ -6,15 +6,41 @@
 	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="csrf-token" content="{{ csrf_token() }}"/>
-  <meta name="robots" content="noindex, nofollow"/>
-  <meta name="googlebot" content="noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
-  <meta name="bingbot" content="noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
+  <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
   <meta name="description" content="@isset($description) {{ $description }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}" />
   <meta name="abstract" content="Official Voting System of Golden Minds Bulacan"  />
   <meta name="copyright" content="Golden Minds Bulacan"  />
   <meta name='Classification' content='Website'/>
   <meta name='identifier-URL' content='{{ url()->current() }}'/>
   <meta name="msapplication-TileImage" content="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
+  <!--<meta author='Jerome Avecilla' content='Developer: https://javecilla.vercel.app'/>-->
+  <!--The SEO Framework by Jerome Avecilla -->
+  <meta property="article:author" content="https://www.facebook.com/gmcstamaria2015"/>
+  <meta property="article:publisher" content="https://www.facebook.com/gmcstamaria2015"/>
+  <meta property="og:image"
+    content="{{ isset($ogimage) ? $ogimage : asset('/wp-content/uploads/mainogimage.PNG') }}" />
+  <meta property="og:image:width" content="608"/>
+  <meta property="og:image:height" content="260"/>
+  <meta property="og:image:alt" content="{{ env('APP_NAME') }}" />
+  <meta property="og:image:secure_url" content="{{ asset('/wp-content/uploads/favicon.PNG') }}"/>
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="website"/>
+  <meta property="og:title"
+  content="@isset($title) {{ $title }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}" />
+  <meta property="og:description" content="{{ $description }}" />
+  <meta property="og:url" content="{{ url()->current() }}" />
+  <meta property="og:site_name" content="{{ env('APP_NAME') }}"/>
+  <meta property="fb:pages" content="100924508936440"/>
+  <meta property="fb:app_id" content="100924508936440"/>
+  <meta name="twitter:card" content="summary"/>
+  <meta name="twitter:site" content="https://twitter.com/goldenminds"/>
+  <meta name="twitter:creator" content="https://twitter.com/goldenminds"/>
+  <meta name="twitter:title" content="@isset($ogtitle) {{ $ogtitle }} | @endisset Online Voting System"/>
+  <meta name="twitter:description" content="{{ $description }}"/>
+  <meta name="twitter:image"
+    content="{{ isset($ogimage) ? $ogimage : asset('/wp-content/uploads/mainogimage.PNG') }}"/>
 	<title>@isset($title) {{ $title }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}</title>
 
 	<link rel="shortcut icon" type="image/png" sizes="16x16"

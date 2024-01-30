@@ -17,7 +17,7 @@ class UserService {
 			//return the response
 			return ['success' => true,
 				'message' => 'Login successfully',
-				'redirect' => '/dashboard',
+				'redirect' => route('dashboard.index', APP_VERSION),
 			];
 		} else {
 			$loginAttempts++; //increment attemp if login is failed

@@ -10,6 +10,7 @@ class AppServiceProvider extends ServiceProvider {
 	 * Register any application services.
 	 */
 	public function register(): void {
+		define('APP_VERSION', env('APP_VERSION'));
 		$this->app->register(L5SwaggerServiceProvider::class);
 	}
 

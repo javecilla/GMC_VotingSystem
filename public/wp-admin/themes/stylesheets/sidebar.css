@@ -5,7 +5,7 @@
   bottom: 0;
   width: 270px;
   transition: all ease-in-out 0.5s;
-  z-index: 1;
+  z-index: 1005; /* Set a higher z-index for the sidebar */
   transition: all 0.5s;
   padding: 0 15px;
   background: #040b14;
@@ -34,6 +34,7 @@
   color: #fff;
   text-decoration: none;
 }
+
 
 #sidebar .profile .social-links a {
   font-size: 18px;
@@ -84,6 +85,17 @@
   padding-right: 8px;
 
 }
+.report-badge {
+  background-color: rgba(255, 255, 255, 0.7);
+  float: right;
+  color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 58px;
+  padding: 0px 8px;
+  border-radius: 20px;
+   transition: all ease 0.1s;
+}
 .nav-menu a:hover,
 .nav-menu .active,
 .nav-menu .active:focus,
@@ -94,6 +106,13 @@
   color: #000;
 	font-weight: 600;
   opacity: .9;
+}
+.nav-menu .report-badge.active,
+.nav-menu a:hover .report-badge, 
+.nav-menu a:focus .report-badge {
+  margin-left: 55px;
+  background-color: #040b14;
+  color: #f3f3f3;
 }
 
 /* Mobile Navigation */
@@ -106,7 +125,7 @@
   font-size: 24px;
   transition: all 0.4s;
   outline: none !important;
-  background-color: #149ddd;
+  background-color: #040b14;
   color: #fff;
   width: 40px;
   height: 40px;
@@ -124,6 +143,16 @@
 
 .mobile-nav-active #sidebar {
   left: 0;
+  z-index: 1002; /* Set a higher z-index when the sidebar is active */
+}
+.sidebar-profile-dropdown {
+  margin-top: 5%!important;
+}
+
+
+.current-date {
+  margin: 2px 0px -4px 20px!important; 
+  color: #f3f3f3!important;
 }
 
 @media (max-width: 1199px) {

@@ -264,5 +264,5 @@
 		</div>
 	</section>
 </x-layout.admin>
-<script src="{{ asset('/wp-admin/themes/scripts/functions.js') }}"></script>
+
 <script src="{{ asset('/wp-admin/themes/scripts/configuration/eventListener.js') }}"></script>

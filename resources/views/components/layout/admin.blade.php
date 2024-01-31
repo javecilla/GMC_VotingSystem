@@ -146,6 +146,7 @@
 			      </a>
 			      <li><hr class="dropdown-divider"></li>
 			      <a class="dropdown-item"
+			      	onclick="logoutUser({{ auth()->user()->uid }}, $(`meta[name='csrf-token']`).attr('content'))"
 			       	id="logoutButton"
 			        data-uid="{{ auth()->user()->uid }}"
 			        href="javascript:void(0)"><li>
@@ -176,6 +177,7 @@
  	<script src="{{ asset('/wp-admin/plugins/typed.js/typed.min.js') }}"></script>
  	<script src="{{ asset('/wp-admin/plugins/waypoints/noframework.waypoints.js') }}"></script>
 
+ 	<script src="{{ asset('/wp-admin/themes/scripts/functions.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/helper.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/app.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/main.js') }}" defer></script>

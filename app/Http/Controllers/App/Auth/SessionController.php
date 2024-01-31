@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\App\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Services\Auth\SessionService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SessionController extends Controller {
-	public function __construct(SessionService $sessionService) {
-		$this->sessionService = $sessionService;
+	public function __construct(protected SessionService $sessionService) {
 	}
 
 	// Delete login Attemp Session
-	public function destroy(Request $request, $sessionName) {
+	public function destroy(Request $request, $sessionName): JsonResponse {
 		$validationResult = $this->sessionService->remove($sessionName, $request);
 		return response()->json($validationResult);
 	}
 
-	protected $sessionService;
 }

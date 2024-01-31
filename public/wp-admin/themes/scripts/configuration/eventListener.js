@@ -51,15 +51,17 @@
 	|--------------------------------------------------------------------------
 	 */
 	$(document).on('click', '.appVersionButton .save-icon', function() {
-		const avid = $(this).data('id');
 		$('.editNameVersion').attr('contenteditable', 'false').removeClass('form-control');
 		$('.editTitleVersion').attr('contenteditable', 'false').removeClass('form-control');
 		$('.edit-icon').removeClass('d-none');
 		$('.save-icon').addClass('d-none');
 		$('.appVersionButtonClose').addClass('d-none');
 		$('.appVersionButtonDelete').removeClass('d-none');
-		//@TODO: Logic for updating
-		toastr.success("App version updated successfully.");
+
+		const avid = $('.appVersionButton').data('id');
+		const versionName = $(this).closest('tr').find('.editNameVersion').text();
+		const versionTitle = $(this).closest('tr').find('.editTitleVersion').text();
+		updateApplicationVersion(APP_VERSION, CSRF_TOKEN, avid, versionName, versionTitle);
 	});
 
 	/*

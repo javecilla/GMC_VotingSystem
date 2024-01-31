@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use App\Exceptions\Auth\InvalidLoginException;
+
 class UserService {
 	const MAX_LOGIN_ATTEMPTS = 3; //set the maximum login attempts
 
-	public function login($user, $request): array {
+	public function login($request): array {
+		$user = $request->only('email', 'password');
 		//then check if there is a login attemp in sesion counter
 		$loginAttempts = $request->session()->get('loginAttempts', 0);
 		//check if this user attempting to login is valid or not
@@ -24,11 +27,18 @@ class UserService {
 			$request->session()->put('loginAttempts', $loginAttempts);
 			//then check if login attempt is reach the maximum login attempt
 			if ($loginAttempts >= self::MAX_LOGIN_ATTEMPTS) {
-				return ['success' => false, 'message' => 'gay'];
+				throw new InvalidLoginException('gay');
 			} else {
-				return ['success' => false, 'message' => 'Invalid Credentials'];
+				throw new InvalidLoginException('Invalid Credentials');
 			}
 		}
+	}
+
+	public function logout($request): array {
+		auth()->logout(); //logout
+		$request->session()->invalidate();
+		$request->session()->regenerateToken();
+		return ['success' => true, 'redirect' => route('login.create')];
 	}
 
 }

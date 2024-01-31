@@ -18,7 +18,7 @@
 		if(validated(email, password)) {
 			//send request to server to 
 			$.post({
-				url: "/api/validate/user",
+				url: "/validate/user",
 				data: {
 					'email': email,
 					'password': password,
@@ -88,7 +88,7 @@
 
 	const deleteSession = (sessionName) => {
 		$.ajax({
-			url: `/api/session/delete/${sessionName}`,
+			url: `/session/delete/${sessionName}`,
 			method: 'delete',
 			dataType: 'json',
 			headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },

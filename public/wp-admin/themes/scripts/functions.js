@@ -5,7 +5,7 @@
  */
  const getAllApplicationVersions = (appVersion, csrfToken) => {
   $.get({
-    url: `/api/${appVersion}/app-versions`,
+    url: `/${appVersion}/admin/app-versions`,
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': csrfToken },
     success: (data) => {
@@ -16,10 +16,10 @@
           listItem += `
             <tr class="appVersionItem_${data[key].avid}">
               <td>
-                <small class="editNameVersion" contenteditable="false">${data[key].name}</small>
+                <small class="editNameVersion">${data[key].name}</small>
               </td>
               <td>
-                <small class="editTitleVersion" contenteditable="false">${data[key].title}</small>
+                <small class="editTitleVersion">${data[key].title}</small>
               </td>
               <td class="text-end">
                 <a href="#edit" data-id="${data[key].avid}" class="appVersionButton">
@@ -51,12 +51,52 @@
 
 /*
 |--------------------------------------------------------------------------
+| Update Application Version
+|--------------------------------------------------------------------------
+ */
+ const updateApplicationVersion = (appVersion, csrfToken, avid, name, title) => {
+  $.ajax({
+    url: `/${appVersion}/admin/app-versions/${avid}/update`,
+    method: 'patch',
+    data: { 
+      'app_version_id': appVersion,
+      'avid': avid,
+      'name': name,
+      'title': title,
+    },
+    dataType: 'json',
+    headers: { 
+      'X-CSRF-TOKEN': csrfToken,
+    },
+    success: (response) => {
+      if(response.success) {
+        toastr.success(response.message);
+      } else {
+        toastr.error(response.message);
+      }
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  }); 
+};
+
+/*
+|--------------------------------------------------------------------------
+| @TODO: ADD FUNCTIONALITY AND DELETE
+|--------------------------------------------------------------------------
+ */
+
+/*
+|--------------------------------------------------------------------------
 | Get ALl Category Records base on Application Version
 |--------------------------------------------------------------------------
  */
+
 const getAllCategory = (appVersion, csrfToken) => {
   $.get({
-    url: `/api/${appVersion}/category`,
+    url: `/${appVersion}/admin/category`,
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': csrfToken },
     success: (data) => {
@@ -65,6 +105,26 @@ const getAllCategory = (appVersion, csrfToken) => {
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
       console.log(response.message);
+    }
+  });
+};
+
+/*
+|--------------------------------------------------------------------------
+| Logout the user
+|--------------------------------------------------------------------------
+ */
+const logoutUser = (uid, csrfToken) => {
+  $.post({
+    url: `/logout/user`,
+    data: { 'uid': uid },
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': csrfToken },
+    success: (response) => {
+      window.location.href=response.redirect;
+    },
+    error: (xhr, status, error) => {
+      console.log(xhr.responseText);
     }
   });
 };

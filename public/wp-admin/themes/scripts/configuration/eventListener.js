@@ -12,68 +12,119 @@
 	 */
 	$(window).on('load', function() {
 		getAllApplicationVersions(APP_VERSION, CSRF_TOKEN);
+		getAllCategory(APP_VERSION, CSRF_TOKEN);
 	});
 
 	/*
 	|--------------------------------------------------------------------------
-	| Make the Application Version [Name and Title] editable 
+	| Configuration >>> Application Version
 	|--------------------------------------------------------------------------
-	 */
-	$(document).on('click', '.appVersionButton .edit-icon', function() {
+	*/
+
+	// Make the Application Version [Name and Title] editable 
+	$(document).on('click', '.appVersionButtonEdit', function() {
 		const avid = $(this).data('id');
-		$('.editNameVersion').attr('contenteditable', 'true').addClass('form-control');
-		$('.editTitleVersion').attr('contenteditable', 'true').addClass('form-control');
-		$('.edit-icon').addClass('d-none');
-		$('.save-icon').removeClass('d-none');
-
-		$('.appVersionButtonClose').removeClass('d-none');
-		$('.appVersionButtonDelete').addClass('d-none');
+		$(`.editNameVersion_${avid}`).attr('contenteditable', 'true').addClass('form-control');
+		$(`.editTitleVersion_${avid}`).attr('contenteditable', 'true').addClass('form-control');
+		$(`.save-icon_${avid}`).removeClass('d-none');
+		$(`.close-icon_${avid}`).removeClass('d-none');
+		$(`.edit-icon_${avid}`).addClass('d-none');
+		$(`.delete-icon_${avid}`).addClass('d-none');
 	});
 
-	/*
-	|--------------------------------------------------------------------------
-	| Close the editable Application Version [Name and Title]  
-	|--------------------------------------------------------------------------
-	 */
+	// Close the editable Application Version [Name and Title]  
 	$(document).on('click', '.appVersionButtonClose', function() {
-		$('.editNameVersion').attr('contenteditable', 'false').removeClass('form-control');
-		$('.editTitleVersion').attr('contenteditable', 'false').removeClass('form-control');
-		$('.edit-icon').removeClass('d-none');
-		$('.save-icon').addClass('d-none');
-
-		$('.appVersionButtonClose').addClass('d-none');
-		$('.appVersionButtonDelete').removeClass('d-none');
+		const avid = $(this).data('id');		
+		$(`.editNameVersion_${avid}`).attr('contenteditable', 'false').removeClass('form-control');
+		$(`.editTitleVersion_${avid}`).attr('contenteditable', 'false').removeClass('form-control');
+		$(`.save-icon_${avid}`).addClass('d-none');
+		$(`.close-icon_${avid}`).addClass('d-none');
+		$(`.edit-icon_${avid}`).removeClass('d-none');
+		$(`.delete-icon_${avid}`).removeClass('d-none');
 	});
 
-	/*
-	|--------------------------------------------------------------------------
-	| Update Application Version [Name and Title] 
-	|--------------------------------------------------------------------------
-	 */
-	$(document).on('click', '.appVersionButton .save-icon', function() {
-		$('.editNameVersion').attr('contenteditable', 'false').removeClass('form-control');
-		$('.editTitleVersion').attr('contenteditable', 'false').removeClass('form-control');
-		$('.edit-icon').removeClass('d-none');
-		$('.save-icon').addClass('d-none');
-		$('.appVersionButtonClose').addClass('d-none');
-		$('.appVersionButtonDelete').removeClass('d-none');
+	// Update Application Version [Name and Title] 
+	$(document).on('click', '.appVersionButtonSave', function() {
+		const avid = $(this).data('id');
+		const versionName = $(this).closest('tr').find(`.editNameVersion_${avid}`).text();
+		const versionTitle = $(this).closest('tr').find(`.editTitleVersion_${avid}`).text();
 
-		const avid = $('.appVersionButton').data('id');
-		const versionName = $(this).closest('tr').find('.editNameVersion').text();
-		const versionTitle = $(this).closest('tr').find('.editTitleVersion').text();
+		const oldName = $(this).closest('tr').find(`.editNameVersion_${avid}`).data('name');
+    const oldTitle = $(this).closest('tr').find(`.editTitleVersion_${avid}`).data('title');
+
+		$(`.editNameVersion_${avid}`).attr('contenteditable', 'false').removeClass('form-control');
+		$(`.editTitleVersion_${avid}`).attr('contenteditable', 'false').removeClass('form-control');
+		$(`.save-icon_${avid}`).addClass('d-none');
+		$(`.close-icon_${avid}`).addClass('d-none');
+		$(`.edit-icon_${avid}`).removeClass('d-none');
+		$(`.delete-icon_${avid}`).removeClass('d-none');
+
+		if (oldName == versionName && oldTitle == versionTitle) {
+      toastr.info("No changes occurred.");
+      return;
+    }
+
+
 		updateApplicationVersion(APP_VERSION, CSRF_TOKEN, avid, versionName, versionTitle);
 	});
 
-	/*
-	|--------------------------------------------------------------------------
-	| Delete the Application Version
-	|--------------------------------------------------------------------------
-	 */
-	$(document).on('click', '.appVersionButtonDelete', function() {
-		const avid = $(this).data('id');
-		$(`.appVersionItem_${avid}`).remove();
-		//@TODO: Logic for deleting
-		toastr.success("App version deleted successfully.");
+
+	// Add New Application Version
+	$(document).on('click', '#createNewVersionButton', function() {
+		runSpinner();
+		const versionTitle = $('#newVotingTitle').val();
+		const versionName = $('#newVotingVersion').val();
+
+		if(isEmpty(versionName)) {
+			$('#newVotingVersion').addClass('is-invalid');
+			stopSpinner();
+			return;
+		}
+
+		if(isEmpty(versionTitle)) {
+			$('#newVotingTitle').addClass('is-invalid');
+			stopSpinner();
+			return;
+		}
+
+		createNewApplicationVersion(APP_VERSION, CSRF_TOKEN, versionName, versionTitle);
 	});
 
+	// Remove the error style input
+	$(document).on('input', '#newVotingTitle, #newVotingVersion', function() {
+		$('#newVotingTitle').removeClass('is-invalid');
+		$('#newVotingVersion').removeClass('is-invalid');
+	});
+
+	// Delete the Application Version
+	$(document).on('click', '.appVersionButtonDelete', function() {
+		const avid = $(this).data('id');
+		const deleteConfirm = Swal.mixin({
+			customClass: {
+			  confirmButton: "btn btn-lg btn-secondary me-2",
+			  cancelButton: "btn btn-lg btn-light",
+			},
+  		buttonsStyling: false
+		});
+
+		deleteConfirm.fire({
+      title: "Confirm Deletion",
+      html: "Are you sure you want to delete this application version? Deleting an app version will also remove all associated records. This action cannot be undone.",
+      showConfirmButton: true,
+      confirmButtonText: "Okay",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+    }).then(function(response) {
+    	if(!response.isConfirmed) { 
+    		return false; 
+		  } 
+		  deleteApplicationVersion(APP_VERSION, CSRF_TOKEN, avid);
+		});
+	});
+
+	/*
+	|--------------------------------------------------------------------------
+	| Configuration >>> Category
+	|--------------------------------------------------------------------------
+	*/
 })(jQuery)

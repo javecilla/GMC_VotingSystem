@@ -10,52 +10,56 @@
 				<div class="card-header">
 					<i class="fa-solid fa-list-check fs-4"></i>&nbsp;
 					 <label>{{ __("Application") }}</label>
-					<small>(Use this module to create and set up new version of voting)</small>
+					<small>{{ __("(Use this module to create and set up new version of voting)") }}</small>
 				</div>
 				<div class="card-body">
 					<div class="container">
 						<div class="row">
 							<div class="col-md-6">
 								<fieldset>
-									<legend class="fs-5 fw-bold">Create New Version</legend><hr class="text-muted"/>
+									<legend class="fs-5 fw-bold">{{ __('Create New Version') }}</legend>
+									<hr class="text-muted"/>
 									<div class="row">
 										<div class="col-md-6">
-											<small class="text-muted">Enter a new theme title of voting</small>
+											<small class="text-muted">{{ __('Enter a new version of voting (v0)') }}</small>
 											<div class="form-floating mb-2">
-												<input type="text" class="form-control" id="newVotingTitle" placeholder="title"/>
-												<label for="newVotingTitle">Enter title</label>
+												<input type="text" class="form-control" id="newVotingVersion" placeholder="version"/>
+												<label for="newVotingVersion">{{ __('Enter version') }}</label>
 											</div>
 										</div>
 										<div class="col-md-6">
-											<small class="text-muted">Enter a new version of voting (v0)</small>
+											<small class="text-muted">{{ __('Enter a new theme title of voting') }}</small>
 											<div class="form-floating mb-2">
-												<input type="text" class="form-control" id="newVotingVersion" placeholder="version"/>
-												<label for="newVotingVersion">Enter version</label>
+												<input type="text" class="form-control" id="newVotingTitle" placeholder="title"/>
+												<label for="newVotingTitle">{{ __('Enter title') }}</label>
 											</div>
 										</div>
 									</div>
-									<button type="button" class="btn btn-light w-100 btn-add">
-										Add
+									<button type="button" id="createNewVersionButton"
+										class="btn btn-light w-100 btn-add">
+										{{ __('Add') }}
+				  					<i class="fas fa-spinner fa-spin loading-spinner d-none"></i>
 									</button>
 								</fieldset>
 							</div>
 							<div class="col-md-6">
 								<fieldset>
-									<legend class="fs-5 fw-bold">Equivalent Vote Points for each Payment</legend><hr class="text-muted"/>
+									<legend class="fs-5 fw-bold">{{ __('List of Applicaiton Version') }}
+									</legend><hr class="text-muted"/>
 									<div id="equivalentVotePointsItem" class="table-responsive">
 										<table class="table">
 											<thead>
 												<tr>
-													<th>Version</th>
-													<th>Title</th>
-													<th class="text-end">Actions</th>
+													<th>{{ __('Version') }}</th>
+													<th>{{ __('Title') }}</th>
+													<th class="text-end">{{ __('Actions') }}</th>
 												</tr>
 											</thead>
 											<tbody id="versionDataBody">
 												<tr class="text-center">
 													<td></td>
 													<td class="text-center">
-														Loading <i class="fas fa-spinner fa-spin"></i>
+														{{ __('Loading') }} <i class="fas fa-spinner fa-spin"></i>
 													</td>
 													<td></td>
 												</tr>
@@ -70,73 +74,49 @@
 			</div>
 			<hr class="text-muted"/>
 
-			{{-- Category --}}
+			{{-- @TODO: Category --}}
 			<div id="categoryConfig" class="configuration-card card mt-3">
 				<div class="card-header">
 					<i class="fa-solid fa-list-check fs-4"></i>&nbsp;
 					 <label>{{ __("Category") }}</label>
-					<small>(Use this module to create and set up category for voting)</small>
+					<small>{{ __('(Use this module to create and set up category for voting)') }}</small>
 				</div>
 				<div class="card-body">
 					<div class="container">
 						<div class="row">
 							<div class="col-md-6">
 								<fieldset>
-									<legend class="fs-5 fw-bold">Add New Category</legend><hr class="text-muted"/>
+									<legend class="fs-5 fw-bold">{{ __('Add New Category') }}</legend>
+									<hr class="text-muted"/>
 									<div class="form-floating mb-2">
 										<input type="text" class="form-control" id="newCategory" placeholder="category"/>
-										<label for="newCategory">Enter category name</label>
+										<label for="newCategory">{{ __('Enter category name') }}</label>
 									</div>
 									<div class="mb-2">
-										<small class="text-muted">Please select the version of voting you want to add this category</small>
-									  <select class="form-select" id="specificSizeSelect">
-									    <option selected value="">{{ env('APP_VERSION') }} (latest)</option>
-									    <option value="">v2</option>
-									    <option value="">v1</option>
-									  </select>
+										<small class="text-muted">
+											{{ __('Please select the version of voting you want to add this category') }}
+										</small>
+										<div class="selectDataBody">
+											<label class="text-center">
+												{{ __('Loading') }} <i class="fas fa-spinner fa-spin"></i>
+											</label>
+									  </div>
 									</div>
 									<button type="button" class="btn btn-light w-100 btn-add">
-										Add
+										{{ __('Add') }}
+				  					<i class="fas fa-spinner fa-spin loading-spinner d-none"></i>
 									</button>
 								</fieldset>
 							</div>
 							<div class="col-md-6">
 								<fieldset>
 									<legend class="fs-5 fw-bold">List of Registered Category</legend><hr class="text-muted"/>
-									<div id="categoryItem">
-      							<div class="row mb-2">
-	 										<div class="col-sm-10">
-	     									<p class="mb-0 form-control" id="colFormLabel" contenteditable="true">
-	      									Category 1
-	      								</p>
-	  									</div>
-										  <label for="colFormLabel" class="col-sm-2 col-form-label">
-										  	<a href="#edit"><i class="fa-solid fa-pen-to-square fs-5 me-2 text-muted"></i></a>
-										  	<a href="#delete"><i class="fa-solid fa-trash fs-5 me-2 text-muted"></i></a>
-										  </label>
+									<div id="categoryBody">
+
+										<div class="text-center">
+											{{ __('Loading') }} <i class="fas fa-spinner fa-spin"></i>
 										</div>
-										<div class="row mb-2">
-	 										<div class="col-sm-10">
-	     									<p class="mb-0" id="colFormLabel" contenteditable="false">
-	      									Category 2
-	      								</p>
-	  									</div>
-										  <label for="colFormLabel" class="col-sm-2 col-form-label">
-										  	<a href="#edit"><i class="fa-solid fa-pen-to-square fs-5 me-2 text-muted"></i></a>
-										  	<a href="#delete"><i class="fa-solid fa-trash fs-5 me-2 text-muted"></i></a>
-										  </label>
-										</div>
-										<div class="row mb-2">
-	 										<div class="col-sm-10">
-	     									<p class="mb-0" id="colFormLabel" contenteditable="false">
-	      									Category 3
-	      								</p>
-	  									</div>
-										  <label for="colFormLabel" class="col-sm-2 col-form-label">
-										  	<a href="#edit"><i class="fa-solid fa-pen-to-square fs-5 me-2 text-muted"></i></a>
-										  	<a href="#delete"><i class="fa-solid fa-trash fs-5 me-2 text-muted"></i></a>
-										  </label>
-										</div>
+
 									</div>
 								</fieldset>
 							</div>
@@ -264,5 +244,4 @@
 		</div>
 	</section>
 </x-layout.admin>
-
 <script src="{{ asset('/wp-admin/themes/scripts/configuration/eventListener.js') }}"></script>

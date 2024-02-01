@@ -34,6 +34,7 @@
 	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/bootstrap/bootstrap@5.3.2/css/bootstrap.min.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/fontawesome/css/all.min.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/toastr/toastr.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/sweetalert/sweetalert2@11/dist/sweetalert2.min.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/wp-admin/plugins/aos/aos.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/wp-admin/plugins/bootstrap-icons/bootstrap-icons.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/wp-admin/plugins/boxicons/css/boxicons.min.css') }}"/>
@@ -169,6 +170,7 @@
  	<script src="{{ asset('/wp-content/plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script>
  	<script src="{{ asset('/wp-content/plugins/fontawesome/js/all.min.js') }}"></script>
 	<script src="{{ asset('/wp-content/plugins/toastr/toastr.min.js') }}"></script>
+	<script src="{{ asset('/wp-content/plugins/sweetalert/sweetalert2@11/dist/sweetalert2.all.min.js') }}"></script>
 	<script src="{{ asset('/wp-admin/plugins/purecounter/purecounter_vanilla.js') }}"></script>
  	<script src="{{ asset('/wp-admin/plugins/aos/aos.js') }}"></script>
  	<script src="{{ asset('/wp-admin/plugins/glightbox/js/glightbox.min.js') }}"></script>
@@ -181,9 +183,5 @@
  	<script src="{{ asset('/wp-admin/themes/scripts/helper.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/app.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/main.js') }}" defer></script>
-
- 	<script>
-
- 	</script>
 </body>
 </html>

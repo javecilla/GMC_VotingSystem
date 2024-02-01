@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Campus extends Model {
+class Category extends Model {
 	use HasFactory;
 
-	protected $table = 'campuses';
-	protected $primaryKey = 'scid';
+	protected $table = 'categories';
+	protected $primaryKey = 'ctid';
 
-	protected $fillable = ['scid', 'app_version_id', 'name', 'created_at', 'updated_at'];
+	protected $fillable = ['ctid', 'app_version_id', 'name', 'created_at', 'updated_at'];
 
 	###[Methods for Database table relationship]
 
-	// Make this 'Campus' model have relationship to 'AppVersion' model
+	// Make this 'Category' model have relationship to 'AppVersion' model
 	public function appVersion() {
 		return $this->belongsTo(AppVersion::class, 'app_version_id', 'avid');
 	}

@@ -1,6 +1,6 @@
 <x-layout.auth title="Portal">
 	<x-slot name="description">{{ __('Admin Portal - Online Voting System of Golden Minds Colleges') }}</x-slot>
-	<x-slot name="ogimage">{{asset('/wp-content/uploads/vsogimage.PNG')}}</x-slot>
+	<x-slot name="ogimage">{{ asset('/wp-content/uploads/vsogimage.PNG') }}</x-slot>
 	<section id="loginAuthSection">
 		<form id="authForm">
 			<div class="d-flex justify-content-center align-items-center">

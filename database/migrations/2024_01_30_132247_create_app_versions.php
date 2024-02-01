@@ -11,8 +11,8 @@ return new class extends Migration {
 	public function up(): void {
 		Schema::create('app_versions', function (Blueprint $table) {
 			$table->bigIncrements('avid');
-			$table->string('name');
-			$table->string('title');
+			$table->string('name')->unique();
+			$table->string('title')->unique();
 			$table->timestamps();
 		});
 	}

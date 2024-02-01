@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\AppVersion;
 use App\Models\Campus;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -16,5 +17,6 @@ class DatabaseSeeder extends Seeder {
 		User::factory()->create();
 		AppVersion::factory()->create();
 		Campus::factory()->create();
+		Category::factory()->create();
 	}
 }

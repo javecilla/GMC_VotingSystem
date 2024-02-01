@@ -19,4 +19,9 @@ class AppVersion extends Model {
 	public function campus() {
 		return $this->hasMany(Campus::class, 'app_version_id', 'avid');
 	}
+
+	// Make this 'AppVersion' model have relationship to 'Category' model
+	public function category() {
+		return $this->hasMany(Category::class, 'app_version_id', 'avid');
+	}
 }

@@ -88,7 +88,7 @@
 
 	const deleteSession = (sessionName) => {
 		$.ajax({
-			url: `/session/delete/${sessionName}`,
+			url: `/session/${sessionName}/delete`,
 			method: 'delete',
 			dataType: 'json',
 			headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },

@@ -29,7 +29,7 @@ Route::middleware(['web', 'guest'])->group(function () {
 	Route::get('/auth/login', [LoginController::class, 'create'])
 		->name('login.create');
 	Route::post('/validate/user', [LoginController::class, 'store']);
-	Route::delete('/session/delete/{sessionName}', [SessionController::class, 'destroy']);
+	Route::delete('/session/{sessionName}/delete', [SessionController::class, 'destroy']);
 });
 
 /*
@@ -38,7 +38,23 @@ Route::middleware(['web', 'guest'])->group(function () {
 |--------------------------------------------------------------------------
  */
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
-	Route::prefix('{version}/admin/')->group(function () {
+	Route::prefix('{version}/admin')->group(function () {
+		Route::prefix('configuration')->group(function () {
+			Route::get('/', [ConfigurationController::class, 'index'])->name('configuration.index');
+
+			Route::prefix('app-versions')->group(function () {
+				Route::get('/all', [AppVersionController::class, 'retrieve']);
+				Route::patch('/{appVersion}/update', [AppVersionController::class, 'update']);
+				Route::post('/store', [AppVersionController::class, 'store']);
+				Route::delete('/{appVersion}/destroy', [AppVersionController::class, 'destroy']);
+			});
+
+			#TODO: CQRS to CRUD
+			Route::prefix('category')->group(function () {
+				Route::get('/all', [CategoryController::class, 'retrieve']);
+			});
+		});
+
 		Route::get('/dashboard', [DashboardController::class, 'index'])
 			->name('dashboard.index');
 
@@ -49,14 +65,6 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 			->name('candidates.index');
 		Route::get('/manage/candidates/create', [CandidatesController::class, 'create'])
 			->name('candidates.create');
-
-		Route::get('/configuration', [ConfigurationController::class, 'index'])
-			->name('configuration.index');
-
-		Route::get('/app-versions', [AppVersionController::class, 'index']);
-		Route::patch('/app-versions/{appVersion}/update', [AppVersionController::class, 'update']);
-
-		Route::get('/category', [CategoryController::class, 'index']);
 	});
 
 	Route::post('/logout/user', [LogoutController::class, 'destroy']);

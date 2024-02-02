@@ -53,7 +53,7 @@
 	<i class="bi bi-list mobile-nav-toggle d-xl-none admin_mobile_nav"></i>
 
 	<!-- ======= Sidebar ======= -->
-	<aside data-component="sidebar" id="sidebar">
+	<x-sidebar>
 	  <div class="d-flex flex-column">
 	   	<div class="mt-3">
 	      <img src="{{ asset('/wp-admin/uploads/vslogo-white.png') }}" alt="logo"
@@ -127,10 +127,10 @@
 		    </div>
 	    </nav>
 	  </div>
-	</aside>
+	</x-sidebar>
 
 	<!-- ======= Header ======= -->
-	<header data-component="header" id="header">
+	<x-header>
 		<div class="header-content ">
 			<div class="mt-auto">
 			  <div id="headerProfile" class="dropdown rounded-5">
@@ -156,12 +156,12 @@
 			    </div>
 		    </div>
 		</div>
-	</header>
+	</x-header>
 
 	<!-- ======= Main ======= -->
- 	<main data-render="true" id="main">
+ 	<x-main>
  		{{ $slot }}
- 	</main>
+ 	</x-main>
 
  	<!-- ======= Footer ======= -->
  	<footer>

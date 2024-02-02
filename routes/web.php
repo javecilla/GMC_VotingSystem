@@ -5,6 +5,7 @@ use App\Http\Controllers\App\Admin\CandidatesController;
 use App\Http\Controllers\App\Admin\CategoryController;
 use App\Http\Controllers\App\Admin\ConfigurationController;
 use App\Http\Controllers\App\Admin\DashboardController;
+use App\Http\Controllers\App\Admin\VotePointController;
 use App\Http\Controllers\App\Admin\VotesController;
 use App\Http\Controllers\App\Auth\LoginController;
 use App\Http\Controllers\App\Auth\LogoutController;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| [GUEST] Routes
+| Guest Routes
 |--------------------------------------------------------------------------
  */
 
@@ -34,33 +35,46 @@ Route::middleware(['web', 'guest'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| [ADMIN PANEL] Routes
+| Admin Panel Routes
 |--------------------------------------------------------------------------
  */
-Route::middleware(['auth', 'verified', 'admin'])->group(function () {
+Route::middleware(['web', 'auth', 'verified', 'admin'])->group(function () {
 	Route::prefix('{version}/admin')->group(function () {
+		# Configuration
 		Route::prefix('configuration')->group(function () {
 			Route::get('/', [ConfigurationController::class, 'index'])->name('configuration.index');
 
-			Route::prefix('app-versions')->group(function () {
-				Route::get('/all', [AppVersionController::class, 'retrieve']);
-				Route::patch('/{appVersion}/update', [AppVersionController::class, 'update']);
-				Route::post('/store', [AppVersionController::class, 'store']);
-				Route::delete('/{appVersion}/destroy', [AppVersionController::class, 'destroy']);
+			// App Versions
+			Route::controller(AppVersionController::class)->prefix('app-versions')->group(function () {
+				Route::get('/all', 'retrieveAllAppVersion');
+				Route::patch('/{appVersion}/update', 'update');
+				Route::post('/store', 'store');
+				Route::delete('/{appVersion}/destroy', 'destroy');
 			});
 
-			#TODO: CQRS to CRUD
-			Route::prefix('category')->group(function () {
-				Route::get('/all', [CategoryController::class, 'retrieve']);
+			// Categories
+			Route::controller(CategoryController::class)->prefix('category')->group(function () {
+				Route::get('/by-version', 'retrieveByAppVersion');
+				Route::patch('/{category}/update', 'update');
+				Route::post('/store', 'store');
+				Route::delete('/{category}/destroy', 'destroy');
+			});
+
+			// TODO::Vote Points
+			Route::controller(VotePointController::class)->prefix('vote-points')->group(function () {
+				Route::get('/by-version', 'retrieveByAppVersion');
 			});
 		});
 
+		# Dashboard
 		Route::get('/dashboard', [DashboardController::class, 'index'])
 			->name('dashboard.index');
 
+		# Votes Management
 		Route::get('/manage/votes', [VotesController::class, 'index'])
 			->name('votes.index');
 
+		# Candidates Management
 		Route::get('/manage/candidates', [CandidatesController::class, 'index'])
 			->name('candidates.index');
 		Route::get('/manage/candidates/create', [CandidatesController::class, 'create'])

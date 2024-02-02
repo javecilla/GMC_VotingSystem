@@ -6,30 +6,43 @@ use App\Exceptions\App\Admin\CreateDataException;
 use App\Exceptions\App\Admin\DeleteDataException;
 use App\Exceptions\App\Admin\UpdateDataException;
 use App\Models\AppVersion;
+use App\Repositories\AppVersionRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 
 class AppVersionService {
+	public function __construct(protected AppVersionRepository $repository) {}
 
-	// Get all the application version data by its [versionName]
-	public function getAll(String $version): object {
+	// TODO: Get all the application version data by its [versionName]
+	public function getAllAppVersion(String $version): object {
 		return AppVersion::all();
+	}
+
+	// Create new record of application version
+	public function create(array $data): array {
+		try {
+			$filteredData = Arr::only($data, ['name', 'title']);
+			return $this->repository->create($filteredData);
+		} catch (CreateDataException $e) {
+			return ['success' => false, 'message' => $e->getMessage()];
+		} catch (\Exception $e) {
+			return ['success' => false, 'message' => 'An error occurred during creation.'];
+		}
 	}
 
 	// Update version by its id
 	public function update(array $data): array {
 		try {
-			$appVersion = AppVersion::findOrFail($data['avid']);
-			return DB::transaction(function () use ($appVersion, $data) {
-				$data['updated_at'] = NOW();
-				$appVersion->fill($data);
-				$result = $appVersion->save();
-				if (!$result) {
-					throw new UpdateDataException('Something went wrong! Failed to update version');
-				}
+			if (!$this->changesOccurred($data)) {
+				return ['success' => false, 'message' => 'No changes occured', 'type' => 'info'];
+			}
 
-				return ['success' => true, 'message' => 'Application version updated successfully.'];
-			});
+			if (!$this->isValidToUpdate($data)) {
+				return ['success' => false, 'message' => 'Cannot duplicate version name or title.', 'type' => 'warning'];
+			}
+
+			$filteredData = Arr::only($data, ['avid', 'name', 'title']);
+			return $this->repository->update($filteredData);
 		} catch (ModelNotFoundException $e) {
 			return ['success' => false, 'message' => 'Application version not found.'];
 		} catch (UpdateDataException $e) {
@@ -39,26 +52,7 @@ class AppVersionService {
 		}
 	}
 
-	// Create new record of application version
-	public function create(array $data): array {
-		try {
-			return DB::transaction(function () use ($data) {
-				$data['updated_at'] = null;
-				$result = AppVersion::create($data);
-				if (!$result) {
-					throw new CreateDataException('Something went wrong! Failed to create version');
-				}
-
-				return ['success' => true, 'message' => 'New application version created successfully'];
-			});
-		} catch (CreateDataException $e) {
-			return ['success' => false, 'message' => $e->getMessage()];
-		} catch (\Exception $e) {
-			return ['success' => false, 'message' => 'An error occurred during creation.'];
-		}
-	}
-
-	// Delete existing record of application
+	// TODO: Delete existing record of application
 	public function delete(int $appVersionId): array {
 		try {
 			$appVersion = AppVersion::findOrFail($appVersionId);
@@ -75,6 +69,26 @@ class AppVersionService {
 		} catch (\Exception $e) {
 			return ['success' => false, 'message' => 'An error occurred during deletion.'];
 		}
+	}
+
+	private function isValidToUpdate(array $data): bool {
+		// Title must be unique, but only if it's changing
+		if ($this->repository->titleExists($data['title'], $data['avid'])) {
+			return false;
+		}
+
+		// Name must be unique, but only if it's changing
+		if ($this->repository->nameExists($data['name'], $data['avid'])) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private function changesOccurred(array $data): bool {
+		$appVersion = $this->repository->findAppVersion($data['avid']);
+		$appVersion->fill($data);
+		return $appVersion->isDirty();
 	}
 
 }

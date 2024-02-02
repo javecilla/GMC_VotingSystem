@@ -13,8 +13,8 @@ class AppVersionController extends Controller {
 	public function __construct(protected AppVersionService $appVersionService) {
 	}
 
-	public function retrieve(String $appVersionName): JsonResponse {
-		$result = $this->appVersionService->getAll($appVersionName);
+	public function retrieveAllAppVersion(String $appVersionName): JsonResponse {
+		$result = $this->appVersionService->getAllAppVersion($appVersionName);
 		return response()->json($result);
 	}
 

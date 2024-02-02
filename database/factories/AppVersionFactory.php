@@ -16,8 +16,8 @@ class AppVersionFactory extends Factory {
 	public function definition(): array {
 		return [
 			'avid' => 1,
-			'name' => 'v1.1',
-			'title' => 'Santa Maria Teen Model 2023',
+			'name' => env('APP_VERSION'),
+			'title' => 'Buwan ng Wikang Pambansa: Lakan, Lakambini at Lakamdyosa 2023',
 			'created_at' => NOW(),
 			'updated_at' => null,
 		];

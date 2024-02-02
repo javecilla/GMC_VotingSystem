@@ -16,6 +16,8 @@ const getAllApplicationVersions = (appVersion, csrfToken) => {
       let tableData = ``;
       let selectData = `<select class="form-select" id="appVersionSelected">
         <option selected value="">-- SELECT --</option>`;
+      let selectFilter = `<select class="form-select" id="versionFilterSelected">
+        <option selected value="${appVersion}">${appVersion}</option>`;
       //check if the return data in an object format and not null
       if(typeof data === 'object' && data !== null) {
         Object.keys(data).forEach(key => {
@@ -55,19 +57,81 @@ const getAllApplicationVersions = (appVersion, csrfToken) => {
           `;
 
           selectData += `<option value="${data[key].avid}">${data[key].name}</option>`;
+          selectFilter += `<option value="${data[key].name}">${data[key].name}</option>`;
         });
-        selectData += `</select>`;
-        $('#versionDataBody').html(tableData);
-        $('.selectDataBody').html(selectData);
+        
       } else {
-        toastr.error('Unexpected data format:', data);
+        tableData += `
+          <tr class="text-center">
+            <td></td>
+            <td class="text-center"> {{ __('Something went wrong') }} 
+              <i class="fa-solid fa-face-sad-tear"></i>
+            </td>
+            <td></td>
+          </tr>
+        `;
       }
+
+      selectData += `</select>`;
+      selectFilter += `</select>`;
+      $('#versionDataBody').html(tableData);
+      $('.selectDataBody').html(selectData);
+      $('.selectFilterBody').html(selectFilter);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
       toastr.error(response.message);
     }
   });
+};
+
+// Update Application Version
+const updateApplicationVersion = (appVersion, csrfToken, avid, name, title) => {
+  $.ajax({
+    url: `/${appVersion}/admin/configuration/app-versions/${avid}/update`,
+    method: 'patch',
+    data: { 
+      'app_version_id': appVersion,
+      'avid': avid,
+      'name': name,
+      'title': title,
+    },
+    dataType: 'json',
+    headers: { 
+      'X-CSRF-TOKEN': csrfToken,
+    },
+    success: (response) => {
+      if(response.success) {
+        getAllApplicationVersions(appVersion, csrfToken);
+        toastr.success(response.message);
+        $(`.editNameVersion_${avid}`).attr('contenteditable', 'false').removeClass('form-control');
+        $(`.editTitleVersion_${avid}`).attr('contenteditable', 'false').removeClass('form-control');
+        $(`.save-icon_${avid}`).addClass('d-none');
+        $(`.close-icon_${avid}`).addClass('d-none');
+        $(`.edit-icon_${avid}`).removeClass('d-none');
+        $(`.delete-icon_${avid}`).removeClass('d-none');
+      } else {
+         if(response.type === 'info') {
+          toastr.info(response.message);
+        } else if(response.type === 'warning') {
+          toastr.warning(response.message);
+        } else {
+          toastr.error(response.message);
+        }
+
+        $(`.editNameVersion_${avid}`).attr('contenteditable', 'true').addClass('form-control');
+        $(`.editTitleVersion_${avid}`).attr('contenteditable', 'true').addClass('form-control');
+        $(`.save-icon_${avid}`).removeClass('d-none');
+        $(`.close-icon_${avid}`).removeClass('d-none');
+        $(`.edit-icon_${avid}`).addClass('d-none');
+        $(`.delete-icon_${avid}`).addClass('d-none');
+      }
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  }); 
 };
 
 // Create New Application Version
@@ -100,36 +164,6 @@ const createNewApplicationVersion = (appVersion, csrfToken, name, title) => {
   });
 };
 
-// Update Application Version
-const updateApplicationVersion = (appVersion, csrfToken, avid, name, title) => {
-  $.ajax({
-    url: `/${appVersion}/admin/configuration/app-versions/${avid}/update`,
-    method: 'patch',
-    data: { 
-      'app_version_id': appVersion,
-      'avid': avid,
-      'name': name,
-      'title': title,
-    },
-    dataType: 'json',
-    headers: { 
-      'X-CSRF-TOKEN': csrfToken,
-    },
-    success: (response) => {
-      if(response.success) {
-        getAllApplicationVersions(appVersion, csrfToken);
-        toastr.success(response.message);
-      } else {
-        toastr.error(response.message);
-      }
-    },
-    error: (xhr, status, error) => {
-      const response = JSON.parse(xhr.responseText);
-      toastr.error(response.message);
-    }
-  }); 
-};
-
 // Delete Application Version
 const deleteApplicationVersion = (appVersion, csrfToken, avid) => {
   $.ajax({
@@ -156,14 +190,14 @@ const deleteApplicationVersion = (appVersion, csrfToken, avid) => {
 
 /*
 |--------------------------------------------------------------------------
-| @TODO: Configuration >>> Category
+| Configuration >>> Category
 |--------------------------------------------------------------------------
 */
 
 // Get ALl Category Records base on Application Version
-const getAllCategory = (appVersion, csrfToken) => {
+const getAllCategoryByVersion = (appVersion, csrfToken) => {
   $.ajax({
-    url: `/${appVersion}/admin/configuration/category/all`,
+    url: `/${appVersion}/admin/configuration/category/by-version`,
     method: 'get',
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': csrfToken },
@@ -172,24 +206,44 @@ const getAllCategory = (appVersion, csrfToken) => {
       if(typeof data === 'object' && data !== null) {
         Object.keys(data).forEach(key => {
           tableData += `
-            <div class="row mb-2 border-bottom">
-              <div class="col-sm-10">
-                <p class="mb-0" id="colFormLabel">
+            <tr class="categoryItem_${data[key].ctid}">
+              <td>
+                <small id="colFormLabel" class="editCategoryName_${data[key].ctid} mb-0">
                   ${data[key].name}
-                </p>
-              </div>
-              <label for="colFormLabel" class="col-sm-2 col-form-label">
-                <a href="javascript:void(0)">
+                </small>
+              </td>
+              <td class="text-end">
+                <a href="javascript:void(0)" data-id="${data[key].ctid}" 
+                  class="categoryButtonEdit editCategory-icon_${data[key].ctid}">
                   <i class="fa-solid fa-pen-to-square fs-5 me-2 text-muted"></i>
                 </a>
-                <a href="javascript:void(0)">
+                <a href="javascript:void(0)" data-id="${data[key].ctid}" 
+                  class="categoryButtonSave saveCategory-icon_${data[key].ctid} d-none">
+                  <i class="fa-solid fa-floppy-disk fs-5 me-2 text-muted"></i>
+                </a>
+
+                <a href="javascript:void(0)" data-id="${data[key].ctid}" 
+                  class="categoryButtonClose closeCategory-icon_${data[key].ctid} d-none">
+                  <i class="fa-solid fa-circle-xmark fs-5 me-2 text-muted"></i>
+                </a>
+                <a href="javascript:void(0)" data-id="${data[key].ctid}" 
+                  class="categoryButtonDelete deleteCategory-icon_${data[key].ctid}">
                   <i class="fa-solid fa-trash fs-5 me-2 text-muted"></i>
                 </a>
-              </label>
-            </div>
+              </td>
+            </tr>
           `; 
         });
-        
+      } else {
+        tableData += `
+          <tr class="text-center">
+            <td></td>
+            <td class="text-center"> {{ __('Something went wrong') }} 
+              <i class="fa-solid fa-face-sad-tear"></i>
+            </td>
+            <td></td>
+          </tr>
+        `;
       }
 
       $('#categoryBody').html(tableData);
@@ -200,6 +254,115 @@ const getAllCategory = (appVersion, csrfToken) => {
     }
   });
 };
+
+// Update Category Name
+const updateCategory = (appVersion, csrfToken, ctid, name) => {
+  $.ajax({
+    url: `/${appVersion}/admin/configuration/category/${ctid}/update`,
+    method: 'patch',
+    data: { 
+      'ctid': ctid,
+      'name': name,
+    },
+    dataType: 'json',
+    headers: { 
+      'X-CSRF-TOKEN': csrfToken 
+    },
+    success: (response) => {
+      if(response.success) {
+        getAllCategoryByVersion(appVersion, csrfToken);
+        toastr.success(response.message);
+      } else {
+        if(response.type === 'warning') {
+          toastr.warning(response.message);
+        } else {
+          toastr.error(response.message);
+        }
+      }
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  })
+};
+
+// Create New Application Version
+const createNewCategory = (appVersion, csrfToken, avid, name) => {
+  $.ajax({
+    url: `/${appVersion}/admin/configuration/category/store`,
+    method: 'post',
+    data: {
+      'app_version_id': avid,
+      'name': name,
+    },
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': csrfToken },
+    success: (response) => {
+      if(response.success) {
+        $('#newCategory').val('');
+        $('#appVersionSelected').val('');
+        getAllCategoryByVersion(appVersion, csrfToken);
+        toastr.success(response.message);
+      } else {
+        toastr.error(response.message);
+      }
+      stopSpinner();
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+      stopSpinner();
+    }
+  });
+};
+
+// Delete Category
+const deleteCategory = (appVersion, csrfToken, ctid) => {
+  $.ajax({
+    url: `/${appVersion}/admin/configuration/category/${ctid}/destroy`,
+    method: 'delete',
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': csrfToken },
+    success: (response) => {
+      if(response.success) {
+        $(`.categoryItem_${ctid}`).remove();
+        getAllCategoryByVersion(appVersion, csrfToken);
+        toastr.success(response.message);
+      } else {
+        toastr.error(response.message);
+      }
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+/*
+|--------------------------------------------------------------------------
+| @TODO: Configuration >>> Vote Points
+|--------------------------------------------------------------------------
+*/
+const getAllVotePointsByVersion = (appVersion, csrfToken) => {
+  $.ajax({
+    url: `/${appVersion}/admin/configuration/vote-points/by-version`,
+    method: 'get',
+    dataType: 'json',
+    headers: {
+      'X-CSRF-TOKEN': csrfToken
+    },
+    success: (data) => {
+      console.log(data);
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      console.log(response.message);
+    },
+  });
+};
+
 
 /*
 |--------------------------------------------------------------------------

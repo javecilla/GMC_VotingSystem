@@ -8,6 +8,7 @@ use App\Models\AppVersion;
 use App\Models\Campus;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\VotePoint;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder {
@@ -18,5 +19,6 @@ class DatabaseSeeder extends Seeder {
 		AppVersion::factory()->create();
 		Campus::factory()->create();
 		Category::factory()->create();
+		VotePoint::factory()->create();
 	}
 }

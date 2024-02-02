@@ -24,4 +24,9 @@ class AppVersion extends Model {
 	public function category() {
 		return $this->hasMany(Category::class, 'app_version_id', 'avid');
 	}
+
+	// Make this 'AppVersion' model have relationship to 'VotePoint' model
+	public function votePoint() {
+		return $this->hasMany(VotePoint::class, 'app_version_id', 'avid');
+	}
 }

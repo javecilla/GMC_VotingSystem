@@ -440,3 +440,14 @@ header .header-content {
   background-color: #040b14!important;
   border-color: #f3f3f3!important;
 }
+
+
+/* Remove default arrow up/down in input type number */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none!important;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield!important;
+}

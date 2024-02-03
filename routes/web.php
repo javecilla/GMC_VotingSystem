@@ -39,47 +39,52 @@ Route::middleware(['web', 'guest'])->group(function () {
 |--------------------------------------------------------------------------
  */
 Route::middleware(['web', 'auth', 'verified', 'admin'])->group(function () {
-	Route::prefix('{version}/admin')->group(function () {
-		# Configuration
-		Route::prefix('configuration')->group(function () {
-			Route::get('/', [ConfigurationController::class, 'index'])->name('configuration.index');
+	Route::prefix('{version}')->group(function () {
+		Route::prefix('admin')->group(function () {
+			# Configuration
+			Route::prefix('configuration')->group(function () {
+				Route::get('/', [ConfigurationController::class, 'index'])->name('configuration.index');
 
-			// App Versions
-			Route::controller(AppVersionController::class)->prefix('app-versions')->group(function () {
-				Route::get('/all', 'retrieveAllAppVersion');
-				Route::patch('/{appVersion}/update', 'update');
-				Route::post('/store', 'store');
-				Route::delete('/{appVersion}/destroy', 'destroy');
+				// App Versions
+				Route::controller(AppVersionController::class)->prefix('app-versions')->group(function () {
+					Route::get('/', 'retrieve');
+					Route::post('/store', 'store');
+					Route::patch('/{appVersion}/update', 'update');
+					Route::delete('/{appVersion}/destroy', 'destroy');
+				});
+
+				// Categories
+				Route::controller(CategoryController::class)->prefix('category')->group(function () {
+					Route::get('/', 'retrieve');
+					Route::post('/store', 'store');
+					Route::patch('/{category}/update', 'update');
+					Route::delete('/{category}/destroy', 'destroy');
+				});
+
+				// Vote Points
+				Route::controller(VotePointController::class)->prefix('vote-points')->group(function () {
+					Route::get('/', 'retrieve');
+					Route::post('/store', 'store');
+					Route::patch('/{votePoint}/update', 'update');
+					Route::delete('/{votePoint}/destroy', 'destroy');
+				});
 			});
 
-			// Categories
-			Route::controller(CategoryController::class)->prefix('category')->group(function () {
-				Route::get('/by-version', 'retrieveByAppVersion');
-				Route::patch('/{category}/update', 'update');
-				Route::post('/store', 'store');
-				Route::delete('/{category}/destroy', 'destroy');
-			});
+			# Dashboard
+			Route::get('/dashboard', [DashboardController::class, 'index'])
+				->name('dashboard.index');
 
-			// TODO::Vote Points
-			Route::controller(VotePointController::class)->prefix('vote-points')->group(function () {
-				Route::get('/by-version', 'retrieveByAppVersion');
-			});
+			# Votes Management
+			Route::get('/manage/votes', [VotesController::class, 'index'])
+				->name('votes.index');
+
+			# Candidates Management
+			Route::get('/manage/candidates', [CandidatesController::class, 'index'])
+				->name('candidates.index');
+			Route::get('/manage/candidates/create', [CandidatesController::class, 'create'])
+				->name('candidates.create');
 		});
-
-		# Dashboard
-		Route::get('/dashboard', [DashboardController::class, 'index'])
-			->name('dashboard.index');
-
-		# Votes Management
-		Route::get('/manage/votes', [VotesController::class, 'index'])
-			->name('votes.index');
-
-		# Candidates Management
-		Route::get('/manage/candidates', [CandidatesController::class, 'index'])
-			->name('candidates.index');
-		Route::get('/manage/candidates/create', [CandidatesController::class, 'create'])
-			->name('candidates.create');
+		# Logout
+		Route::post('/logout/user', [LogoutController::class, 'destroy']);
 	});
-
-	Route::post('/logout/user', [LogoutController::class, 'destroy']);
 });

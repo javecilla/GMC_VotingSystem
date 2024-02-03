@@ -3,12 +3,19 @@
 namespace App\Repositories;
 
 use App\Exceptions\App\Admin\CreateDataException;
+use App\Exceptions\App\Admin\DeleteDataException;
 use App\Exceptions\App\Admin\UpdateDataException;
 use App\Interfaces\IRepository;
 use App\Models\AppVersion;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * This Repository class will be the communicator to model and handle database transaction
+ */
+
 class AppVersionRepository implements IRepository {
+
+	# @Override
 	public function create(array $attributes): array {
 		return DB::transaction(function () use ($attributes) {
 			$created = AppVersion::query()->create([
@@ -25,6 +32,7 @@ class AppVersionRepository implements IRepository {
 		});
 	}
 
+	# @Override
 	public function update(array $attributes): array {
 		$appVersion = $this->findAppVersion($attributes['avid']);
 
@@ -40,6 +48,29 @@ class AppVersionRepository implements IRepository {
 
 			return ['success' => true, 'message' => 'Application version updated successfully.'];
 		});
+	}
+
+	# @Override
+	public function delete(int $avid): array {
+		$appVersion = $this->findAppVersion($avid);
+		return DB::transaction(function () use ($appVersion) {
+			$deleted = $appVersion->delete();
+			if (!$deleted) {
+				throw new DeleteDataException('Something went wrong! Failed to delete version');
+			}
+
+			return ['success' => true, 'message' => 'Application version deleted successfully'];
+		});
+	}
+
+	# @Override
+	public function getAll(String $condition = ""): object {
+		return AppVersion::all();
+	}
+
+	# @Override
+	public function getOne(int $avid): object {
+		return AppVersion::where('avid', $avid)->get();
 	}
 
 	public function titleExists(string $title, int $avid): bool {

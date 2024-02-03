@@ -73,12 +73,6 @@
 		createNewApplicationVersion(APP_VERSION, CSRF_TOKEN, versionName, versionTitle);
 	});
 
-	// Remove the error style input
-	$(document).on('input', '#newVotingTitle, #newVotingVersion', function() {
-		$('#newVotingTitle').removeClass('is-invalid');
-		$('#newVotingVersion').removeClass('is-invalid');
-	});
-
 	// Delete the Application Version
 	$(document).on('click', '.appVersionButtonDelete', function() {
 		const avid = $(this).data('id');
@@ -133,13 +127,6 @@
 	$(document).on('click', '.categoryButtonSave', function() {
 		const ctid = $(this).data('id');
 		const categoryName = $(this).closest('tr').find(`.editCategoryName_${ctid}`).text();
-
-		$(`.editCategoryName_${ctid}`).attr('contenteditable', 'false').removeClass('form-control');
-		$(`.editCategory-icon_${ctid}`).removeClass('d-none');
-		$(`.saveCategory-icon_${ctid}`).addClass('d-none');
-		$(`.closeCategory-icon_${ctid}`).addClass('d-none');
-		$(`.deleteCategory-icon_${ctid}`).removeClass('d-none');
-
 		updateCategory(APP_VERSION, CSRF_TOKEN, ctid, categoryName);
 	});
 
@@ -161,14 +148,6 @@
 		}
 
 		createNewCategory(APP_VERSION, CSRF_TOKEN, appVersionIdSelected, categoryName);
-	});
-
-	$(document).on('input', '#newCategory', function() {
-		$(this).removeClass('is-invalid');
-	});
-
-	$(document).on('change', '#appVersionSelected', function() {
-		$(this).removeClass('is-invalid');
 	});
 
 	$(document).on('click', '.categoryButtonDelete', function() {
@@ -197,8 +176,116 @@
 		});
 	});
 
-	$(document).on('change', '#versionFilterSelected', function() {
-		const avid = $(this).val();
-		getAllCategoryByVersion(avid, CSRF_TOKEN);
+	/*
+	|--------------------------------------------------------------------------
+	| Configuration >>> Vote Points
+	|--------------------------------------------------------------------------
+	*/
+	$(document).on('click', '.votePointButtonEdit', function() {
+		const vpid = $(this).data('id');
+		$(`.editVoteAmount_${vpid}`).attr('contenteditable', 'true').addClass('form-control');
+		$(`.editVotePoint_${vpid}`).attr('contenteditable', 'true').addClass('form-control');
+		$(`.editVotePoint-icon_${vpid}`).addClass('d-none'); 
+		$(`.saveVotePoint-icon_${vpid}`).removeClass('d-none');
+		$(`.closeVotePoint-icon_${vpid}`).removeClass('d-none');
+		$(`.deleteVotePoint-icon_${vpid}`).addClass('d-none');
 	});
+
+	$(document).on('click', '.votePointButtonClose', function() {
+		const vpid = $(this).data('id');
+		$(`.editVoteAmount_${vpid}`).attr('contenteditable', 'false').removeClass('form-control');
+		$(`.editVotePoint_${vpid}`).attr('contenteditable', 'false').removeClass('form-control');
+		$(`.editVotePoint-icon_${vpid}`).removeClass('d-none'); 
+		$(`.saveVotePoint-icon_${vpid}`).addClass('d-none');
+		$(`.closeVotePoint-icon_${vpid}`).addClass('d-none');
+		$(`.deleteVotePoint-icon_${vpid}`).removeClass('d-none');
+	});
+
+	$(document).on('click', '.votePointButtonSave', function() {
+		const vpid = $(this).data('id');
+		const voteAmount = $(this).closest('tr').find(`.editVoteAmount_${vpid}`).text();
+		const votePoint = $(this).closest('tr').find(`.editVotePoint_${vpid}`).text();
+		updateVotePoints(APP_VERSION, CSRF_TOKEN, vpid, voteAmount, votePoint);
+	});
+
+	$(document).on('click', '#createVotingPointsButton', function() {
+		runSpinner();
+		const voteAmount = $('#newAmount').val();
+		const votePoint = $('#newPoints').val();
+		const appVersionIdSelected = $('#appVersionSelectedVP').val();
+		
+		if(isEmpty(appVersionIdSelected)) {
+			$('#appVersionSelectedVP').addClass('is-invalid');
+			stopSpinner();
+			return;
+		}
+
+		if(isEmpty(voteAmount)) {
+			$('#newAmount').addClass('is-invalid');
+			stopSpinner();
+			return;
+		}
+
+		if(isEmpty(votePoint)) {
+			$('#newPoints').addClass('is-invalid');
+			stopSpinner();
+			return;
+		}
+
+		createNewVotePoints(APP_VERSION, CSRF_TOKEN, appVersionIdSelected, voteAmount, votePoint);
+	});
+
+	$(document).on('click', '.votePointButtonDelete', function() {
+		const vpid = $(this).data('id');
+		const deleteConfirm = Swal.mixin({
+			customClass: {
+			  confirmButton: "btn btn-lg btn-secondary me-2",
+			  cancelButton: "btn btn-lg btn-light",
+			},
+  		buttonsStyling: false
+		});
+
+		deleteConfirm.fire({
+      title: "Confirm Deletion",
+      html: `Are you sure you want to delete this vote points? Deleting an category will also remove all associated records. This action cannot be undone.`,
+      showConfirmButton: true,
+      confirmButtonText: "Okay",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+    }).then(function(response) {
+    	if(!response.isConfirmed) { 
+    		return false; 
+		  } 
+		  deleteVotePoints(APP_VERSION, CSRF_TOKEN, vpid);
+		});
+	});
+
+	$(document).on('change', '#appVersionSelected, #versionFilterSelected, #appVersionSelectedVP, #versionFilterSelectedVP', function() {
+		$('#appVersionSelected').removeClass('is-invalid');
+		$('#appVersionSelectedVP').removeClass('is-invalid');
+		const avid = $('#versionFilterSelected').val();
+		const avidvp = $('#versionFilterSelectedVP').val();
+		getAllCategoryByVersion(avid, CSRF_TOKEN);
+		getAllVotePointsByVersion(avidvp, CSRF_TOKEN);
+	});
+
+	// Remove the error style input
+	$(document).on('input', '#newVotingTitle, #newVotingVersion, #newCategory', function() {
+		$('#newVotingTitle').removeClass('is-invalid');
+		$('#newVotingVersion').removeClass('is-invalid');
+
+		$('#newCategory').removeClass('is-invalid');
+	});
+
+	$(document).on('keyup', '.newAmount, .newPoints', function() {
+		$('#newAmount').removeClass('is-invalid');
+		$('#newPoints').removeClass('is-invalid');
+		const inputAmount = $('.newAmount').val();
+		const inputPoint = $('.newPoints').val();
+    const cleanAmount = inputAmount.replace(/[^0-9]/g, ''); 
+    const cleanPoint = inputPoint.replace(/[^0-9]/g, ''); 
+    $('.newAmount').val(cleanAmount);
+    $('.newPoints').val(cleanPoint);
+	});
+
 })(jQuery)

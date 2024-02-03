@@ -93,13 +93,13 @@
 					  			</thead>
 					  			<tbody>
 					  				<tr title="Pending">
-					  					<td><span class="badge text-bg-warning opacity-4 rounded-5" style="color: transparent!important; font-size: 10px;">0</span></td>
+					  					<td><span class="badge text-bg-secondary opacity-4 rounded-5" style="color: transparent!important; font-size: 10px;">0</span></td>
 					  					<td>test1@gmail.com</td>
 					  					<td>182475820582</td>
 					  					<td>₱ 200.00</td>
 					  				</tr>
 					  				<tr title="Pending">
-					  					<td><span class="badge text-bg-warning opacity-4 rounded-5" style="color: transparent!important; font-size: 10px;">0</span></td>
+					  					<td><span class="badge text-bg-secondary opacity-4 rounded-5" style="color: transparent!important; font-size: 10px;">0</span></td>
 					  					<td>test2@gmail.com</td>
 					  					<td>522375820981</td>
 					  					<td>₱ 500.00</td>

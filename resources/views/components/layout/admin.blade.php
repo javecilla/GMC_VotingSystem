@@ -115,10 +115,6 @@
 			        	{{ env('APP_VERSION') }}</li>
 			        </a>
 			        <a class="dropdown-item"
-			        href="{{ route('dashboard.index', ['version' => 'v1.2']) }}"><li>
-			        	{{ __('v1.2') }}</li>
-			        </a>
-			        <a class="dropdown-item"
 			        href="{{ route('dashboard.index', ['version' => 'v1.1']) }}"><li>
 			        	{{ __('v1.1') }}</li>
 			        </a>
@@ -146,15 +142,16 @@
 			       	<i class="fa-solid fa-list"></i>&nbsp; {{ __('Activity Log') }}</li>
 			      </a>
 			      <li><hr class="dropdown-divider"></li>
-			      <a class="dropdown-item"
-			      	onclick="logoutUser({{ auth()->user()->uid }}, $(`meta[name='csrf-token']`).attr('content'))"
-			       	id="logoutButton"
-			        data-uid="{{ auth()->user()->uid }}"
-			        href="javascript:void(0)"><li>
-			        <i class="fas fa-sign-out-alt"></i>&nbsp; {{ __('Log out') }}</li></a>
-			      </ul>
-			    </div>
-		    </div>
+			      <a class="dropdown-item" href="javascript:void(0)"
+			      	id="logoutButton"
+			      	data-uid="{{ auth()->user()->uid }}"
+			      	data-version="{{ request()->route('version') }}"
+			      	data-csrf="{{ csrf_token() }}">
+			      	<li><i class="fas fa-sign-out-alt"></i>&nbsp; {{ __('Log out') }}</li>
+			      </a>
+			    </ul>
+			  </div>
+		  </div>
 		</div>
 	</x-header>
 

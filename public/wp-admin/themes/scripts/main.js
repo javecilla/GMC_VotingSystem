@@ -27,5 +27,12 @@
 	  "hideMethod": "fadeOut",
 		"positionClass": 'toast-bottom-right',
 	};
+
+	$(document).on('click', '#logoutButton', function() {
+		const appVersion = $(this).data('version');
+		const userId = $(this).data('uid');
+		const csrfToken = $(this).data('csrf');
+		logoutUser(appVersion, userId, csrfToken);
+	});
 	
 })(jQuery)

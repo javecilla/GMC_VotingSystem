@@ -5,21 +5,24 @@ namespace App\Services;
 use App\Exceptions\App\Admin\CreateDataException;
 use App\Exceptions\App\Admin\DeleteDataException;
 use App\Exceptions\App\Admin\UpdateDataException;
-use App\Models\AppVersion;
 use App\Repositories\AppVersionRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
 
+/**
+ * This Services class will be the base of business logic
+ */
+
 class AppVersionService {
 	public function __construct(protected AppVersionRepository $repository) {}
 
-	// TODO: Get all the application version data by its [versionName]
-	public function getAllAppVersion(String $version): object {
-		return AppVersion::all();
+	// Get all the application version
+	public function getAllAppVersion(): object {
+		return $this->repository->getAll();
 	}
 
 	// Create new record of application version
-	public function create(array $data): array {
+	public function createAppVersion(array $data): array {
 		try {
 			$filteredData = Arr::only($data, ['name', 'title']);
 			return $this->repository->create($filteredData);
@@ -31,9 +34,9 @@ class AppVersionService {
 	}
 
 	// Update version by its id
-	public function update(array $data): array {
+	public function updateAppVersion(array $data): array {
 		try {
-			if (!$this->changesOccurred($data)) {
+			if (!$this->hasChangesOccurred($data)) {
 				return ['success' => false, 'message' => 'No changes occured', 'type' => 'info'];
 			}
 
@@ -52,16 +55,10 @@ class AppVersionService {
 		}
 	}
 
-	// TODO: Delete existing record of application
-	public function delete(int $appVersionId): array {
+	// Delete existing record of application version
+	public function deleteAppVersion(int $appVersionId): array {
 		try {
-			$appVersion = AppVersion::findOrFail($appVersionId);
-			$result = $appVersion->delete();
-			if (!$result) {
-				throw new DeleteDataException('Something went wrong! Failed to delete version');
-			}
-
-			return ['success' => true, 'message' => 'Application version deleted successfully'];
+			return $this->repository->delete($appVersionId);
 		} catch (ModelNotFoundException $e) {
 			return ['success' => false, 'message' => 'Application version not found.'];
 		} catch (DeleteDataException $e) {
@@ -72,22 +69,18 @@ class AppVersionService {
 	}
 
 	private function isValidToUpdate(array $data): bool {
-		// Title must be unique, but only if it's changing
-		if ($this->repository->titleExists($data['title'], $data['avid'])) {
-			return false;
-		}
-
-		// Name must be unique, but only if it's changing
-		if ($this->repository->nameExists($data['name'], $data['avid'])) {
-			return false;
-		}
-
-		return true;
+		// Title and Name must be unique, but only if it's changing
+		return ($this->repository->titleExists($data['title'], $data['avid'])
+			|| $this->repository->nameExists($data['name'], $data['avid']))
+		? false
+		: true;
 	}
 
-	private function changesOccurred(array $data): bool {
+	private function hasChangesOccurred(array $data): bool {
+		// This check if there is any changes occured or not
 		$appVersion = $this->repository->findAppVersion($data['avid']);
 		$appVersion->fill($data);
+
 		return $appVersion->isDirty();
 	}
 

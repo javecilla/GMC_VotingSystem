@@ -9,7 +9,7 @@
 		          <div class="card-content">
 		            <h4><b>{{ __('Pending Votes') }}</b></h4>
 		            <h2 class="text-left"><i class="fas fa-user-clock fs-2"></i>
-		              <span id="totalAllPending">0</span>
+		              <span id="totalAllPending">2</span>
 		            </h2>
 		          </div>
 		        </div>
@@ -19,7 +19,7 @@
 		          <div class="card-content">
 		            <h4><b>{{ __('Verified Votes') }}</b></h4>
 		            <h2 class="text-left"><i class="fas fa-circle-check fs-2"></i>
-		              <span id="totalVerifiedVotes">0</span>
+		              <span id="totalVerifiedVotes">1</span>
 		            </h2>
 		          </div>
 		        </div>
@@ -29,7 +29,7 @@
 		          <div class="card-content">
 		            <h4><b>{{ __('Spam Votes') }}</b></h4>
 		            <h2 class="text-left"><i class="fas fa-delete-left fs-2"></i>
-		              <span id="totalSpamVotes">0</span>
+		              <span id="totalSpamVotes">1</span>
 		            </h2>
 		          </div>
 		        </div>
@@ -101,7 +101,7 @@
 						  		<td>150</td>
 						  		<td>18247582<b>0582</b></td>
 						  		<td>
-						  			<a class="badge text-bg-warning opacity-4 rounded-5 text-decoration-none text-white status-btn"
+						  			<a class="badge text-bg-secondary opacity-4 rounded-5 text-decoration-none text-white status-btn"
 						  				href="#"
 						  				title="pending">Pending
 						  			</a>
@@ -112,7 +112,7 @@
 						  			<a data-id="#" title="view" class="btn btn-primary btn-sm btn-view">
 						  				<i class="fa-solid fa-eye"></i>&nbsp;
 						  			</a>
-						  			<a data-id="#" title="edit" class="btn btn-warning btn-sm btn-edit text-white">
+						  			<a data-id="#" title="edit" class="btn btn-secondary btn-sm btn-edit text-white">
 						  				<i class="fa-solid fa-pen-to-square"></i>&nbsp;
 						  			</a>
 						  			<a data-id="#" title="flag this vote as spam" class="btn btn-danger btn-sm btn-delete">
@@ -138,7 +138,7 @@
 						  			<a data-id="#" title="view" class="btn btn-primary btn-sm btn-view">
 						  				<i class="fa-solid fa-eye"></i>&nbsp;
 						  			</a>
-						  			<a data-id="#" title="edit" class="btn btn-warning btn-sm btn-edit text-white">
+						  			<a data-id="#" title="edit" class="btn btn-secondary btn-sm btn-edit text-white">
 						  				<i class="fa-solid fa-pen-to-square"></i>&nbsp;
 						  			</a>
 						  			<a data-id="#" title="flag this vote as spam" class="btn btn-danger btn-sm btn-delete">
@@ -164,7 +164,7 @@
 						  			<a data-id="#" title="view" class="btn btn-primary btn-sm btn-view">
 						  				<i class="fa-solid fa-eye"></i>&nbsp;
 						  			</a>
-						  			<a data-id="#" title="edit" class="btn btn-warning btn-sm btn-edit text-white">
+						  			<a data-id="#" title="edit" class="btn btn-secondary btn-sm btn-edit text-white">
 						  				<i class="fa-solid fa-pen-to-square"></i>&nbsp;
 						  			</a>
 						  			<a data-id="#" title="delete permanently this spam vote" class="btn btn-danger btn-sm btn-delete">
@@ -179,7 +179,7 @@
 						  		<td>50</td>
 						  		<td>18247582<b>1823</b></td>
 						  		<td>
-						  			<a class="badge text-bg-warning opacity-4 rounded-5 text-decoration-none text-white status-btn"
+						  			<a class="badge text-bg-secondary opacity-4 rounded-5 text-decoration-none text-white status-btn"
 						  				href="#"
 						  				title="pending">Pending
 						  			</a>
@@ -190,7 +190,7 @@
 						  			<a data-id="#" title="view" class="btn btn-primary btn-sm btn-view">
 						  				<i class="fa-solid fa-eye"></i>&nbsp;
 						  			</a>
-						  			<a data-id="#" title="edit" class="btn btn-warning btn-sm btn-edit text-white">
+						  			<a data-id="#" title="edit" class="btn btn-secondary btn-sm btn-edit text-white">
 						  				<i class="fa-solid fa-pen-to-square"></i>&nbsp;
 						  			</a>
 						  			<a data-id="#" title="flag this vote as spam" class="btn btn-danger btn-sm btn-delete">

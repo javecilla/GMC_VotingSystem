@@ -7,16 +7,21 @@
 // Get ALl Application Version
 const getAllApplicationVersions = (appVersion, csrfToken) => {
   $.ajax({
-    url: `/${appVersion}/admin/configuration/app-versions/all`,
+    url: `/${appVersion}/admin/configuration/app-versions/`,
     method: 'get',
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': csrfToken },
     success: (data) => {
       
       let tableData = ``;
+
       let selectData = `<select class="form-select" id="appVersionSelected">
         <option selected value="">-- SELECT --</option>`;
       let selectFilter = `<select class="form-select" id="versionFilterSelected">
+        <option selected value="${appVersion}">${appVersion}</option>`;
+      let selectDataVP = `<select class="form-select" id="appVersionSelectedVP">
+        <option selected value="">-- SELECT --</option>`;
+      let selectFilterVP = `<select class="form-select" id="versionFilterSelectedVP">
         <option selected value="${appVersion}">${appVersion}</option>`;
       //check if the return data in an object format and not null
       if(typeof data === 'object' && data !== null) {
@@ -58,6 +63,8 @@ const getAllApplicationVersions = (appVersion, csrfToken) => {
 
           selectData += `<option value="${data[key].avid}">${data[key].name}</option>`;
           selectFilter += `<option value="${data[key].name}">${data[key].name}</option>`;
+          selectDataVP += `<option value="${data[key].avid}">${data[key].name}</option>`;
+          selectFilterVP += `<option value="${data[key].name}">${data[key].name}</option>`;
         });
         
       } else {
@@ -74,9 +81,17 @@ const getAllApplicationVersions = (appVersion, csrfToken) => {
 
       selectData += `</select>`;
       selectFilter += `</select>`;
+      selectDataVP += `</select>`;
+      selectFilterVP += `</select>`;
+
       $('#versionDataBody').html(tableData);
+
       $('.selectDataBody').html(selectData);
       $('.selectFilterBody').html(selectFilter);
+      $('.selectDataBodyVP').html(selectDataVP);
+      $('.selectFilterBodyVP').html(selectFilterVP);
+      
+
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -197,7 +212,7 @@ const deleteApplicationVersion = (appVersion, csrfToken, avid) => {
 // Get ALl Category Records base on Application Version
 const getAllCategoryByVersion = (appVersion, csrfToken) => {
   $.ajax({
-    url: `/${appVersion}/admin/configuration/category/by-version`,
+    url: `/${appVersion}/admin/configuration/category/`,
     method: 'get',
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': csrfToken },
@@ -272,19 +287,33 @@ const updateCategory = (appVersion, csrfToken, ctid, name) => {
       if(response.success) {
         getAllCategoryByVersion(appVersion, csrfToken);
         toastr.success(response.message);
+        $('#versionFilterSelected').val(appVersion);
+        $(`.editCategoryName_${ctid}`).attr('contenteditable', 'false').removeClass('form-control');
+        $(`.editCategory-icon_${ctid}`).removeClass('d-none');
+        $(`.saveCategory-icon_${ctid}`).addClass('d-none');
+        $(`.closeCategory-icon_${ctid}`).addClass('d-none');
+        $(`.deleteCategory-icon_${ctid}`).removeClass('d-none');
       } else {
-        if(response.type === 'warning') {
+        if(response.type === 'info') {
+          toastr.info(response.message);
+        } else if(response.type === 'warning') {
           toastr.warning(response.message);
         } else {
           toastr.error(response.message);
         }
+
+        $(`.editCategoryName_${ctid}`).attr('contenteditable', 'true').addClass('form-control');
+        $(`.editCategory-icon_${ctid}`).addClass('d-none');
+        $(`.saveCategory-icon_${ctid}`).removeClass('d-none');
+        $(`.closeCategory-icon_${ctid}`).removeClass('d-none');
+        $(`.deleteCategory-icon_${ctid}`).addClass('d-none');
       }
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
       toastr.error(response.message);
     }
-  })
+  });
 };
 
 // Create New Application Version
@@ -302,6 +331,7 @@ const createNewCategory = (appVersion, csrfToken, avid, name) => {
       if(response.success) {
         $('#newCategory').val('');
         $('#appVersionSelected').val('');
+        $('#versionFilterSelected').val(appVersion);
         getAllCategoryByVersion(appVersion, csrfToken);
         toastr.success(response.message);
       } else {
@@ -327,6 +357,7 @@ const deleteCategory = (appVersion, csrfToken, ctid) => {
     success: (response) => {
       if(response.success) {
         $(`.categoryItem_${ctid}`).remove();
+        $('#versionFilterSelected').val(appVersion);
         getAllCategoryByVersion(appVersion, csrfToken);
         toastr.success(response.message);
       } else {
@@ -347,19 +378,160 @@ const deleteCategory = (appVersion, csrfToken, ctid) => {
 */
 const getAllVotePointsByVersion = (appVersion, csrfToken) => {
   $.ajax({
-    url: `/${appVersion}/admin/configuration/vote-points/by-version`,
+    url: `/${appVersion}/admin/configuration/vote-points/`,
     method: 'get',
     dataType: 'json',
     headers: {
       'X-CSRF-TOKEN': csrfToken
     },
     success: (data) => {
-      console.log(data);
+     let tableData = ``;
+     Object.keys(data).forEach(key => {
+      tableData += `
+        <tr class="votingPointsItem_${data[key].vpid}">
+          <td>
+            <small data-amount="${data[key].amount}" 
+              class="editVoteAmount_${data[key].vpid}">
+              ${data[key].amount}
+            </small>
+          </td>
+          <td>
+            <small data-amount="${data[key].point}" 
+              class="editVotePoint_${data[key].vpid}">
+              ${data[key].point}
+            </small>
+          </td>
+          <td class="text-end">
+            <a href="javascript:void(0)" data-id="${data[key].vpid}" 
+              class="votePointButtonEdit editVotePoint-icon_${data[key].vpid}">
+              <i class="fa-solid fa-pen-to-square fs-5 me-2 text-muted"></i>
+            </a>
+            <a href="javascript:void(0)" data-id="${data[key].vpid}" 
+              class="votePointButtonSave saveVotePoint-icon_${data[key].vpid} d-none">
+              <i class="fa-solid fa-floppy-disk fs-5 me-2 text-muted"></i>
+            </a>
+            <a href="javascript:void(0)" data-id="${data[key].vpid}" 
+              class="votePointButtonClose closeVotePoint-icon_${data[key].vpid} d-none">
+              <i class="fa-solid fa-circle-xmark fs-5 me-2 text-muted"></i>
+            </a>
+            <a href="javascript:void(0)" data-id="${data[key].vpid}" 
+              class="votePointButtonDelete deleteVotePoint-icon_${data[key].vpid}">
+              <i class="fa-solid fa-trash fs-5 me-2 text-muted"></i>
+            </a>
+          </td>
+        </tr>
+      `;
+     });
+
+     $('#equivalentVotePointsBody').html(tableData);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
-      console.log(response.message);
+      toastr.error(response.message);
+    }
+  });
+};
+
+const updateVotePoints = (appVersion, csrfToken, vpid, voteAmount, votePoint) => {
+  $.ajax({
+    url: `/${appVersion}/admin/configuration/vote-points/${vpid}/update`,
+    method: 'patch',
+    data: { 
+      'vpid': vpid,
+      'amount': voteAmount,
+      'point': votePoint,
     },
+    dataType: 'json',
+    headers: { 
+      'X-CSRF-TOKEN': csrfToken 
+    },
+    success: (response) => {
+      if(response.success) {
+        getAllVotePointsByVersion(appVersion, csrfToken);
+        toastr.success(response.message);
+        $('#versionFilterSelectedVP').val(appVersion);
+        $(`.editVoteAmount_${vpid}`).attr('contenteditable', 'false').removeClass('form-control');
+        $(`.editVotePoint_${vpid}`).attr('contenteditable', 'false').removeClass('form-control');
+        $(`.editVotePoint-icon_${vpid}`).removeClass('d-none'); 
+        $(`.saveVotePoint-icon_${vpid}`).addClass('d-none');
+        $(`.closeVotePoint-icon_${vpid}`).addClass('d-none');
+        $(`.deleteVotePoint-icon_${vpid}`).removeClass('d-none');
+      } else {
+        if(response.type === 'info') {
+          toastr.info(response.message);
+        } else if(response.type === 'warning') {
+          toastr.warning(response.message);
+        } else {
+          toastr.error(response.message);
+        }
+
+        $(`.editVoteAmount_${vpid}`).attr('contenteditable', 'true').addClass('form-control');
+        $(`.editVotePoint_${vpid}`).attr('contenteditable', 'true').addClass('form-control');
+        $(`.editVotePoint-icon_${vpid}`).addClass('d-none'); 
+        $(`.saveVotePoint-icon_${vpid}`).removeClass('d-none');
+        $(`.closeVotePoint-icon_${vpid}`).removeClass('d-none');
+        $(`.deleteVotePoint-icon_${vpid}`).addClass('d-none');
+      }
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+const createNewVotePoints = (appVersion, csrfToken, avid, amount, point) => {
+  $.ajax({
+    url: `/${appVersion}/admin/configuration/vote-points/store`,
+    method: 'post',
+    data: {
+      'app_version_id': avid,
+      'amount': amount,
+      'point': point,
+    },
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': csrfToken },
+    success: (response) => {
+      if(response.success) {
+        $('#newAmount').val('');
+        $('#newPoints').val('');
+        $('#appVersionSelectedVP').val('');
+        $('#versionFilterSelectedVP').val(appVersion);
+        getAllVotePointsByVersion(appVersion, csrfToken);
+        toastr.success(response.message);
+      } else {
+        toastr.error(response.message);
+      }
+      stopSpinner();
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+      stopSpinner();
+    }
+  });
+};
+
+const deleteVotePoints = (appVersion, csrfToken, vpid) => {
+  $.ajax({
+    url: `/${appVersion}/admin/configuration/vote-points/${vpid}/destroy`,
+    method: 'delete',
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': csrfToken },
+    success: (response) => {
+       if(response.success) {
+        $(`.votingPointsItem_${vpid}`).remove();
+        $('#versionFilterSelectedVP').val(appVersion);
+        getAllVotePointsByVersion(appVersion, csrfToken);
+        toastr.success(response.message);
+      } else {
+        toastr.error(response.message);
+      }
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
   });
 };
 
@@ -369,9 +541,9 @@ const getAllVotePointsByVersion = (appVersion, csrfToken) => {
 | Logout the user
 |--------------------------------------------------------------------------
 */
-const logoutUser = (uid, csrfToken) => {
+const logoutUser = (appVersion, uid, csrfToken) => {
   $.ajax({
-    url: `/logout/user`,
+    url: `/${appVersion}/logout/user`,
     method: 'post',
     data: { 'uid': uid },
     dataType: 'json',

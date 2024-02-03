@@ -13,6 +13,7 @@ class UserService {
 		$loginAttempts = $request->session()->get('loginAttempts', 0);
 		//check if this user attempting to login is valid or not
 		if (auth()->attempt($user)) {
+			$loggedInUser = auth()->user();
 			//if valid then, reset the login attempt session upon successful
 			$request->session()->forget('loginAttempts');
 			//create new session for user currently loggedin

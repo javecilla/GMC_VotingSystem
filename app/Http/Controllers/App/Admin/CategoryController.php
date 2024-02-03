@@ -9,32 +9,26 @@ use App\Services\CategoryService;
 use Illuminate\Http\JsonResponse;
 
 class CategoryController extends Controller {
-	public function __construct(protected CategoryService $categoryService) {}
+	public function __construct(protected CategoryService $service) {}
 
 	//get all the category
-	public function retrieveAll(String $appVersionName): JsonResponse {
-		$result = $this->categoryService->getAll($appVersionName);
-		return response()->json($result);
-	}
-
-	//get specific category base on what version it is
-	public function retrieveByAppVersion(String $appVersionName): JsonResponse {
-		$result = $this->categoryService->getAllByVersion($appVersionName);
-		return response()->json($result);
-	}
-
-	public function update(CategoryUpdateRequest $request): JsonResponse {
-		$result = $this->categoryService->update($request->validated());
+	public function retrieve(String $appVersionName): JsonResponse {
+		$result = $this->service->getAllCategory($appVersionName);
 		return response()->json($result);
 	}
 
 	public function store(CategoryCreateRequest $request): JsonResponse {
-		$result = $this->categoryService->create($request->validated());
+		$result = $this->service->createCategory($request->validated());
+		return response()->json($result);
+	}
+
+	public function update(CategoryUpdateRequest $request): JsonResponse {
+		$result = $this->service->updateCategory($request->validated());
 		return response()->json($result);
 	}
 
 	public function destroy(String $appVersionName, int $categoryId): JsonResponse {
-		$result = $this->categoryService->delete($categoryId);
+		$result = $this->service->deleteCategory($categoryId);
 		return response()->json($result);
 	}
 }

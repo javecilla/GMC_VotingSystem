@@ -161,7 +161,7 @@
 										<small class="text-muted">
 											{{ __('Select the version of voting you want to add this category') }}
 										</small>
-										<div class="selectDataBody">
+										<div class="selectDataBodyVP">
 											<label class="text-center">
 												{{ __('Loading') }} <i class="fas fa-spinner fa-spin"></i>
 											</label>
@@ -171,15 +171,15 @@
 										<div class="col-md-6">
 											<small class="text-muted">{{ __('Enter amount (payment) value') }}</small>
 											<div class="form-floating mb-2">
-												<input type="text" class="form-control" id="newAmount" placeholder="category"/>
+												<input type="text" class="form-control newAmount" id="newAmount" placeholder="category"/>
 												<label for="newAmount">{{ __('Enter amount') }}</label>
 											</div>
 										</div>
 										<div class="col-md-6">
 											<small class="text-muted">{{  __('Enter equivalent vote points') }}</small>
 											<div class="form-floating mb-2">
-												<input type="text" class="form-control" id="newAmount" placeholder="category"/>
-												<label for="newAmount">{{ __('Enter points') }}</label>
+												<input type="text" class="form-control newPoints" id="newPoints" placeholder="category"/>
+												<label for="newPoints">{{ __('Enter points') }}</label>
 											</div>
 										</div>
 									</div>
@@ -192,8 +192,8 @@
 							<div class="col-md-6">
 								<fieldset>
 									<legend class="fs-5 fw-bold">
-										<span class="float-start">{{ __('Equivalent Vote Points for each Payment') }}</span>
-										<span class="float-end selectFilterBody">
+										<span class="float-start">{{ __('Equivalent Vote Points for each Amount') }}</span>
+										<span class="float-end selectFilterBodyVP">
 											{{-- data being fetch via ajax--}}
 										</span>
 									</legend>
@@ -207,20 +207,8 @@
 													<th class="text-end">Actions</th>
 												</tr>
 											</thead>
-											<tbody>
-												<tr>
-													<td><small contenteditable="true" class="form-control">
-															100
-														</small>
-													</td>
-													<td><small contenteditable="true" class="form-control">
-															50
-														</small>
-													</td>
-													<td class="text-end">
-														action
-													</td>
-												</tr>
+											<tbody id="equivalentVotePointsBody">
+												{{-- Data fetch via ajax request --}}
 											</tbody>
 										</table>
 									</div>

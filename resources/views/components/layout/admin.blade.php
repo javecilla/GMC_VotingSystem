@@ -127,7 +127,7 @@
 
 	<!-- ======= Header ======= -->
 	<x-header>
-		<div class="header-content ">
+		<div class="header-content">
 			<div class="mt-auto">
 			  <div id="headerProfile" class="dropdown rounded-5">
 			    <a href="javascript:void(0)" class="d-flex align-items-center dropdown-toggle text-decoration-none text-white" data-bs-toggle="dropdown" aria-expanded="false">
@@ -152,7 +152,9 @@
 			    </ul>
 			  </div>
 		  </div>
+
 		</div>
+
 	</x-header>
 
 	<!-- ======= Main ======= -->

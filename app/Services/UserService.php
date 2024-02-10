@@ -18,6 +18,8 @@ class UserService {
 			$request->session()->forget('loginAttempts');
 			//create new session for user currently loggedin
 			$request->session()->regenerate();
+			//upon login successfull, track the last activity time
+			$request->session()->put('last_activity', now());
 			//return the response
 			return ['success' => true,
 				'message' => 'Login successfully',

@@ -17,4 +17,9 @@ class SessionController extends Controller {
 		return response()->json($validationResult);
 	}
 
+	public function check(Request $request): JsonResponse {
+		$checkingResult = $this->sessionService->forget($request);
+		return response()->json($checkingResult);
+	}
+
 }

@@ -8,6 +8,14 @@
     updateTime('#time');
   }, 1000);
 
+  setInterval(function() {	
+    checkUserSession(
+    	$('meta[name="app-version"]').attr('content'),
+    	$('meta[name="csrf-token"]').attr('content')
+    );
+  }, 10000);
+
+
 	// toastr config style
 	toastr.options = {
 		"debug": false,
@@ -33,6 +41,5 @@
 		const userId = $(this).data('uid');
 		const csrfToken = $(this).data('csrf');
 		logoutUser(appVersion, userId, csrfToken);
-	});
-	
+	});	
 })(jQuery)

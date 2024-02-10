@@ -543,7 +543,7 @@ const deleteVotePoints = (appVersion, csrfToken, vpid) => {
 
 /*
 |--------------------------------------------------------------------------
-| Logout the user
+| Authentication
 |--------------------------------------------------------------------------
 */
 const logoutUser = (appVersion, uid, csrfToken) => {
@@ -555,6 +555,33 @@ const logoutUser = (appVersion, uid, csrfToken) => {
     headers: { 'X-CSRF-TOKEN': csrfToken },
     success: (response) => {
       window.location.href=response.redirect;
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+const checkUserSession = (appVersion, csrfToken) => {
+  $.ajax({
+    url: `/${appVersion}/check/user/session`,
+    method: 'post',
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': csrfToken },
+    success: (response) => {
+      console.log(response.message);
+      if (!response.active) {
+        Swal.fire({
+          title: "Session Timeout",
+          html: "For security reasons, system automatically logging you out due to inactivity. Please log in again to continue accessing your account.",
+          showConfirmButton: false,
+        });
+        //automaticall logout the user after 9s
+        setTimeout(() => {
+          window.location.href = response.redirect;
+        }, 9000);
+      }
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);

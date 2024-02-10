@@ -47,10 +47,14 @@
 					//stopSpinner();
 				},
 				error: (xhr, status, error) => {
-					const response = JSON.parse(xhr.responseText);
-		  		toastr.error(response.message);
-					grecaptcha.reset(); // Reinitialize recaptcha widget
-					stopSpinner();
+					if (xhr.status === 429) {
+            window.location.href='/e4292024';
+          } else {
+            const response = JSON.parse(xhr.responseText);
+            toastr.error(response.message);
+         	}
+          grecaptcha.reset(); // Reinitialize recaptcha widget
+          stopSpinner();
 				}
 			});
 		}

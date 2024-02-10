@@ -13,6 +13,7 @@ class VotePointUpdateRequest extends FormRequest {
 	public function rules(): array {
 		return [
 			'vpid' => 'required',
+			'app_version_id' => 'required',
 			'amount' => 'required',
 			'point' => 'required',
 		];

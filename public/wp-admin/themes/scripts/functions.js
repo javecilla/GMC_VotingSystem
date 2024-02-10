@@ -233,6 +233,7 @@ const getAllCategoryByVersion = (appVersion, csrfToken) => {
                   <i class="fa-solid fa-pen-to-square fs-5 me-2 text-muted"></i>
                 </a>
                 <a href="javascript:void(0)" data-id="${data[key].ctid}" 
+                  data-avid="${data[key].app_version_id}"
                   class="categoryButtonSave saveCategory-icon_${data[key].ctid} d-none">
                   <i class="fa-solid fa-floppy-disk fs-5 me-2 text-muted"></i>
                 </a>
@@ -271,11 +272,12 @@ const getAllCategoryByVersion = (appVersion, csrfToken) => {
 };
 
 // Update Category Name
-const updateCategory = (appVersion, csrfToken, ctid, name) => {
+const updateCategory = (appVersion, csrfToken, ctid, avid, name) => {
   $.ajax({
     url: `/${appVersion}/admin/configuration/category/${ctid}/update`,
     method: 'patch',
     data: { 
+      'app_version_id': avid,
       'ctid': ctid,
       'name': name,
     },
@@ -373,7 +375,7 @@ const deleteCategory = (appVersion, csrfToken, ctid) => {
 
 /*
 |--------------------------------------------------------------------------
-| @TODO: Configuration >>> Vote Points
+| Configuration >>> Vote Points
 |--------------------------------------------------------------------------
 */
 const getAllVotePointsByVersion = (appVersion, csrfToken) => {
@@ -396,7 +398,7 @@ const getAllVotePointsByVersion = (appVersion, csrfToken) => {
             </small>
           </td>
           <td>
-            <small data-amount="${data[key].point}" 
+            <small data-point="${data[key].point}" 
               class="editVotePoint_${data[key].vpid}">
               ${data[key].point}
             </small>
@@ -407,7 +409,9 @@ const getAllVotePointsByVersion = (appVersion, csrfToken) => {
               <i class="fa-solid fa-pen-to-square fs-5 me-2 text-muted"></i>
             </a>
             <a href="javascript:void(0)" data-id="${data[key].vpid}" 
-              class="votePointButtonSave saveVotePoint-icon_${data[key].vpid} d-none">
+              data-avid="${data[key].app_version_id}"
+              class="votePointButtonSave 
+              saveVotePoint-icon_${data[key].vpid} d-none">
               <i class="fa-solid fa-floppy-disk fs-5 me-2 text-muted"></i>
             </a>
             <a href="javascript:void(0)" data-id="${data[key].vpid}" 
@@ -432,12 +436,13 @@ const getAllVotePointsByVersion = (appVersion, csrfToken) => {
   });
 };
 
-const updateVotePoints = (appVersion, csrfToken, vpid, voteAmount, votePoint) => {
+const updateVotePoints = (appVersion, csrfToken, vpid, avid, voteAmount, votePoint) => {
   $.ajax({
     url: `/${appVersion}/admin/configuration/vote-points/${vpid}/update`,
     method: 'patch',
     data: { 
       'vpid': vpid,
+      'app_version_id': avid,
       'amount': voteAmount,
       'point': votePoint,
     },

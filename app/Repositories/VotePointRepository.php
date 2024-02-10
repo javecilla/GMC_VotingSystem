@@ -80,19 +80,22 @@ class VotePointRepository implements IRepository {
 		});
 	}
 
-	public function amountExists(float $amount, int $vpid): bool {
-		return VotePoint::where('amount', $amount)
-			->where('vpid', '<>', $vpid)
-			->exists();
-	}
-
-	public function pointExists(int $point, int $vpid): bool {
-		return VotePoint::where('point', $point)
-			->where('vpid', '<>', $vpid)
-			->exists();
-	}
-
 	public function findVotePoint(int $vpid): VotePoint {
 		return VotePoint::findOrFail($vpid);
 	}
+
+	public function amountExists(float $amount, int $avid, int $vpid): bool {
+		return VotePoint::where('amount', $amount)
+			->where('app_version_id', $avid)
+			->where('vpid', '<>', $vpid)
+			->exists();
+	}
+
+	public function pointExists(int $point, int $avid, int $vpid): bool {
+		return VotePoint::where('point', $point)
+			->where('app_version_id', $avid)
+			->where('vpid', '<>', $vpid)
+			->exists();
+	}
+
 }

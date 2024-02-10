@@ -21,6 +21,9 @@ return new class extends Migration {
 				->onUpdate('CASCADE');
 			$table->string('name');
 			$table->timestamps();
+
+			// unique constraint for combination of app_version_id, amount, and point
+			$table->unique(['app_version_id', 'name']);
 		});
 	}
 

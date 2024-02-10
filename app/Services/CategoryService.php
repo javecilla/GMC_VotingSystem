@@ -34,7 +34,7 @@ class CategoryService {
 				return ['success' => false, 'message' => 'No changes occured', 'type' => 'info'];
 			}
 
-			if (!$this->isValidToUpdate($data)) {
+			if ($this->isDuplicateCategory($data)) {
 				return ['success' => false, 'message' => 'Cannot duplicate category.', 'type' => 'warning'];
 			}
 
@@ -61,9 +61,9 @@ class CategoryService {
 		}
 	}
 
-	private function isValidToUpdate(array $data): bool {
+	private function isDuplicateCategory(array $data): bool {
 		// Name must be unique, but only if it's changing
-		return ($this->repository->nameExists($data['name'], $data['ctid'])) ? false : true;
+		return $this->repository->nameExists($data['name'], $data['app_version_id'], $data['ctid']);
 	}
 
 	private function hasChangesOccurred(array $data): bool {

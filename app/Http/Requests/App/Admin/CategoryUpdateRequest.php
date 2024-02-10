@@ -12,6 +12,7 @@ class CategoryUpdateRequest extends FormRequest {
 
 	public function rules(): array {
 		return [
+			'app_version_id' => 'required',
 			'ctid' => 'required',
 			'name' => 'required',
 		];

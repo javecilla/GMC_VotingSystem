@@ -42,6 +42,7 @@
 		$(`.close-icon_${avid}`).addClass('d-none');
 		$(`.edit-icon_${avid}`).removeClass('d-none');
 		$(`.delete-icon_${avid}`).removeClass('d-none');
+		getAllApplicationVersions(APP_VERSION, CSRF_TOKEN);
 	});
 
 	// Update Application Version [Name and Title] 
@@ -122,12 +123,20 @@
 		$(`.saveCategory-icon_${ctid}`).addClass('d-none');
 		$(`.closeCategory-icon_${ctid}`).addClass('d-none');
 		$(`.deleteCategory-icon_${ctid}`).removeClass('d-none');
+		getAllCategoryByVersion(APP_VERSION, CSRF_TOKEN);
 	});
 
 	$(document).on('click', '.categoryButtonSave', function() {
 		const ctid = $(this).data('id');
+		const avid = $(this).data('avid');
 		const categoryName = $(this).closest('tr').find(`.editCategoryName_${ctid}`).text();
-		updateCategory(APP_VERSION, CSRF_TOKEN, ctid, categoryName);
+
+		if(isEmpty(categoryName)) {
+			toastr.info("Category name is required.");
+			return;
+		}
+
+		updateCategory(APP_VERSION, CSRF_TOKEN, ctid, avid, categoryName);
 	});
 
 	$(document).on('click', '#createCategoryButton', function() {
@@ -199,13 +208,26 @@
 		$(`.saveVotePoint-icon_${vpid}`).addClass('d-none');
 		$(`.closeVotePoint-icon_${vpid}`).addClass('d-none');
 		$(`.deleteVotePoint-icon_${vpid}`).removeClass('d-none');
+		getAllVotePointsByVersion(APP_VERSION, CSRF_TOKEN);
 	});
 
 	$(document).on('click', '.votePointButtonSave', function() {
 		const vpid = $(this).data('id');
+		const avid = $(this).data('avid');
 		const voteAmount = $(this).closest('tr').find(`.editVoteAmount_${vpid}`).text();
 		const votePoint = $(this).closest('tr').find(`.editVotePoint_${vpid}`).text();
-		updateVotePoints(APP_VERSION, CSRF_TOKEN, vpid, voteAmount, votePoint);
+
+		if (isEmpty(voteAmount) || isEmpty(votePoint)) {
+      toastr.info('Vote amount and vote point is required.');
+      return;
+    }
+
+		if (isNaN(voteAmount) || isNaN(votePoint)) {
+      toastr.info('Vote amount and vote point must be numeric.');
+      return;
+    }
+
+		updateVotePoints(APP_VERSION, CSRF_TOKEN, vpid, avid, voteAmount, votePoint);
 	});
 
 	$(document).on('click', '#createVotingPointsButton', function() {
@@ -277,6 +299,7 @@
 		$('#newCategory').removeClass('is-invalid');
 	});
 
+	//clean input amount and points
 	$(document).on('keyup', '.newAmount, .newPoints', function() {
 		$('#newAmount').removeClass('is-invalid');
 		$('#newPoints').removeClass('is-invalid');

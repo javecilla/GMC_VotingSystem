@@ -37,7 +37,7 @@ class VotePointService {
 				return ['success' => false, 'message' => 'No changes occured', 'type' => 'info'];
 			}
 
-			if (!$this->isValidToUpdate($data)) {
+			if ($this->isDuplicateVotePoint($data)) {
 				return ['success' => false, 'message' => 'Cannot duplicate vote points or amount.', 'type' => 'warning'];
 			}
 
@@ -65,11 +65,9 @@ class VotePointService {
 		}
 	}
 
-	private function isValidToUpdate(array $data): bool {
-		return ($this->repository->amountExists((float) $data['amount'], $data['vpid'])
-			|| $this->repository->pointExists((int) $data['point'], $data['vpid']))
-		? false
-		: true;
+	private function isDuplicateVotePoint(array $data): bool {
+		return $this->repository->amountExists($data['amount'], $data['app_version_id'], $data['vpid'])
+		|| $this->repository->pointExists($data['point'], $data['app_version_id'], $data['vpid']);
 	}
 
 	private function hasChangesOccurred(array $data): bool {

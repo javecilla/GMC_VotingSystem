@@ -23,6 +23,9 @@ return new class extends Migration {
 			$table->decimal('amount', 10, 2); //1000, 500, 200, 100
 			$table->integer('point'); //700, 500, 150, 50
 			$table->timestamps();
+
+			// unique constraint for combination of app_version_id, amount, and point
+			$table->unique(['app_version_id', 'amount', 'point']);
 		});
 	}
 

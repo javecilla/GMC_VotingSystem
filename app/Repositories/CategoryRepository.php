@@ -69,9 +69,10 @@ class CategoryRepository implements IRepository {
 		});
 	}
 
-	public function nameExists(string $name, int $ctid): bool {
+	public function nameExists(string $name, int $avid, int $ctid): bool {
 		// Check if any other category has the same name
 		return Category::where('name', $name)
+			->where('app_version_id', $avid)
 			->where('ctid', '<>', $ctid)
 			->exists();
 	}

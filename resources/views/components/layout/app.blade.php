@@ -32,7 +32,7 @@
 	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/bootstrap/bootstrap@5.3.2/css/bootstrap.min.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/fontawesome/css/all.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('/wp-content/plugins/wow/wow.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-content/themes/stylesheets/app.css?v=1.3') }}" async defer/>
+	<link rel="stylesheet" href="{{ asset('/wp-content/themes/stylesheets/app.css?v=1.3') }}" defer/>
 	<script src="{{ asset('/wp-content/plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
 
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>

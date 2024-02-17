@@ -218,6 +218,8 @@ const getAllCategoryByVersion = (appVersion, csrfToken) => {
     headers: { 'X-CSRF-TOKEN': csrfToken },
     success: (data) => {
       let tableData = ``;
+      let selectCategoryData = `<select id="categorySelected" class="form-select">
+        <option selected value="">-- SELECT --</option>`;
       if(typeof data === 'object' && data !== null) {
         Object.keys(data).forEach(key => {
           tableData += `
@@ -249,6 +251,8 @@ const getAllCategoryByVersion = (appVersion, csrfToken) => {
               </td>
             </tr>
           `; 
+
+          selectCategoryData += `<option value="${data[key].ctid}">${data[key].name}</option>`;
         });
       } else {
         tableData += `
@@ -261,8 +265,10 @@ const getAllCategoryByVersion = (appVersion, csrfToken) => {
           </tr>
         `;
       }
+      selectCategoryData += `</select>`;
 
       $('#categoryBody').html(tableData);
+      $('.selectCategoryBody').html(selectCategoryData);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -540,6 +546,294 @@ const deleteVotePoints = (appVersion, csrfToken, vpid) => {
   });
 };
 
+/*
+|--------------------------------------------------------------------------
+| Configuration >>> School Campus
+|--------------------------------------------------------------------------
+*/
+const getAllCampusByVersion = (appVersion, csrfToken) => {
+  $.ajax({
+    url: `/${appVersion}/admin/configuration/campus`,
+    method: 'get',
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': csrfToken },
+    success: (data) => {
+      let selectCampusData = `<select id="campusSelected" class="form-select">
+        <option selected value="">-- SELECT --</option>`;
+      if(typeof data === 'object' && data !== null) {
+        Object.keys(data).forEach(key => {
+          selectCampusData += `<option value="${data[key].scid}">${data[key].name}</option>`;
+        });
+      } 
+      selectCampusData += `</select>`;
+
+      $('.selectCampusBody').html(selectCampusData);
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+/*
+|--------------------------------------------------------------------------
+| Candidate Management
+|--------------------------------------------------------------------------
+*/
+const getAllCandidatesByVersion = (appVersion, csrfToken) => {
+  $.ajax({
+    url: `/${appVersion}/admin/manage/candidates/retrieves`,
+    method: 'get',
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': csrfToken },
+    success: (data) => {
+      let candidatesDataBody = `<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-1">`;
+      if(typeof data === 'object' && data !== null) { 
+        Object.keys(data).forEach(key => {
+          candidatesDataBody += `
+            <div class="col candidatesItem_${data[key].cdid}">
+              <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" 
+                style="background-image: url('/storage/${data[key].image}');
+                height: 60vh!important;">
+                <div id="cardOverlay" class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
+                  <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
+                    <ul class="d-flex list-unstyled mt-auto">
+                      <li class="me-auto" style="margin-top: 5px">
+                        <a href="javascript:void(0)" class="button-links d-flex align-items-center text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                          <i class="fa-solid fa-ellipsis button-links-icon"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                          <a id="viewCandidateButton" data-id="${data[key].cdid}" 
+                            class="dropdown-item" 
+                            href="/${appVersion}/admin/manage/candidates/${data[key].cdid}/show">
+                            <i class="fa-solid fa-eye"></i>&nbsp; View</li>
+                          </a>
+                          <a id="editCandidateButton" data-id="${data[key].cdid}" 
+                            class="dropdown-item" 
+                            href="/${appVersion}/admin/manage/candidates/${data[key].cdid}/edit"><li>
+                            <i class="fa-solid fa-pen-to-square"></i>&nbsp; Edit</li>
+                          </a>
+                          <a class="dropdown-item" href="javascript:void(0)"><li>
+                            <i class="fa-solid fa-trash"></i>&nbsp; Delete</li>
+                          </a>
+                        </ul>
+                      </li>
+                      <li class="d-flex align-items-center">
+                        <label class="fw-bold"  style="font-size: 20px;">
+                          <span id="candidateNameText">${data[key].name}</span>
+                          <span>&nbsp;:&nbsp;</span>
+                          <span id="candidateNoText">${data[key].candidate_no}</span>
+                        </label>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+      candidatesDataBody += `</div>`;
+      
+      $('.candidatesDataRecords').html(candidatesDataBody);
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+const getOneCandidatesByVersion = (appVersion, csrfToken, cdid) => {
+  $.ajax({
+    url: `/${appVersion}/admin/manage/candidates/${cdid}/retrieve`,
+    method: 'get',
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': csrfToken },
+    success: (data) => {
+      let editDataBody = ``;
+      Object.keys(data).forEach(key => {
+        editDataBody += `
+          <div class="container">
+            <div class="row">
+              <div class="col-md-5">
+                <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg"
+                  id="cardCandidateImage"
+                  style="background-image: url('/storage/${data[key].image}');
+                height: 65vh!important;">
+                  <div id="cardOverlay" class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
+                    <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
+                    <ul class="d-flex list-unstyled mt-auto">
+                      <li class="me-auto" style="margin-top: 5px">
+                        <a href="javascript:void(0)" class="button-links d-flex align-items-center text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                          <i class="fa-solid fa-ellipsis button-links-icon"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                          <a class="dropdown-item" href="javascript:void(0)"><li>
+                            <i class="fa-solid fa-eye"></i>&nbsp; View</li>
+                          </a>
+                          <a class="dropdown-item" href="javascript:void(0)"><li>
+                            <i class="fa-solid fa-pen-to-square"></i>&nbsp; Edit</li>
+                          </a>
+                          <a class="dropdown-item" href="javascript:void(0)"><li>
+                            <i class="fa-solid fa-trash"></i>&nbsp; Delete</li>
+                          </a>
+                        </ul>
+                      </li>
+                      <li class="d-flex align-items-center">
+                        <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
+                        <label class="fw-bold"  style="font-size: 20px;">
+                          <span id="candidateNameText">Candidate Name</span>
+                          <span>&nbsp;:&nbsp;</span>
+                          <span id="candidateNoText">00</span>
+                        </label>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-7">
+                <form method="post" action="#" id="campusCreateForm" class="mt-3">
+                  <div class="row mb-3">
+                    <label for="candidateAppVersion" class="col-sm-2 col-form-label">
+                      Version
+                    </label>
+                    <div class="col-sm-10">
+                      <small class="text-muted">
+                        Select the version of voting you want to add this candidate
+                      </small>
+                      <div class="selectDataBody">
+        
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label for="selectCampus" class="col-sm-2 col-form-label">
+                      Campus
+                    </label>
+                    <div class="col-sm-10">
+                      <small id="campusLabel" class="text-muted">
+                        Select the campus candidate. Leave it blank if not applicable.
+                      </small>
+                      <div class="selectCampusBody">
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label for="candidateCategory" class="col-sm-2 col-form-label">
+                      Category
+                    </label>
+                    <div class="col-sm-10">
+                      <div class="selectCategoryBody">
+                   
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label for="candidateInfo" class="col-sm-2 col-form-label">Info</label>
+                    <div class="col-sm-10" id="candidateInfo">
+                      <div class="row">
+                        <div class="col-8">
+                          <input type="text" class="form-control" placeholder="Name"
+                          id="candidateName"/>
+                        </div>
+                        <div class="col-4">
+                          <input type="text" class="form-control" placeholder="Candidate no."
+                          id="candidateNo"/>
+                        </div>
+                      </div>
+
+                      <div class="form-floating mt-3">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="candidateMottoDescription"></textarea>
+                        <label for="candidateMottoDescription"><small class="text-muted">
+                          Candidate motto or description. Leave it blank if not applicable.
+                        </small></label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label"
+                    style="cursor: pointer;">
+                      <span id="imageLabel">Image</span>
+                      <small id="removeImageButton"class="d-none">
+                        <i class="fa-solid fa-trash"></i> Remove
+                      </small>
+                    </label>
+                    <div class="col-sm-10 ">
+                      <input type="file" class="form-control imageFile" id="candidateImage"
+                      accept="image/png, image/jpg, image/jpeg" />
+                      <div class="invalid-feedback imageValidationFeedBack"></div>
+                    </div>
+                  </div>
+                  <button type="submit" id="createNewCandidate"
+                    class="btn btn-light w-100 btn-add">
+                    Create
+                    <i class="fas fa-spinner fa-spin loading-spinner d-none"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      $('#editDataBody').html(editDataBody);
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+const createNewCandidate = (appVersion, csrfToken, avid, scid, ctid, candidateNo, candidateName, candidateMotto, candidateImage) => {
+  runSpinner();
+  //toastr.success("validated");
+  const formData = new FormData();
+  formData.append('app_version_id', avid);
+  formData.append('school_campus_id', scid);
+  formData.append('category_id', ctid);
+  formData.append('candidate_no', candidateNo);
+  formData.append('name', candidateName);
+  formData.append('motto_description', candidateMotto);
+  formData.append('image', candidateImage);
+  //checkFormData(formData);
+  $.ajax({
+    url: `/${appVersion}/admin/manage/candidates/store`,
+    method: 'post',
+    data: formData,
+    processData: false, 
+    contentType: false,
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': csrfToken },
+    success: (response) => {
+      if(response.success) {
+        $('#campusCreateForm')[0].reset();
+        
+        $('#removeImageButton').addClass('d-none');
+        $('#imageLabel').removeClass('d-none'); 
+        $('#cardCandidateImage').css('background-image', `url('/wp-admin/uploads/noimg-yet.PNG')`);
+        $('#candidateNameText').text('Candidate Name');    
+        $('#candidateNoText').text('00');
+        toastr.success(response.message);
+      } else {
+        toastr.warning(response.message);
+      }
+      stopSpinner();
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+      stopSpinner();
+    }
+  });
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -588,4 +882,19 @@ const checkUserSession = (appVersion, csrfToken) => {
       toastr.error(response.message);
     }
   });
+};
+
+
+/*
+|--------------------------------------------------------------------------
+| Debugger Helper
+|--------------------------------------------------------------------------
+*/
+const checkFormData = (formData) => {
+  //check data form field value
+  var formDataArray = [];
+  formData.forEach((value, key) => {
+    formDataArray.push({ [key]: value });
+  });
+  console.log(formDataArray);
 };

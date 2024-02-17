@@ -1,7 +1,7 @@
 <x-layout.admin title="Candidates Management">
 <x-slot name="version">{{ request()->route('version') }}</x-slot>
-	<section data-component="candidatesManagement" id="candidatesManagementContent">
-		<div class="container" data-aos="fade-in">
+	<x-section id="candidatesManagementContent" data-component="candidatesManagement">
+		<x-container>
 			<div class="votes-management-card card">
 				<div class="card-header">
 					<div class="float-start">
@@ -28,6 +28,7 @@
 			    	</div>
 					</div>
 				</div>
+
 				<div class="card-body">
 					<form action="#" method="GET" class="search-form" id="searchForm">
 						<div class="search-container">
@@ -44,196 +45,14 @@
 							</a>
 						</div>
 					</form>
+
 					<div class="candidatesDataRecords">
-						<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-				      <div class="col">
-				        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates8.PNG') }});
-				        	height: 65vh!important;">
-				          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-				            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-				            <ul class="d-flex list-unstyled mt-auto">
-				              <li class="me-auto" style="margin-top: 5px">
-				              	<a href="javascript:void(0)" class="button-links d-flex align-items-center dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
-				              		<i class="fa-solid fa-ellipsis button-links-icon"></i>
-				              	</a>
-									      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-eye"></i>&nbsp; {{ __('View') }}</li>
-									        </a>
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-pen-to-square"></i>&nbsp; {{ __('Edit') }}</li>
-									        </a>
-									        <a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-trash"></i>&nbsp; {{ __('Delete') }}</li>
-									        </a>
-									      </ul>
-				              </li>
-				              <li class="d-flex align-items-center">
-				                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-				                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-				              </li>
-				            </ul>
-				          </div>
-				        </div>
-				      </div>
-
-				      <div class="col">
-				        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates4.PNG') }});
-				        	height: 65vh!important;">
-				          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-				            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-				            <ul class="d-flex list-unstyled mt-auto">
-				              <li class="me-auto" style="margin-top: 5px">
-				              	<a href="javascript:void(0)" class="button-links d-flex align-items-center dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
-				              		<i class="fa-solid fa-ellipsis button-links-icon"></i>
-				              	</a>
-									      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-eye"></i>&nbsp; {{ __('View') }}</li>
-									        </a>
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-pen-to-square"></i>&nbsp; {{ __('Edit') }}</li>
-									        </a>
-									        <a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-trash"></i>&nbsp; {{ __('Delete') }}</li>
-									        </a>
-									      </ul>
-				              </li>
-				              <li class="d-flex align-items-center">
-				                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-				                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-				              </li>
-				            </ul>
-				          </div>
-				        </div>
-				      </div>
-
-				      <div class="col">
-				        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates3.PNG') }});
-				        	height: 65vh!important;">
-				          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-				            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-				            <ul class="d-flex list-unstyled mt-auto">
-				              <li class="me-auto" style="margin-top: 5px">
-				              	<a href="javascript:void(0)" class="button-links d-flex align-items-center dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
-				              		<i class="fa-solid fa-ellipsis button-links-icon"></i>
-				              	</a>
-									      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-eye"></i>&nbsp; {{ __('View') }}</li>
-									        </a>
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-pen-to-square"></i>&nbsp; {{ __('Edit') }}</li>
-									        </a>
-									        <a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-trash"></i>&nbsp; {{ __('Delete') }}</li>
-									        </a>
-									      </ul>
-				              </li>
-				              <li class="d-flex align-items-center">
-				                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-				                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-				              </li>
-				            </ul>
-				          </div>
-				        </div>
-				      </div>
-
-				      <div class="col">
-				        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates1.PNG') }});
-				        	height: 65vh!important;">
-				          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-				            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-				            <ul class="d-flex list-unstyled mt-auto">
-				              <li class="me-auto" style="margin-top: 5px">
-				              	<a href="javascript:void(0)" class="button-links d-flex align-items-center dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
-				              		<i class="fa-solid fa-ellipsis button-links-icon"></i>
-				              	</a>
-									      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-eye"></i>&nbsp; {{ __('View') }}</li>
-									        </a>
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-pen-to-square"></i>&nbsp; {{ __('Edit') }}</li>
-									        </a>
-									        <a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-trash"></i>&nbsp; {{ __('Delete') }}</li>
-									        </a>
-									      </ul>
-				              </li>
-				              <li class="d-flex align-items-center">
-				                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-				                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-				              </li>
-				            </ul>
-				          </div>
-				        </div>
-				      </div>
-
-				      <div class="col">
-				        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates6.PNG') }});
-				        	height: 65vh!important;">
-				          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-				            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-				            <ul class="d-flex list-unstyled mt-auto">
-				              <li class="me-auto" style="margin-top: 5px">
-				              	<a href="javascript:void(0)" class="button-links d-flex align-items-center dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
-				              		<i class="fa-solid fa-ellipsis button-links-icon"></i>
-				              	</a>
-									      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-eye"></i>&nbsp; {{ __('View') }}</li>
-									        </a>
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-pen-to-square"></i>&nbsp; {{ __('Edit') }}</li>
-									        </a>
-									        <a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-trash"></i>&nbsp; {{ __('Delete') }}</li>
-									        </a>
-									      </ul>
-				              </li>
-				              <li class="d-flex align-items-center">
-				                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-				                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-				              </li>
-				            </ul>
-				          </div>
-				        </div>
-				      </div>
-
-				      <div class="col">
-				        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates7.PNG') }});
-				        	height: 65vh!important;">
-				          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-				            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-				            <ul class="d-flex list-unstyled mt-auto">
-				              <li class="me-auto" style="margin-top: 5px">
-				              	<a href="javascript:void(0)" class="button-links d-flex align-items-center dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
-				              		<i class="fa-solid fa-ellipsis button-links-icon"></i>
-				              	</a>
-									      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-eye"></i>&nbsp; {{ __('View') }}</li>
-									        </a>
-									      	<a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-pen-to-square"></i>&nbsp; {{ __('Edit') }}</li>
-									        </a>
-									        <a class="dropdown-item" href="javascript:void(0)"><li>
-									        	<i class="fa-solid fa-trash"></i>&nbsp; {{ __('Delete') }}</li>
-									        </a>
-									      </ul>
-				              </li>
-				              <li class="d-flex align-items-center">
-				                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-				                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-				              </li>
-				            </ul>
-				          </div>
-				        </div>
-				      </div>
-			    	</div>
+						<div class="text-muted mt-3 d-flex align-items-center justify-content-center text-center">
+							<i class="fas fa-spinner fa-spin loading-spinner fs-4"></i>
+							<span class="fs-4">&nbsp;{{ __('Loading...') }}</span>
+						</div>
+						{{-- data fetch via ajax --}}
 					</div>
-
 
 					<nav aria-label="Page navigation example" class="float-end">
 					  <ul class="pagination">
@@ -254,6 +73,7 @@
 					</nav>
 				</div>
 			</div>
-		</div>
-	</section>
+		</x-container>
+	</x-section>
 </x-layout.admin>
+<script src="{{ asset('/wp-admin/themes/scripts/eventListener/candidate.js') }}" defer></script>

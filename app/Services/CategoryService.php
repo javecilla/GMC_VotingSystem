@@ -24,7 +24,7 @@ class CategoryService {
 		} catch (CreateDataException $e) {
 			return ['success' => false, 'message' => $e->getMessage()];
 		} catch (\Exception $e) {
-			return ['success' => false, 'message' => 'An error occurred during deletion.'];
+			return ['success' => false, 'message' => 'An error occurred during creation.'];
 		}
 	}
 

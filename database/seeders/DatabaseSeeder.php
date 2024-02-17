@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\AppVersion;
 use App\Models\Campus;
+use App\Models\Candidate;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\VotePoint;
@@ -20,5 +21,6 @@ class DatabaseSeeder extends Seeder {
 		Campus::factory()->create();
 		Category::factory()->create();
 		VotePoint::factory()->create();
+		Candidate::factory()->create();
 	}
 }

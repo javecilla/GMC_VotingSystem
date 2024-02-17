@@ -1,11 +1,11 @@
-<x-layout.admin title="Create Candidate">
+<x-layout.admin title="Show Candidate">
 	<x-slot name="version">{{ request()->route('version') }}</x-slot>
 	<x-section id="candidatesManagementContent" data-component="candidatesManagement">
 		<x-container>
 			<div class="votes-management-card card bg-white">
 				<div class="card-header">
-					<i class="fa-solid fa-user-plus fs-4"></i>&nbsp;
-					<label>{{ __("Create New Candidate") }}</label>
+					<i class="fa-solid fa-eye fs-4"></i>&nbsp;
+					<label>{{ __("Show Candidate") }}</label>
 					<a href="{{ route('candidates.index', ['version' => env('APP_VERSION')]) }}"
 						class="btn btn-light border-0 float-end">
 						<i class="fa-solid fa-arrow-left"></i> {{ __('Back') }}

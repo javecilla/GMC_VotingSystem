@@ -42,7 +42,7 @@
 		$(`.close-icon_${avid}`).addClass('d-none');
 		$(`.edit-icon_${avid}`).removeClass('d-none');
 		$(`.delete-icon_${avid}`).removeClass('d-none');
-		getAllApplicationVersions(APP_VERSION, CSRF_TOKEN);
+		getAllApplicationVersions(`/${APP_VERSION}/admin/configuration/app-versions/`, CSRF_TOKEN);
 	});
 
 	// Update Application Version [Name and Title] 

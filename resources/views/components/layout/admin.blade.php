@@ -76,6 +76,10 @@
 	        	<li><i class="fas fa-igloo"></i>&nbsp; <span>{{ __('Dashboard') }}</span></li>
 	        </a>
 
+	        <a href="#" class="nav-link"><li>
+	        	<i class="fas fa-sort-amount-up"></i>&nbsp; <span>{{ __('Candidates Ranking') }}</span>
+	        </li></a>
+
 	        <a href="{{ route('votes.index', ['version' => request()->route('version')]) }}"
 	        	class="nav-link {{ Str::contains(request()->getRequestUri(), '/manage/votes') ? 'active' : ''}}">
 	        	<li><i class="fas fa-database"></i>&nbsp; <span>{{ __('Votes Management') }}</span></li>
@@ -86,10 +90,6 @@
 	        	class="nav-link {{ Str::contains(request()->getRequestUri(), '/manage/candidates') ? 'active' : ''}}">
 	        	<li><i class="fas fa-users"></i>&nbsp; <span>{{ __('Candidate Management') }}</span></li>
 	        </a>
-
-	        <a href="#" class="nav-link"><li>
-	        	<i class="fas fa-sort-amount-up"></i>&nbsp; <span>{{ __('Candidates Ranking') }}</span>
-	        </li></a>
 	        <hr class="mb-3">
 
 	        <a href="#" class="nav-link"><li>
@@ -114,10 +114,6 @@
 			        <a class="dropdown-item active"
 			        	href="{{ route('dashboard.index', ['version' => env('APP_VERSION')]) }}"><li>
 			        	{{ env('APP_VERSION') }}</li>
-			        </a>
-			        <a class="dropdown-item"
-			        href="{{ route('dashboard.index', ['version' => 'v1.1']) }}"><li>
-			        	{{ __('v1.1') }}</li>
 			        </a>
 			      </ul>
 			    </div>
@@ -181,6 +177,7 @@
 
  	<script src="{{ asset('/wp-admin/themes/scripts/functions.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/helper.js') }}" defer></script>
+ 	<script src="{{ asset('/wp-admin/themes/scripts/validations.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/app.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/main.js') }}" defer></script>
 </body>

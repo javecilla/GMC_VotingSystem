@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\App\Admin\AppVersionController;
+use App\Http\Controllers\App\Admin\CampusController;
 use App\Http\Controllers\App\Admin\CandidatesController;
 use App\Http\Controllers\App\Admin\CategoryController;
 use App\Http\Controllers\App\Admin\ConfigurationController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\App\Admin\VotePointController;
 use App\Http\Controllers\App\Admin\VotesController;
 use App\Http\Controllers\App\Auth\LogoutController;
 use App\Http\Controllers\App\Auth\SessionController;
+use App\Http\Controllers\App\Guest\PageController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web'])->group(function () {
@@ -61,6 +63,26 @@ Route::middleware(['web'])->group(function () {
 						Route::patch('/{votePoint}/update', 'update');
 						Route::delete('/{votePoint}/destroy', 'destroy');
 					});
+
+					// School/Campus
+					Route::controller(CampusController::class)->prefix('campus')->group(function () {
+						Route::get('/', 'retrieve');
+						//Route::post('/store', 'store');
+						//Route::patch('/{campus}/update', 'update');
+						//Route::delete('/{campus}/destroy', 'destroy');
+					});
+				});
+
+				# Candidates Management
+				Route::controller(CandidatesController::class)
+					->prefix('manage/candidates')->group(function () {
+					Route::get('/', 'index')->name('candidates.index');
+					Route::get('/create', 'create')->name('candidates.create');
+					Route::post('/store', 'store');
+					Route::get('/retrieves', 'retrieves'); //get all
+					Route::get('/{candidate}/show', 'show')->name('candidates.show');
+					Route::get('/{candidate}/edit', 'edit')->name('candidates.edit');
+					Route::get('/{candidate}/retrieve', 'retrieve'); //get one
 				});
 
 				# Dashboard
@@ -71,11 +93,6 @@ Route::middleware(['web'])->group(function () {
 				Route::get('/manage/votes', [VotesController::class, 'index'])
 					->name('votes.index');
 
-				# Candidates Management
-				Route::get('/manage/candidates', [CandidatesController::class, 'index'])
-					->name('candidates.index');
-				Route::get('/manage/candidates/create', [CandidatesController::class, 'create'])
-					->name('candidates.create');
 			});
 
 			# Logout

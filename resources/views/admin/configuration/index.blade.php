@@ -1,10 +1,7 @@
 <x-layout.admin title="Configuration">
 	<x-slot name="version">{{ request()->route('version') }}</x-slot>
-	<section class="app-content"
-		id="configurationContent"
-		data-component="configuration"
-		data-app="{{ request()->route('version') }}">
-		<div class="container" data-aos="fade-in">
+	<x-section id="configurationContent" data-component="configuration">
+		<x-container>
 			{{-- Application Versioning --}}
 			<div id="applicationVersionConfig" class="configuration-card card">
 				<div class="card-header">
@@ -218,7 +215,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</section>
+		</x-container>
+	</x-section>
 </x-layout.admin>
-<script src="{{ asset('/wp-admin/themes/scripts/configuration/eventListener.js') }}"></script>
+<script src="{{ asset('/wp-admin/themes/scripts/eventListener/configuration.js') }}"></script>

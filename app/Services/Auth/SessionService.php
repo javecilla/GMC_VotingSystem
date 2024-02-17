@@ -10,7 +10,7 @@ class SessionService {
 
 	public function forget($request): array {
 		$lastActivity = $request->session()->get('last_activity');
-		$inactiveDuration = 600; // 600 seconds (10 minute) of inactivity
+		$inactiveDuration = 5000; // 600 seconds (10 minute) of inactivity
 
 		if ($lastActivity && now()->diffInSeconds($lastActivity) > $inactiveDuration) {
 			auth()->logout();

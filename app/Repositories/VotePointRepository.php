@@ -9,6 +9,7 @@ use App\Interfaces\IRepository;
 use App\Models\AppVersion;
 use App\Models\VotePoint;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class VotePointRepository implements IRepository {
 
@@ -23,7 +24,9 @@ class VotePointRepository implements IRepository {
 	}
 
 	# @Override
-	public function getOne(int $vpid): object {}
+	public function getOne(int $vpid): object {
+		return VotePoint::where('vpid', $vpid)->get();
+	}
 
 	# @Override
 	public function create(array $attributes): array {
@@ -31,10 +34,17 @@ class VotePointRepository implements IRepository {
 		$point = (int) $attributes['point'];
 
 		return DB::transaction(function () use ($attributes, $amount, $point) {
+			$file = $attributes['image'] ?? null;
+			if ($file instanceof \Illuminate\Http\UploadedFile  && $file->isValid()) {
+				$path = Storage::disk('public')->put('qrcode', $file);
+				$attributes['image'] = $path;
+			}
+
 			$created = VotePoint::query()->create([
 				'app_version_id' => data_get($attributes, 'app_version_id', null),
 				'amount' => $amount,
 				'point' => $point,
+				'image' => $attributes['image'],
 				'updated_at' => data_get($attributes, 'updated_at', null),
 			]);
 
@@ -49,18 +59,27 @@ class VotePointRepository implements IRepository {
 	# @Override
 	public function update(array $attributes): array {
 		$votePoint = $this->findVotePoint((int) $attributes['vpid']);
-		//format the number into decimal [200 => 200.00]
-		$amount = number_format((float) $attributes['amount'], 2, '.', '');
-		$point = (int) $attributes['point'];
 
-		return DB::transaction(function () use ($votePoint, $amount, $point) {
+		return DB::transaction(function () use ($votePoint, $attributes) {
+			//format the number into decimal [200 => 200.00]
+			$amount = number_format((float) $attributes['amount'], 2, '.', '');
+			$point = (int) $attributes['point'];
+			$file = $attributes['image'] ?? null;
+
+			if ($file instanceof \Illuminate\Http\UploadedFile  && $file->isValid()) {
+				$path = Storage::disk('public')->put('qrcode', $file);
+				$attributes['image'] = $path;
+			} elseif (!isset($attributes['image']) || $attributes['image'] === 'undefined' || $attributes['image'] === null) {
+				$attributes['image'] = $votePoint->image;
+			}
+
 			$updated = $votePoint->update([
 				'amount' => $amount,
 				'point' => $point,
-				'updated_at' => null,
+				'image' => data_get($attributes, 'image', $votePoint->image),
 			]);
 			if (!$updated) {
-				throw new UpdateDataException('Something went wrong! Failed to vote points');
+				throw new UpdateDataException('Something went wrong! Failed to update vote points');
 			}
 
 			return ['success' => true, 'message' => 'Vote points updated successfully.'];

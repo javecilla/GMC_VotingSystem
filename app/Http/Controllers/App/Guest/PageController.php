@@ -13,4 +13,8 @@ class PageController extends Controller {
 	public function index(Request $request) {
 		return view('guest.index');
 	}
+
+	public function show(Request $request) {
+		return view('guest.show');
+	}
 }

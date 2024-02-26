@@ -6,10 +6,12 @@
 				<div class="card-header">
 					<i class="fa-solid fa-user-plus fs-4"></i>&nbsp;
 					<label>{{ __("Create New Candidate") }}</label>
-					<a href="{{ route('candidates.index', ['version' => env('APP_VERSION')]) }}"
-						class="btn btn-light border-0 float-end">
-						<i class="fa-solid fa-arrow-left"></i> {{ __('Back') }}
-					</a>
+					<div class="float-end">
+						<a href="{{ route('candidates.index', ['version' => request()->route('version')]) }}"
+							class="btn btn-light border-0 ">
+							<i class="fa-solid fa-arrow-left"></i> {{ __('Back') }}
+						</a>
+					</div>
 				</div>
 				<div class="card-body">
 					<div class="container">
@@ -52,7 +54,7 @@
 							</div>
 							{{-- form --}}
 							<div class="col-md-7">
-								<form method="post" action="#" id="campusCreateForm" class="mt-3">
+								<form method="post" action="#" id="createCandidateForm" class="mt-3">
 								  <div class="row mb-3">
 								    <label for="candidateAppVersion" class="col-sm-2 col-form-label">
 								    	{{ __('Version') }}
@@ -143,4 +145,6 @@
 		</x-container>
 	</x-section>
 </x-layout.admin>
-<script src="{{ asset('/wp-admin/themes/scripts/eventListener/candidate.js') }}" defer></script>
+<script src="{{ asset('/wp-admin/themes/scripts/eventListener/candidate.js') }}"></script>
+<script src="{{ asset('/wp-admin/themes/scripts/functions/candidate.js') }}"></script>
+<script src="{{ asset('/wp-admin/themes/scripts/functions/configuration.js') }}"></script>

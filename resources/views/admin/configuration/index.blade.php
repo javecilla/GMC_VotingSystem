@@ -3,7 +3,8 @@
 	<x-section id="configurationContent" data-component="configuration">
 		<x-container>
 			{{-- Application Versioning --}}
-			<div id="applicationVersionConfig" class="configuration-card card">
+			<div id="indexUri" data-iurl="{{ route('configuration.index', request()->route('version')) }}"
+				class="configuration-card card">
 				<div class="card-header">
 					<i class="fa-solid fa-list-check fs-4"></i>&nbsp;
 					 <label>{{ __("Application") }}</label>
@@ -180,6 +181,21 @@
 											</div>
 										</div>
 									</div>
+									<div class="row mb-3">
+								  	<label class="col-sm-2 col-form-label"
+								  	style="cursor: pointer;">
+								  		<span id="imageLabel">{{ __('Upload') }}</span>
+								  		<small id="removeImageButton"class="d-none">
+								  			<i class="fa-solid fa-trash"></i> {{ __('Remove') }}
+								  		</small>
+								  	</label>
+								    <div class="col-sm-10 ">
+								    	<small class="text-muted">{{  __('Upload the qr code image for this vote points.') }}</small>
+								    	<input type="file" class="form-control imageFile" id="qrCodeImage"
+								    	accept="image/png, image/jpg, image/jpeg" />
+								    	<div class="invalid-feedback imageValidationFeedBack"></div>
+								    </div>
+								  </div>
 									<button type="button" id="createVotingPointsButton" class="btn btn-light w-100 btn-add">
 										{{ __('Add') }}
 				  					<i class="fas fa-spinner fa-spin loading-spinner d-none"></i>
@@ -219,3 +235,4 @@
 	</x-section>
 </x-layout.admin>
 <script src="{{ asset('/wp-admin/themes/scripts/eventListener/configuration.js') }}"></script>
+<script src="{{ asset('/wp-admin/themes/scripts/functions/configuration.js') }}"></script>

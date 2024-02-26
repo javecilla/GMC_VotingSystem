@@ -18,4 +18,23 @@
     "hideMethod": "fadeOut",
 	 	"positionClass": 'toast-bottom-right',
 	};
+
+	//tool tip
+  const tooltipTriggerList = $('[data-bs-toggle="tooltip"]');
+  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+  // wow animation
+  const wow = new WOW({
+    boxClass:     'wow',
+    animateClass: 'animated',
+    offset:       25,
+    mobile:       true,
+    live:         true
+  })
+
+  wow.init();
+
+
+
+  
 })(jQuery)

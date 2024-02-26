@@ -16,6 +16,7 @@ class VotePointUpdateRequest extends FormRequest {
 			'app_version_id' => 'required',
 			'amount' => 'required',
 			'point' => 'required',
+			'image' => '',
 		];
 	}
 }

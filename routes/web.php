@@ -6,6 +6,7 @@ use App\Http\Controllers\App\Admin\CandidatesController;
 use App\Http\Controllers\App\Admin\CategoryController;
 use App\Http\Controllers\App\Admin\ConfigurationController;
 use App\Http\Controllers\App\Admin\DashboardController;
+use App\Http\Controllers\App\Admin\TicketReportController;
 use App\Http\Controllers\App\Admin\VotePointController;
 use App\Http\Controllers\App\Admin\VotesController;
 use App\Http\Controllers\App\Auth\LogoutController;
@@ -21,8 +22,9 @@ Route::middleware(['web'])->group(function () {
 	*/
 	Route::middleware(['guest'])->group(function () {
 		Route::get('/', [PageController::class, 'main'])->name('main.page');
-		Route::prefix('testing-title-voting')->group(function () {
+		Route::prefix('{title}')->group(function () {
 			Route::get('/candidates', [PageController::class, 'index'])->name('index.page');
+			Route::get('/{candidate}/candidates', [PageController::class, 'show'])->name('show.page');
 		});
 	});
 
@@ -79,20 +81,54 @@ Route::middleware(['web'])->group(function () {
 					Route::get('/', 'index')->name('candidates.index');
 					Route::get('/create', 'create')->name('candidates.create');
 					Route::post('/store', 'store');
-					Route::get('/retrieves', 'retrieves'); //get all
+					Route::get('/load/{limit}/offset/{offset}', 'loadMoreData');
+					Route::get('/retrieves', 'retrieves');
+					Route::get('/{query}/search', 'search');
+					Route::get('/{ctid}/category', 'category');
 					Route::get('/{candidate}/show', 'show')->name('candidates.show');
+					Route::get('/{candidate}/retrieve', 'retrieve');
 					Route::get('/{candidate}/edit', 'edit')->name('candidates.edit');
-					Route::get('/{candidate}/retrieve', 'retrieve'); //get one
+					Route::patch('/{candidate}/update', 'update');
+					Route::delete('/{candidate}/destroy', 'destroy');
+					Route::get('/candidates/ranking/overall/{limit}', 'getOverallRanking');
+					Route::get('/candidates/ranking/category/{limit}', 'getCategoryRanking');
 				});
+				Route::get('/candidates/ranking', [CandidatesController::class, 'ranking'])
+					->name('candidates.ranking');
 
 				# Dashboard
-				Route::get('/dashboard', [DashboardController::class, 'index'])
-					->name('dashboard.index');
+				Route::controller(DashboardController::class)
+					->prefix('dashboard')->group(function () {
+					Route::get('/', 'index')->name('dashboard.index');
+					Route::get('/most/votes/candidates/limit/{limit}', 'getMostVotes');
+					Route::get('/count/all', 'counts');
+					Route::get('/load/limit/{limit}/offset/{offset}', 'retrievesLimit');
+					Route::get('/count/reports', 'counts');
+				});
 
 				# Votes Management
-				Route::get('/manage/votes', [VotesController::class, 'index'])
-					->name('votes.index');
+				Route::controller(VotesController::class)
+					->prefix('/manage/votes')->group(function () {
+					Route::get('/', 'index')->name('votes.index');
+					Route::get('/get/all', 'retrieves');
+					Route::get('/load/{limit}/offset/{offset}', 'loadMoreData');
+					Route::get('/{vid}/get', 'retrieve');
+					Route::get('/count/all', 'counts');
+					Route::patch('/update/status', 'updateByStatus');
+					Route::get('/get/all/{status}/status', 'getByStatus');
+					Route::get('/get/all/{search}/search', 'getBySearch');
+					Route::post('/store', 'store');
+					Route::patch('/update', 'update');
+					Route::delete('/{vid}/destroy', 'destroy');
+				});
 
+				#Ticket Report
+				Route::controller(TicketReportController::class)
+					->prefix('/manage/ticket/reports')->group(function () {
+					Route::get('/', 'index')->name('reports.index');
+					Route::get('/load/{limit}/offset/{offset}', 'loadMoreData');
+					Route::get('/count/all', 'counts');
+				});
 			});
 
 			# Logout

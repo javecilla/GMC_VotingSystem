@@ -35,9 +35,80 @@ const isValidImageFile = (file) => {
 	}
 };
 
+const removeEditedImage = (file) => {
+	$('.removeImageButton').addClass('d-none');
+	$('#imageLabel').removeClass('d-none');	
+	$('#cardCandidateImage').css('background-image', `url(${file})`);
+	$('#candidateImage').val(""); 
+};
+
+const uploadButtonIcon = (vpid) => {
+  $(`.imageFileUpload_${vpid}`).click();
+};
+
 // Function to validate email if valid
 const isValidEmail = (email) => {
 	const REGX_EMAIL = /^([a-zA-z]+)([0-9]+)?(@)([a-zA-Z]{5,10}(.)([a-zA-Z]+))$/i;
 	return (REGX_EMAIL.test(email)) ? true : false;
 };
 
+const formatDate = (timestamp) => {
+	const date = new Date(timestamp);
+	const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+	const month = months[date.getMonth()];
+	const day = date.getDate();
+	const year = date.getFullYear();
+	let hour = date.getHours();
+	const minute = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
+  const period = hour >= 12 ? 'PM' : 'AM';
+  // Convert hour from 24-hour to 12-hour format
+  hour = hour % 12 || 12;
+  return `${month} ${day}, ${year} - ${hour}:${minute} ${period}`;
+};
+
+const boldLastPart = (referrenceNo) => {
+	let boldPart = referrenceNo.slice(-4);
+	let normalPart = referrenceNo.slice(0, -4);
+
+	return `${normalPart}<b>${boldPart}`;
+};
+
+const writeURI = (paramsName, requestQuery) => {
+	const currentUrl = window.location.href.split('?')[0];
+	const newUrl = currentUrl + (requestQuery ? '?' +paramsName+ '=' + encodeURIComponent(requestQuery) : '');
+	window.history.replaceState(null, null, newUrl);
+};
+
+const checkFormData = (formData) => {
+  //check data form field value
+  var formDataArray = [];
+  formData.forEach((value, key) => {
+    formDataArray.push({ [key]: value });
+  });
+  console.log(formDataArray);
+};
+
+const generateReferrenceNo = () => {
+  let referrenceNumber = '';
+  for (let i = 0; i < 9; i++) {
+    referrenceNumber += Math.floor(Math.random() * 10); 
+  }
+  return `${referrenceNumber}0000`; 
+};
+
+const generatePhoneNumber = () => {
+  let phoneNumber = '';
+  for (let i = 0; i < 9; i++) {
+    phoneNumber += Math.floor(Math.random() * 10); 
+  }
+  return `09${phoneNumber}`; 
+};
+
+const formatTextEllipsis = (text, length) => {
+ 	let words = text.split(' ');
+  if (words.length > length) {
+    text = words.slice(0, length).join(' ') + ' ...';
+  }
+
+  return text;
+};

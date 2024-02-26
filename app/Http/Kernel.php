@@ -52,6 +52,10 @@ class Kernel extends HttpKernel {
 			\App\Http\Middleware\ValidateAppVersion::class,
 			\App\Http\Middleware\Admin::class,
 		],
+
+		'guest' => [
+			//\App\Http\Middleware\ValidateAppName::class,
+		],
 	];
 
 	/**

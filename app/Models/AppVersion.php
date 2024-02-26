@@ -29,4 +29,14 @@ class AppVersion extends Model {
 	public function votePoint() {
 		return $this->hasMany(VotePoint::class, 'app_version_id', 'avid');
 	}
+
+	// Make this 'AppVersion' model have relationship to 'Vote' model
+	public function vote() {
+		return $this->hasMany(Vote::class, 'app_version_id', 'avid');
+	}
+
+	// Make this 'AppVersion' model have relationship to 'TicketReport' model
+	public function ticketReport() {
+		return $this->hasMany(TicketReport::class, 'app_version_id', 'avid');
+	}
 }

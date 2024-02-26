@@ -17,9 +17,13 @@ class VotePointService {
 		return $this->repository->getAll($versionName);
 	}
 
+	public function getOneVotePoints(int $votePointsId): object {
+		return $this->repository->getOne($votePointsId);
+	}
+
 	public function createVotePoints(array $data): array {
 		try {
-			$filteredData = Arr::only($data, ['app_version_id', 'amount', 'point']);
+			$filteredData = Arr::only($data, ['app_version_id', 'amount', 'point', 'image']);
 			return $this->repository->create($filteredData);
 		} catch (ModelNotFoundException $e) {
 			return ['success' => false, 'message' => 'Vote Point not found'];
@@ -41,7 +45,7 @@ class VotePointService {
 				return ['success' => false, 'message' => 'Cannot duplicate vote points or amount.', 'type' => 'warning'];
 			}
 
-			$filteredData = Arr::only($data, ['vpid', 'amount', 'point']);
+			$filteredData = Arr::only($data, ['vpid', 'amount', 'point', 'image']);
 			return $this->repository->update($filteredData);
 		} catch (ModelNotFoundException $e) {
 			return ['success' => false, 'message' => 'Vote Point not found'];

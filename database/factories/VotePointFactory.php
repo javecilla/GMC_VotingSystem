@@ -14,6 +14,7 @@ class VotePointFactory extends Factory {
 			'app_version_id' => 1,
 			'amount' => 100.00,
 			'point' => 50,
+			'image' => 'qrcode/lSEfnaCLORYuv0qWSW5QHUlSY8juTtJFcE1UFiQs.png',
 			'created_at' => now(),
 			'updated_at' => null,
 		];

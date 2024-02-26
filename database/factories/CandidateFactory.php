@@ -22,7 +22,7 @@ class CandidateFactory extends Factory {
 			'candidate_no' => '01',
 			'name' => 'Zeo Natad',
 			'motto_description' => null,
-			'image' => 'imagetest.png',
+			'image' => 'candidates/eir82krBOcDXWnqkHwnpvH4WAjEsRwJDp2dRx7mp.jpg',
 			'created_at' => NOW(),
 			'updated_at' => null,
 		];

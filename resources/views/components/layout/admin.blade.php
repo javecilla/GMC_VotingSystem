@@ -45,9 +45,6 @@
 	<link rel="stylesheet" href="{{ asset('/wp-admin/themes/stylesheets/sidebar.css') }}" defer/>
 	<link rel="stylesheet" href="{{ asset('/wp-admin/themes/stylesheets/main.css') }}" defer/>
 	<script src="{{ asset('/wp-content/plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
-
-
-
 </head>
 <body class="app-body" id="body">
 	<!-- ======= Mobile nav toggle button ======= -->
@@ -76,7 +73,7 @@
 	        	<li><i class="fas fa-igloo"></i>&nbsp; <span>{{ __('Dashboard') }}</span></li>
 	        </a>
 
-	        <a href="#" class="nav-link"><li>
+	        <a href="{{ route('candidates.ranking', ['version' => request()->route('version')]) }}" class="nav-link {{ Str::contains(request()->getRequestUri(), '/ranking') ? 'active' : ''}}"><li>
 	        	<i class="fas fa-sort-amount-up"></i>&nbsp; <span>{{ __('Candidates Ranking') }}</span>
 	        </li></a>
 
@@ -92,9 +89,12 @@
 	        </a>
 	        <hr class="mb-3">
 
-	        <a href="#" class="nav-link"><li>
+	        <a href="{{ route('reports.index', request()->route('version')) }}"
+	         class="nav-link {{ Str::contains(request()->getRequestUri(), '/manage/ticket/reports') ? 'active' : ''}}"><li>
 	        	<i class="fa-solid fa-bug"></i>&nbsp; <span>{{ __('Ticket Report') }}</span>
-	        	<span class="report-badge">5</span> {{--active--}}
+	        	<span class="report-badge {{ Str::contains(request()->getRequestUri(), '/manage/ticket/reports') ? 'active' : ''}}">
+	        		<i class="fas fa-spinner fa-spin" style="font-size: 10px;"></i>
+	        	</span>
 	        </li></a>
 
 	        <a
@@ -112,7 +112,7 @@
 			      </a>
 			      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
 			        <a class="dropdown-item active"
-			        	href="{{ route('dashboard.index', ['version' => env('APP_VERSION')]) }}"><li>
+			        	href="{{ route('dashboard.index', ['version' => request()->route('version')]) }}"><li>
 			        	{{ env('APP_VERSION') }}</li>
 			        </a>
 			      </ul>
@@ -175,8 +175,10 @@
  	<script src="{{ asset('/wp-admin/plugins/typed.js/typed.min.js') }}"></script>
  	<script src="{{ asset('/wp-admin/plugins/waypoints/noframework.waypoints.js') }}"></script>
 
- 	<script src="{{ asset('/wp-admin/themes/scripts/functions.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/helper.js') }}" defer></script>
+ 	<script src="{{ asset('/wp-admin/themes/scripts/functions/auth.js') }}" defer></script>
+ 	<script src="{{ asset('/wp-admin/themes/scripts/functions/reports.js') }}"></script>
+ 	<script src="{{ asset('/wp-admin/themes/scripts/eventListener/auth.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/validations.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/app.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/main.js') }}" defer></script>

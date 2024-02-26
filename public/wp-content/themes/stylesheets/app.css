@@ -497,7 +497,7 @@ background: #ff0000;
 
 /* Declare heights because of positioning of img element */
 .carousel-item {
-  height: 38rem;
+  height: 35rem;
   overflow: hidden;
   position: relative;
 } .carousel-image {
@@ -603,6 +603,7 @@ background: #ff0000;
 .search_form {
   display: flex;
   align-items: center;
+  margin-top: 30px;
 }
 
 .search_container {
@@ -611,7 +612,7 @@ background: #ff0000;
   align-items: center;
   margin-right: 10px;
   width: 100%;
-}
+} 
 
 .search_container span {
   position: absolute;
@@ -628,18 +629,34 @@ background: #ff0000;
   background: rgba(255, 255, 255, 0.2)!important;
   border-radius: 4px;
 }
-.search_icon {
+.back_icon, .filter_icon {
   font-size: 25px!important;
   opacity: .8;
   background: transparent!important;
   border: none!important;
+}
+
+@media (max-width: 1000px) {
+  .back_icon, .filter_icon {
+    font-size: 23px!important;
+  }
+}
+@media (max-width: 800px) {
+  .back_icon, .filter_icon {
+    font-size: 20px!important;
+  }
+}
+@media (max-width: 600px) {
+  .back_icon, .filter_icon {
+    font-size: 20px!important;
+  }
 }
 .search_input {
   width: 100%;
   height: 50px;
   border: none;
   border-bottom: 2px solid var(--app-dirty-white);
-  margin-bottom: 10px;
+  margin-bottom: -10px;
   margin-left: 10px;
   padding-right: 20px!important; 
   background: transparent!important;
@@ -657,6 +674,23 @@ background: #ff0000;
   text-indent: 10px;
   font-size: 19px;
 } 
+@media (max-width: 1000px) {
+  .search_input::placeholder {
+    font-size: 18px;
+  }
+}
+@media (max-width: 800px) {
+  .search_input::placeholder {
+    font-size: 16px;
+  }
+}
+@media (max-width: 600px) {
+  .search_input::placeholder {
+    text-indent: 1px;
+    font-size: 14px;
+  }
+}
+
 .filter-item {
   font-size: 18px;
   font-weight: 600;
@@ -677,4 +711,110 @@ background: #ff0000;
   border: 0;
   background-color: #d3d4d5
 } 
+.dropdown-item.active {
+  color: var(--bs-dropdown-link-hover-color);
+  background-color: var(--bs-dropdown-link-hover-bg);
+}
+#cardOverlay {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  color-stop(55%, rgba(0, 0, 0, .6)), to(rgba(0, 0, 0, 2)));
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .1) 80%, rgba(0, 0, 0, .9) 100%)!important;
+  background-blend-mode: multiply;
+}
 
+/** progres bar */
+#castVoteForm {
+  position: relative;
+  margin-top: 20px;
+}
+
+#progressbar {
+  text-align: center;
+  margin-bottom: 30px;
+  overflow: hidden;
+  color: lightgrey;
+}
+
+#progressbar .active {
+    color: #000000;
+    opacity: .9;
+}
+
+#progressbar li {
+    list-style-type: none;
+    font-size: 12px;
+    width: 40%;
+    float: start!important;
+    position: relative;
+    z-index: 1;
+}
+
+/*Icons in the ProgressBar*/
+#progressbar #fillUpForm:before {
+    font-family: FontAwesome;
+    content: "\f31c";
+}
+
+#progressbar #referrenceNo:before {
+    font-family: FontAwesome;
+    content: "\f023";
+}
+
+#progressbar #finish:before {
+    font-family: FontAwesome;
+    content: "\f058";
+}
+
+/*ProgressBar before any progress*/
+#progressbar li:before {
+    width: 50px;
+    height: 50px;
+    line-height: 45px;
+    display: block;
+    font-size: 18px;
+    color: grey;
+    background: lightgray;
+    border-radius: 50%;
+    margin: 0 auto 10px auto;
+    padding: 2px;
+    position: relative;
+    z-index: 4!important;
+}
+
+/*ProgressBar connectors*/
+#progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 2px;
+    background: lightgray;
+    position: absolute;
+    left: 0;
+    top: 25px;
+    z-index: 1;
+}
+
+/*Color number of the step and the connector before it*/
+#progressbar li.active:before, #progressbar li.active:after {
+  color: #f3f3f3;
+  background: linear-gradient(to right, var(--app-dark-blue), var(--app-light-blue))!important; 
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.c-vote-points-info { padding: 50px!important; } 
+.c-vote-points-label-text {
+  font-family: var(--app-font-poppins); 
+  font-size: 25px;
+  font-weight: bolder;
+} .c-vote-points-sub-text {
+  font-family: var(--app-font-roboto);  
+  font-size: 25px;
+  color: #0B214A;
+}
+.c-vote-points-header-title {
+  font-family: var(--app-font-poppins); 
+  font-size: 72px;
+}

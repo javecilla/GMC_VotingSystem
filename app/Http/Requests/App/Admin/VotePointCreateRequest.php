@@ -30,6 +30,7 @@ class VotePointCreateRequest extends FormRequest {
 						->where('point', $this->point);
 				}),
 			],
+			'image' => 'required|image|mimes:jpeg,png,jpg|max:5120',
 		];
 	}
 

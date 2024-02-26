@@ -1,6 +1,6 @@
-(function($) {
-	"use-strict";
-
+const APP_VERSION = $('.app-content').data('app');
+const CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+	
 	updateTime('#time'); // Update time on page load
 
   // Update time every second at @Top Navigation Bar
@@ -9,11 +9,12 @@
   }, 1000);
 
   setInterval(function() {	
-    checkUserSession(
-    	$('meta[name="app-version"]').attr('content'),
-    	$('meta[name="csrf-token"]').attr('content')
-    );
+    checkUserSession();
   }, 10000);
+
+  setTimeout(function() {
+  	getTotalNotFixedTicketReports();
+  }, 1000);
 
 
 	// toastr config style
@@ -35,11 +36,3 @@
 	  "hideMethod": "fadeOut",
 		"positionClass": 'toast-bottom-right',
 	};
-
-	$(document).on('click', '#logoutButton', function() {
-		const appVersion = $(this).data('version');
-		const userId = $(this).data('uid');
-		const csrfToken = $(this).data('csrf');
-		logoutUser(appVersion, userId, csrfToken);
-	});	
-})(jQuery)

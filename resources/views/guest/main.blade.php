@@ -18,7 +18,7 @@
 	      <a href="#button" class="h-button btn btn-primary gap-3">
 	        {{ __('Read More About This Event') }}
 	      </a>
-	      <a href="{{ route('index.page') }}" class="h-button btn btn-primary">
+	      <a href="{{ route('index.page', Str::slug(env('APP_VOTING_NAME'))) }}" class="h-button btn btn-primary">
 	       	{{ __('Cast Your Vote') }} <i class="fa-solid fa-arrow-right"></i>
 	      </a>
 	    </div>
@@ -29,7 +29,7 @@
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="tracker-svg">
 		  <path fill="#fff" fill-opacity="1" d="M0,192L60,186.7C120,181,240,171,360,149.3C480,128,600,96,720,106.7C840,117,960,171,1080,181.3C1200,192,1320,160,1380,144L1440,128L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path>
 		</svg>
-		<div class="container px-4 py-5 tracker-container">
+		<div class="container px-3 py-5 tracker-container">
 			<div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
 	      <div class="feature col">
 	      	<div class="card p-5 border-0 shadow rounded-4 wow fadeInUp">
@@ -38,8 +38,7 @@
 		        </div>
 		        <h3 class="fs-2 h-sub-text">{{ __('Page Views:') }} <span>0</span></h3>
 		        <p class="tracker-description">
-		        	{{ __('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-		        	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.') }}
+		        	{{ __('Stay updated with the page views on the Golden Minds Colleges Voting System.') }}
 		        </p>
 	      	</div>
 	      </div>
@@ -50,8 +49,7 @@
 		        </div>
 		        <h3 class="fs-2 h-sub-text">{{ __('Total Voters:') }} <span>0</span></h3>
 		        <p class="tracker-description">
-		        	{{ __('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-		        	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.') }}
+		        	{{ __('Track the total number of voters participating in the Golden Minds Colleges - Voting System.') }}
 		        </p>
 	        </div>
 	      </div>
@@ -69,12 +67,17 @@
 	      	<label class="gradient-blue-text h-sub-text fw-bold">{{ __('How to Vote?') }}</label>
 	        <h1 class="sub-header-title lh-1 mb-3">{{ __('Navigating the Voting Process') }}</h1>
 	        <p class="description-text-htv wow fadeInUp">
-	        	{{ __('Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-	        	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-	        	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-	        	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-	        	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-	        	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.') }}
+	        	<small class="text-justify">
+					For a smooth and precise voting experience, kindly adhere to the following guidelines:
+					<ol>
+						<li><b>Choose Payment Amount</b>: Begin by selecting the desired payment amount.</li>
+						<li><b>Scan QR Code</b>: Scan the provided QR code with your device's camera.</li>
+						<li><b>Enter Refference Number</b>: Enter the reference number from GCash.</li>
+						<li><b>Enter Email & Phone Number</b>: Enter your active email address and phone number (This use by admin contact you incase of emergency)</li>
+						<li><b>Submit Vote</b>: Click the "Submit Vote" button to confirm.</li>
+					</ol>
+					Your cooperation in following these steps ensures a seamless voting process.
+				</small>
 	        </p>
 	      </div>
 	      <div class="col-10 col-sm-8 col-lg-6">

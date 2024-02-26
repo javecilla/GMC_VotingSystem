@@ -22,6 +22,7 @@ return new class extends Migration {
 			//'amount' can store up to 10 digits with 2 decimal places.
 			$table->decimal('amount', 10, 2); //1000, 500, 200, 100
 			$table->integer('point'); //700, 500, 150, 50
+			$table->text('image')->nullable();
 			$table->timestamps();
 
 			// unique constraint for combination of app_version_id, amount, and point

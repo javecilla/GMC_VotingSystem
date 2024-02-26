@@ -32,4 +32,9 @@ class Candidate extends Model {
 	public function category() {
 		return $this->belongsTo(Category::class, 'category_id', 'ctid');
 	}
+
+	// Make this 'Candidate' model have relationship to 'Vote' model
+	public function vote() {
+		return $this->hasMany(Vote::class, 'candidate_id', 'cdid');
+	}
 }

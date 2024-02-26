@@ -3,9 +3,12 @@
 namespace App\Repositories;
 
 use App\Exceptions\App\Admin\CreateDataException;
+use App\Exceptions\App\Admin\DeleteDataException;
+use App\Exceptions\App\Admin\UpdateDataException;
 use App\Interfaces\IRepository;
 use App\Models\AppVersion;
 use App\Models\Candidate;
+use App\Models\Vote;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,15 +16,105 @@ class CandidateRepository implements IRepository {
 
 	public function getAll(String $appVersionName = ""): object {
 		$appVersion = AppVersion::where('name', $appVersionName)->first();
+		$candidates = Candidate::where('app_version_id', $appVersion->avid)
+			->orderBy('created_at', 'desc')
+			->get();
+
+		return $candidates;
+	}
+
+	public function loadMoreData(String $appVersionName, int $limit, int $offset): object {
+		$appVersion = AppVersion::where('name', $appVersionName)->first();
+		$candidates = Candidate::where('app_version_id', $appVersion->avid)
+			->orderBy('created_at', 'desc')
+			->skip($offset)
+			->take($limit)
+			->get();
+
+		return $candidates;
+	}
+
+	public function filterSearch(String $appVersionName, String $searchQuery): object {
+		$appVersion = AppVersion::where('name', $appVersionName)->first();
+
 		if ($appVersion) {
-			return Candidate::where('app_version_id', $appVersion->avid)->get();
+			$query = Candidate::where('app_version_id', $appVersion->avid)
+				->where(function ($query) use ($searchQuery) {
+					$query->where('name', 'like', '%' . $searchQuery . '%')
+						->orWhere('candidate_no', 'like', '%' . $searchQuery . '%');
+				});
+
+			// Return candidates
+			return $query->get();
+		} else {
+			// Return an empty collection if app version is not found
+			return collect();
+		}
+	}
+
+	public function getByCategory(String $appVersionName, int $categoryId): object {
+		$appVersion = AppVersion::where('name', $appVersionName)->first();
+		if ($appVersion) {
+			return Candidate::where('app_version_id', $appVersion->avid)
+				->where('category_id', $categoryId)
+				->orderBy('created_at', 'desc')->get();
 		} else {
 			return Candidate::all();
 		}
 	}
 
 	public function getOne(int $candidateId): object {
-		return Candidate::where('cdid', $candidateId)->get();
+		// get information for a single candidate
+		$candidate = Candidate::with(['appVersion', 'campus', 'category'])
+			->where('cdid', $candidateId)
+			->first();
+
+		// get all votes records for this candidates (verified|pending|spam)
+		$votes = Vote::with(['candidate', 'votePoint'])->where('candidate_id', $candidate->cdid)->get();
+
+		// calculate the total votes of this candidate (only verified lang will count)
+		$totalVotes = Vote::where('candidate_id', $candidate->cdid)
+			->where('status', 0)
+			->count();
+
+		// calculate the total amount of this candidate (only verified lang will count)
+		$totalAmount = Vote::where('candidate_id', $candidate->cdid)
+			->where('status', 0)
+			->join('vote_points', 'votes.vote_points_id', '=', 'vote_points.vpid')
+			->sum('vote_points.amount');
+
+		// calculate the total vote points of this candidates (only if is verfied lang)
+		$totalVotePoints = Vote::where('candidate_id', $candidate->cdid)
+			->where('status', 0)
+			->join('vote_points', 'votes.vote_points_id', '=', 'vote_points.vpid')
+			->sum('vote_points.point');
+
+		// calculate the total pending vote of this candidates
+		$totalPendingVotes = Vote::where('candidate_id', $candidate->cdid)
+			->where('status', 1)
+			->count();
+
+		// calculate the total spam vote of this candidates
+		$totalSpamVotes = Vote::where('candidate_id', $candidate->cdid)
+			->where('status', 2)
+			->count();
+
+		// calculate the all total vote of this candidates (verified|pending|spam)
+		$totalOfAllVotes = Vote::where('candidate_id', $candidate->cdid)
+			->count();
+
+		// object para i hold lahat ng information about candidates
+		$result = new \stdClass();
+		$result->candidate = $candidate;
+		$result->votes = $votes;
+		$result->totalVotes = $totalVotes;
+		$result->totalAmount = $totalAmount;
+		$result->totalVotePoints = $totalVotePoints;
+		$result->totalPendingVotes = $totalPendingVotes;
+		$result->totalSpamVotes = $totalSpamVotes;
+		$result->totalOfAllVotes = $totalOfAllVotes;
+		// \Illuminate\Support\Facades\Log::info($result);
+		return $result;
 	}
 
 	public function create(array $attributes): array {
@@ -52,6 +145,62 @@ class CandidateRepository implements IRepository {
 		});
 	}
 
-	public function update(array $attributes): array {}
-	public function delete(int $id): array {}
+	public function update(array $attributes): array {
+		$candidate = $this->findCandidate($attributes['cdid']);
+
+		return DB::transaction(function () use ($candidate, $attributes) {
+			$file = $attributes['image'] ?? null;
+			$scid = $attributes['school_campus_id'] ?? $candidate->school_campus_id;
+			$avid = $attributes['app_version_id'] ?? $candidate->app_version_id;
+			$ctid = $attributes['category_id'] ?? $candidate->category_id;
+
+			if ($file instanceof \Illuminate\Http\UploadedFile  && $file->isValid()) {
+				$path = Storage::disk('public')->put('candidates', $file);
+				$attributes['image'] = $path;
+			}
+			// If no new image is provided or the image data is 'undefined' or null
+			elseif (!isset($attributes['image']) || $attributes['image'] === 'undefined' || $attributes['image'] === null) {
+				$attributes['image'] = $candidate->image;
+			}
+
+			$updated = $candidate->update([
+				'app_version_id' => $avid,
+				'school_campus_id' => $scid,
+				'category_id' => $ctid,
+				'candidate_no' => data_get($attributes, 'candidate_no', $candidate->candidate_no),
+				'name' => data_get($attributes, 'name', $candidate->name),
+				'motto_description' => data_get($attributes, 'motto_description', $candidate->motto_description),
+				'image' => data_get($attributes, 'image', $candidate->image),
+			]);
+
+			if (!$updated) {
+				throw new UpdateDataException('Something went wrong! Failed to candidate');
+			}
+
+			return ['success' => true, 'message' => 'Candidate updated successfully.'];
+		});
+	}
+
+	public function delete(int $cdid): array {
+		$candidate = $this->findCandidate($cdid);
+		return DB::transaction(function () use ($candidate) {
+			$deleted = $candidate->delete();
+			if (!$deleted) {
+				throw new DeleteDataException('Something went wrong! Failed to delete candidate');
+			}
+
+			return ['success' => true, 'message' => 'Candidate deleted successfully'];
+		});
+	}
+
+	public function nameExists(string $name, int $avid, int $cdid): bool {
+		return Candidate::where('name', $name)
+			->where('app_version_id', $avid)
+			->where('cdid', '<>', $cdid)
+			->exists();
+	}
+
+	public function findCandidate(int $cdid): Candidate {
+		return Candidate::findOrFail($cdid);
+	}
 }

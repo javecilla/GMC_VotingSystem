@@ -56,260 +56,164 @@
 
 	<section class="bg-white" style="margin-top: -100px;">
 		<div class="container">
-			<div id="guideLine" class="py-5">
-				<div class="alert alert-primary alert-dismissible fade show" role="alert">
-				  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="bi flex-shrink-0 me-2"
-				    aria-label="Info:" width="20"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM169.8 165.3c7.9-22.3 29.1-37.3 52.8-37.3h58.3c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24V250.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1H222.6c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z" fill="currentColor"/></svg>
-				  </svg>
-  	  		<h4 class="alert-heading"><strong>Important Notice:</strong></h4>
-				  <p>
-				  	The online voting for Golden Minds Colleges' Lakan, Lakambini at Lakandyosa 2023 will end on September 29 at 11:59 PM</strong><br/><br/>Following the deadline, the voting system will be locked and will no longer accept any votes. We encourage you to cast your votes in advance to prevent any inconvenience. If you have any concerns or require clarification regarding your votes, please reach out to the vote administrators before the online voting deadline
-				  </p>
-				  <hr>
-				  <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
-				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-				</div>
-			</div>
-			<div id="filterTools">
-				<form action="{{ route('index.page') }}" method="GET" class="search_form" id="searchForm">
+			<div id="filterTools" class="py-5">
+	      <form action="{{ route('index.page', Str::slug(env('APP_VOTING_NAME'))) }}" method="GET" class="search_form" id="searchForm">
 					<div class="search_container">
+						<a href="{{ route('main.page') }}" class="btn btn-light rounded-3">
+							<i class="fa-solid fa-arrow-left back_icon"></i>
+		  			</a>
 						<input type="search" class="search_input" name="search"
 						  placeholder="Search candidate name and hit enter or click search button icon"
 						  autocomplete="search"
 						  value="{{ (isset($_GET['search'])) ? $_GET['search'] : ''}}"
 						/>
-						<button type="submit" id="searchBtn">
-		  				<i class="fa-solid fa-magnifying-glass search_icon"></i>
+						<button type="button" class="dropdown-toggle btn btn-light rounded-3"
+							data-bs-toggle="dropdown" aria-expanded="false">
+		  				<i class="fa-solid fa-filter filter_icon"></i>
 		  			</button>
+		  			<div id="dataListOfCategoriesBody">
+
+		  			</div>
+
 					</div>
 				</form>
-				<div class="d-flex justify-content-center align-items-center mb-4">
-		      <div class="btn-group float-end">
-		        <a href="{{ route('main.page') }}" class="filter-item btn btn-light back-button">
-				      <i class="fa-solid fa-arrow-left"></i> {{ __('Back') }}
-				    </a>
-				    <a href="#" class="filter-item btn btn-light active">
-				      {{ __('All Candidates') }}
-				    </a>
-		        <a href="#" class="filter-item btn btn-light">
-				      {{ __('Category 1') }}
-				    </a>
-				    <a href="#" class="filter-item btn btn-light">
-				      {{ __('Category 2') }}
-				    </a>
-		      </div>
-	      </div>
 			</div>
 
-			<div id="dataList">
-				<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-		      <div class="col">
-		        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates8.PNG') }});
-		        	height: 65vh!important;">
-		          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-		            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-		            <ul class="d-flex list-unstyled mt-auto">
-		              <li class="me-auto" style="margin-top: 5px">
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Copy link and share">
-		              		<i class="fa-solid fa-share-nodes button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="View more information">
-		              		<i class="fa-solid fa-eye button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Cast vote for this candidate">
-		              		<i class="fa-solid fa-heart button-links-icon"></i>
-		              	</a>
-		              </li>
-		              <li class="d-flex align-items-center me-3">
-		                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-		                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-		              </li>
-		            </ul>
-		          </div>
-		        </div>
-		      </div>
-		      <div class="col">
-		        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates4.PNG') }});
-		        	height: 65vh!important;">
-		          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-		            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-		            <ul class="d-flex list-unstyled mt-auto">
-		              <li class="me-auto" style="margin-top: 5px">
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Copy link and share">
-		              		<i class="fa-solid fa-share-nodes button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="View more information">
-		              		<i class="fa-solid fa-eye button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Cast vote for this candidate">
-		              		<i class="fa-solid fa-heart button-links-icon"></i>
-		              	</a>
-		              </li>
-		              <li class="d-flex align-items-center me-3">
-		                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-		                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-		              </li>
-		            </ul>
-		          </div>
-		        </div>
-		      </div>
-		      <div class="col">
-		        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates3.PNG') }});
-		        	height: 65vh!important;">
-		          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-		            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-		            <ul class="d-flex list-unstyled mt-auto">
-		              <li class="me-auto" style="margin-top: 5px">
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Copy link and share">
-		              		<i class="fa-solid fa-share-nodes button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="View more information">
-		              		<i class="fa-solid fa-eye button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Cast vote for this candidate">
-		              		<i class="fa-solid fa-heart button-links-icon"></i>
-		              	</a>
-		              </li>
-		              <li class="d-flex align-items-center me-3">
-		                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-		                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-		              </li>
-		            </ul>
-		          </div>
-		        </div>
-		      </div>
-		      <div class="col">
-		        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates1.PNG') }});
-		        	height: 65vh!important;">
-		          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-		            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-		            <ul class="d-flex list-unstyled mt-auto">
-		              <li class="me-auto" style="margin-top: 5px">
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Copy link and share">
-		              		<i class="fa-solid fa-share-nodes button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="View more information">
-		              		<i class="fa-solid fa-eye button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Cast vote for this candidate">
-		              		<i class="fa-solid fa-heart button-links-icon"></i>
-		              	</a>
-		              </li>
-		              <li class="d-flex align-items-center me-3">
-		                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-		                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-		              </li>
-		            </ul>
-		          </div>
-		        </div>
-		      </div>
-		      <div class="col">
-		        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates6.PNG') }});
-		        	height: 65vh!important;">
-		          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-		            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-		            <ul class="d-flex list-unstyled mt-auto">
-		              <li class="me-auto" style="margin-top: 5px">
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Copy link and share">
-		              		<i class="fa-solid fa-share-nodes button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="View more information">
-		              		<i class="fa-solid fa-eye button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Cast vote for this candidate">
-		              		<i class="fa-solid fa-heart button-links-icon"></i>
-		              	</a>
-		              </li>
-		              <li class="d-flex align-items-center me-3">
-		                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-		                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-		              </li>
-		            </ul>
-		          </div>
-		        </div>
-		      </div>
-		      <div class="col">
-		        <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url({{ asset('/wp-content/uploads/testcandidates7.PNG') }});
-		        	height: 65vh!important;">
-		          <div class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-		            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-		            <ul class="d-flex list-unstyled mt-auto">
-		              <li class="me-auto" style="margin-top: 5px">
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Copy link and share">
-		              		<i class="fa-solid fa-share-nodes button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="View more information">
-		              		<i class="fa-solid fa-eye button-links-icon"></i>
-		              	</a>
-		              	<a href="#" class="button-links"
-		              		data-bs-toggle="tooltip" data-bs-placement="bottom"
-							        data-bs-custom-class="custom-tooltip"
-							        data-bs-title="Cast vote for this candidate">
-		              		<i class="fa-solid fa-heart button-links-icon"></i>
-		              	</a>
-		              </li>
-		              <li class="d-flex align-items-center me-3">
-		                <svg class="bi me-1" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>
-		                <span class="fw-bold" style="font-size: 20px;">Candidate Name</span>
-		              </li>
-		            </ul>
-		          </div>
-		        </div>
-		      </div>
-	    	</div>
+		{{-- 	<div class="instruction alert alert-primary alert-dismissible fade show instructionModal" role="alert">
+				<small class="text-justify">
+					For a smooth and precise voting experience, kindly adhere to the following guidelines:
+					<ol>
+						<li><b>Choose Payment Amount</b>: Begin by selecting the desired payment amount.</li>
+						<li><b>Scan QR Code</b>: Scan the provided QR code with your device's camera.</li>
+						<li><b>Enter Refference Number</b>: Enter the reference number from GCash.</li>
+						<li><b>Enter Email & Phone Number</b>: Enter your active email address and phone number (This use by admin contact you incase of emergency)</li>
+						<li><b>Submit Vote</b>: Click the "Submit Vote" button to confirm.</li>
+					</ol>
+					Your cooperation in following these steps ensures a seamless voting process.
+				</small>
+  			<button type="button" class="btn-close" id="alertClose"></button>
+			</div>
+ --}}
+			<div id="dataListOfCandidatesBody">
+				<div class="text-muted mt-3 d-flex align-items-center justify-content-center text-center">
+					<i class="fas fa-spinner fa-spin loading-spinner fs-4"></i>
+					<span class="fs-4">&nbsp;{{ __('Loading...') }}</span>
+				</div>
+				{{-- data fetch via ajax --}}
     	</div>
 		</div>
+
+		<input type="hidden" value="{{ route('index.page', Str::slug(env('APP_VOTING_NAME'))) }}" id="indexURI">
+		<div class="modal fade" id="castVoteModal" data-bs-backdrop="static" aria-hidden="true" aria-labelledby="castVoteModalLabel" tabindex="-1" >
+		  <div class="modal-dialog modal-fullscreen-xxl-down">
+		    <div class="modal-content container">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5" id="castVoteModalLabel"><span id="candidateInfo"></span></h1>
+		        <button type="button" class="btn-close" id="castVoteCloseModal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		      	<form id="castVoteForm">
+							<ul id="progressbar" class="d-flex justify-content-center align-items-center">
+					      <li class="active" id="fillUpForm"><strong>{{ __('Fill up & Scan QR') }}</strong></li>
+					      <li id="referrenceNo"><strong>{{ __('Refference No') }}</strong></li>
+					      <li id="finish"><strong>{{ __('Finish') }}</strong></li>
+					   	</ul>
+					    <div class="form-step" id="stepOne" data-step="1" data-mode="fill-up" >
+								<div class="row mb-2">
+									<label for="email" class="col-sm-3 col-form-label fw-bold">Voters Information</label>
+									<div class="col-sm-9">
+									  <div class="row">
+											<div class="col">
+												<input type="text" id="email" class="form-control email" placeholder="your@gmail.com" aria-label="email">
+												<div class="invalid-feedback emailError"></div>
+											</div>
+											<div class="col">
+												<input type="number" id="contactno" class="contactno form-control" placeholder="0977*****22" aria-label="contactno">
+												<div class="invalid-feedback contactnoError"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row mb-2">
+									<label for="amountOfPayment" class="col-sm-3 col-form-label fw-bold">Amount of Payment</label>
+									<div class="col-sm-9">
+									  <div class="row">
+											<div class="col-md-6" id="dataListOfAmountPaymentBody">
+												{{-- data fetch via ajax --}}
+											</div>
+											<div class="col-md-6">
+											<div class="p-2 noEvents mb-2">
+												<div class="form-control mb-2">
+													<small id="guideTextLabel">QR Code Image Preview</small>
+												</div>
+												<input type="hidden" value="" id="amountPaymentSelected"/>
+												<input type="hidden" value="" id="candidateSelected"/>
+												<input type="hidden" value="{{ env('APP_VERSION') }}" id="appVersionName"/>
+												<div id="dataQRCodePreviewBody">
+													{{-- data fetch  via ajax --}}
+												</div>
+											</div>
+										</div>
+									</div>
+									</div>
+								</div>
+								<center>
+						  		<hr class="text-muted"/>
+							  	<button type="button" class="btn btn-primary" id="nextStepButton" disabled>proceed to next step
+							  		<i class="fa-solid fa-arrow-right"></i>
+							  	</button>
+					  		</center>
+					  	</div>
+						  <div class="form-step" id="stepTwo" data-step="2" data-mode="reference-no" style="display: none;">
+						  	<center class="container">
+						  		<label for="referenceNo" class="fw-bold text-muted">Please enter the reference number send by Gcash</label>
+						  		<input type="number" class="form-control w-100 referenceNo" id="referenceNo"
+						  		placeholder="200*******123"
+						  		/>
+						  		<div class="invalid-feedback referenceNoError"></div>
+						  		<div class="mb-2 mt-2 d-flex justify-content-center align-items-center ">
+										<div class="g-recaptcha-widgets">
+											<div class="g-recaptcha"
+												id="g-recaptcha-response"
+												data-sitekey="{{ env('RECAPTCHA_FRONTEND_KEY') }}">
+											</div>
+										</div>
+									</div>
+									<hr class="text-muted"/>
+									<button type="button" class="btn btn-primary" id="submitMyVote">
+										Submit my vote
+							  		<i class="fas fa-spinner fa-spin loading-spinner d-none"></i>
+							  	</button>
+						  	</center>
+						  </div>
+						  <div class="form-step" id="stepThree" data-step="3" data-mode="finish" style="display: none;">
+						  	<center class="container">
+						  		<div class="card mb-3" style="border: 1px solid #f3f3f3">
+									  <img src="{{ asset('/wp-content/uploads/vote-success.PNG') }}" class="card-img-top" alt="vote success">
+									  <div class="card-body">
+									  	<div class="row">
+									  		<div class="col-md-6 mt-2">
+									  			<button type="button" id="voteAgainButton" class="btn btn-primary w-100">Vote again this candidate</button>
+									  		</div>
+									  		<div class="col-md-6 mt-2">
+									  			<button type="button" id="doneAndExitButton" class="btn btn-light w-100">Done and exit</button>
+									  		</div>
+									  	</div>
+									  </div>
+									</div>
+						  	</center>
+						  </div>
+						</form>
+		    	</div>
+			   	<div class="modal-footer d-flex text-center align-items-center justify-content-center">
+			   		<center>
+			   			<small class="text-muted">&copy; {{ now()->year }} Golden Minds Colleges <br/>Maintain and Manage by Information System</small>
+			   		</center>
+			    </div>
+		  	</div>
+			</div>
+		</div>
+
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="f-svg"><path fill="#f9f9f9" fill-opacity="1" d="M0,128L48,112C96,96,192,64,288,74.7C384,85,480,139,576,144C672,149,768,107,864,122.7C960,139,1056,213,1152,213.3C1248,213,1344,139,1392,101.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
 	</section>
 </x-layout.app>

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use L5Swagger\L5SwaggerServiceProvider;
 
@@ -18,6 +20,10 @@ class AppServiceProvider extends ServiceProvider {
 	 * Bootstrap any application services.
 	 */
 	public function boot(): void {
-		//
+		// Allow the data schema to create freely database table
+		Schema::defaultStringLength(191);
+
+		//Use the bootstrap pagination ui button
+		Paginator::useBootstrapFive();
 	}
 }

@@ -1,28 +1,27 @@
-(function($){
+(function($) {
 	
 	"use-strict";
 
-	const APP_VERSION = $('.app-content').data('app');
-	const CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-
-	/*
-	|--------------------------------------------------------------------------
-	| Laod all the data when page is load
-	|--------------------------------------------------------------------------
-	 */
 	$(window).on('load', function() {
-		getAllApplicationVersions(APP_VERSION, CSRF_TOKEN);
-		getAllCategoryByVersion(APP_VERSION, CSRF_TOKEN);
-		getAllVotePointsByVersion(APP_VERSION, CSRF_TOKEN);
+		setTimeout(function() {
+			getAllVotePoints();
+		}, 1500);
+
+		setTimeout(function() {
+			getAllCategories();
+		}, 1000);
+
+		setTimeout(function() {
+			getAllApplicationVersions();
+		}, 500);
 	});
 
 	/*
-	|--------------------------------------------------------------------------
-	| Configuration >>> Application Version
-	|--------------------------------------------------------------------------
+		|--------------------------------------------------------------------------
+		| Configuration >>> Application Version
+		|--------------------------------------------------------------------------
 	*/
 
-	// Make the Application Version [Name and Title] editable 
 	$(document).on('click', '.appVersionButtonEdit', function() {
 		const avid = $(this).data('id');
 		$(`.editNameVersion_${avid}`).attr('contenteditable', 'true').addClass('form-control');
@@ -42,7 +41,7 @@
 		$(`.close-icon_${avid}`).addClass('d-none');
 		$(`.edit-icon_${avid}`).removeClass('d-none');
 		$(`.delete-icon_${avid}`).removeClass('d-none');
-		getAllApplicationVersions(`/${APP_VERSION}/admin/configuration/app-versions/`, CSRF_TOKEN);
+		getAllApplicationVersions();
 	});
 
 	// Update Application Version [Name and Title] 
@@ -50,7 +49,7 @@
 		const avid = $(this).data('id');
 		const versionName = $(this).closest('tr').find(`.editNameVersion_${avid}`).text();
 		const versionTitle = $(this).closest('tr').find(`.editTitleVersion_${avid}`).text();
-		updateApplicationVersion(APP_VERSION, CSRF_TOKEN, avid, versionName, versionTitle);
+		updateApplicationVersion(avid, versionName, versionTitle);
 	});
 
 	// Add New Application Version
@@ -71,7 +70,7 @@
 			return;
 		}
 
-		createNewApplicationVersion(APP_VERSION, CSRF_TOKEN, versionName, versionTitle);
+		createNewApplicationVersion(versionName, versionTitle);
 	});
 
 	// Delete the Application Version
@@ -98,15 +97,17 @@
     	if(!response.isConfirmed) { 
     		return false; 
 		  } 
-		  deleteApplicationVersion(APP_VERSION, CSRF_TOKEN, avid);
+		  deleteApplicationVersion(avid);
 		});
 	});
 
+
 	/*
-	|--------------------------------------------------------------------------
-	| Configuration >>> Category
-	|--------------------------------------------------------------------------
+		|--------------------------------------------------------------------------
+		| Configuration >>> Category
+		|--------------------------------------------------------------------------
 	*/
+
 	$(document).on('click', '.categoryButtonEdit', function() {
 		const ctid = $(this).data('id');
 		$(`.editCategoryName_${ctid}`).attr('contenteditable', 'true').addClass('form-control');
@@ -123,7 +124,7 @@
 		$(`.saveCategory-icon_${ctid}`).addClass('d-none');
 		$(`.closeCategory-icon_${ctid}`).addClass('d-none');
 		$(`.deleteCategory-icon_${ctid}`).removeClass('d-none');
-		getAllCategoryByVersion(APP_VERSION, CSRF_TOKEN);
+		getAllCategories();
 	});
 
 	$(document).on('click', '.categoryButtonSave', function() {
@@ -136,7 +137,7 @@
 			return;
 		}
 
-		updateCategory(APP_VERSION, CSRF_TOKEN, ctid, avid, categoryName);
+		updateCategory(ctid, avid, categoryName);
 	});
 
 	$(document).on('click', '#createCategoryButton', function() {
@@ -156,7 +157,7 @@
 			return;
 		}
 
-		createNewCategory(APP_VERSION, CSRF_TOKEN, appVersionIdSelected, categoryName);
+		createNewCategory(appVersionIdSelected, categoryName);
 	});
 
 	$(document).on('click', '.categoryButtonDelete', function() {
@@ -181,19 +182,21 @@
     	if(!response.isConfirmed) { 
     		return false; 
 		  } 
-		  deleteCategory(APP_VERSION, CSRF_TOKEN, ctid);
+		  deleteCategory(ctid);
 		});
 	});
 
 	/*
-	|--------------------------------------------------------------------------
-	| Configuration >>> Vote Points
-	|--------------------------------------------------------------------------
+		|--------------------------------------------------------------------------
+		| Configuration >>> Vote Points
+		|--------------------------------------------------------------------------
 	*/
+
 	$(document).on('click', '.votePointButtonEdit', function() {
 		const vpid = $(this).data('id');
 		$(`.editVoteAmount_${vpid}`).attr('contenteditable', 'true').addClass('form-control');
 		$(`.editVotePoint_${vpid}`).attr('contenteditable', 'true').addClass('form-control');
+		$(`.editVotePointImage-icon_${vpid}`).removeClass('d-none');
 		$(`.editVotePoint-icon_${vpid}`).addClass('d-none'); 
 		$(`.saveVotePoint-icon_${vpid}`).removeClass('d-none');
 		$(`.closeVotePoint-icon_${vpid}`).removeClass('d-none');
@@ -204,11 +207,15 @@
 		const vpid = $(this).data('id');
 		$(`.editVoteAmount_${vpid}`).attr('contenteditable', 'false').removeClass('form-control');
 		$(`.editVotePoint_${vpid}`).attr('contenteditable', 'false').removeClass('form-control');
+		$(`.editVotePointImage-icon_${vpid}`).addClass('d-none');
 		$(`.editVotePoint-icon_${vpid}`).removeClass('d-none'); 
 		$(`.saveVotePoint-icon_${vpid}`).addClass('d-none');
 		$(`.closeVotePoint-icon_${vpid}`).addClass('d-none');
 		$(`.deleteVotePoint-icon_${vpid}`).removeClass('d-none');
-		getAllVotePointsByVersion(APP_VERSION, CSRF_TOKEN);
+		$(`.imageFileUpload_${vpid}`).val("");
+    $('#removeImageButton').addClass('d-none');  
+    $('#imageLabel').removeClass('d-none'); 
+		getAllVotePoints();
 	});
 
 	$(document).on('click', '.votePointButtonSave', function() {
@@ -216,6 +223,8 @@
 		const avid = $(this).data('avid');
 		const voteAmount = $(this).closest('tr').find(`.editVoteAmount_${vpid}`).text();
 		const votePoint = $(this).closest('tr').find(`.editVotePoint_${vpid}`).text();
+		const qrCodeImage = $(`.imageFileUpload_${vpid}`)[0]; 
+		let imageFile = qrCodeImage.files[0]; 
 
 		if (isEmpty(voteAmount) || isEmpty(votePoint)) {
       toastr.info('Vote amount and vote point is required.');
@@ -227,34 +236,19 @@
       return;
     }
 
-		updateVotePoints(APP_VERSION, CSRF_TOKEN, vpid, avid, voteAmount, votePoint);
+		updateVotePoints(vpid, avid, voteAmount, votePoint, imageFile);
 	});
 
 	$(document).on('click', '#createVotingPointsButton', function() {
-		runSpinner();
 		const voteAmount = $('#newAmount').val();
 		const votePoint = $('#newPoints').val();
 		const appVersionIdSelected = $('#appVersionSelectedVP').val();
-		
-		if(isEmpty(appVersionIdSelected)) {
-			$('#appVersionSelectedVP').addClass('is-invalid');
-			stopSpinner();
-			return;
-		}
+		const qrCodeImage = $('#qrCodeImage')[0]; 
+		let imageFile = qrCodeImage.files[0]; 
 
-		if(isEmpty(voteAmount)) {
-			$('#newAmount').addClass('is-invalid');
-			stopSpinner();
-			return;
-		}
-
-		if(isEmpty(votePoint)) {
-			$('#newPoints').addClass('is-invalid');
-			stopSpinner();
-			return;
-		}
-
-		createNewVotePoints(APP_VERSION, CSRF_TOKEN, appVersionIdSelected, voteAmount, votePoint);
+		if(validateVotePointsForm(voteAmount, votePoint, appVersionIdSelected, imageFile)) {
+	  	createNewVotePoints(appVersionIdSelected, voteAmount, votePoint, imageFile);
+	  }	
 	});
 
 	$(document).on('click', '.votePointButtonDelete', function() {
@@ -278,7 +272,7 @@
     	if(!response.isConfirmed) { 
     		return false; 
 		  } 
-		  deleteVotePoints(APP_VERSION, CSRF_TOKEN, vpid);
+		  deleteVotePoints(vpid);
 		});
 	});
 
@@ -287,8 +281,8 @@
 		$('#appVersionSelectedVP').removeClass('is-invalid');
 		const avid = $('#versionFilterSelected').val();
 		const avidvp = $('#versionFilterSelectedVP').val();
-		getAllCategoryByVersion(avid, CSRF_TOKEN);
-		getAllVotePointsByVersion(avidvp, CSRF_TOKEN);
+		getAllCategories();
+		getAllVotePoints();
 	});
 
 	// Remove the error style input
@@ -311,4 +305,16 @@
     $('.newPoints').val(cleanPoint);
 	});
 
+	$(document).on('change', '#qrCodeImage', function() {
+		$(this).removeClass('is-invalid');			
+		$('#removeImageButton').removeClass('d-none');
+		$('.removeImageButton').removeClass('d-none');
+		$('#imageLabel').addClass('d-none');	
+	});
+
+	$(document).on('click', '#removeImageButton', function() {
+		$(this).addClass('d-none');
+		$('#imageLabel').removeClass('d-none');	
+		$('#qrCodeImage').val(""); 
+	});
 })(jQuery)

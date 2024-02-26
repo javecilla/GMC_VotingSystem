@@ -32,6 +32,7 @@
 	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/bootstrap/bootstrap@5.3.2/css/bootstrap.min.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/fontawesome/css/all.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('/wp-content/plugins/wow/wow.min.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('/wp-content/plugins/toastr/toastr.min.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/wp-content/themes/stylesheets/app.css?v=1.3') }}" defer/>
 	<script src="{{ asset('/wp-content/plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
 
@@ -89,7 +90,9 @@
 	  </div>
 	</nav><!-- /nav -->
 
- 	<main>
+ 	<main class="main-content"
+    data-app="{{ env('APP_VERSION') }}"
+    data-vtitle="{{ Str::slug(env('APP_VOTING_NAME')) }}">
  		{{ $slot }}
  	</main> <!-- /main -->
 
@@ -139,41 +142,12 @@
 
  	<script src="{{ asset('/wp-content/plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script>
  	<script src="{{ asset('/wp-content/plugins/fontawesome/js/all.min.js') }}"></script>
+  <script src="{{ asset('/wp-content/plugins/toastr/toastr.min.js') }}"></script>
   <script src="{{ asset('/wp-content/plugins/wow/wow.min.js') }}"></script>
- 	<script src="{{ asset('/wp-content/themes/scripts/app.js?v=1.3') }}" async></script>
+  <script src="{{ asset('/wp-content/themes/scripts/functions.js?v=1.3') }}" defer></script>
+  <script src="{{ asset('/wp-content/themes/scripts/helper.js?v=1.3') }}" defer></script>
+ 	<script src="{{ asset('/wp-content/themes/scripts/app.js?v=1.3') }}" defer></script>
+  <script src="{{ asset('/wp-content/themes/scripts/general.js?v=1.3') }}" defer></script>
 
-  <script type="text/javascript">
-    (($) => {
-      //tool tip
-      const tooltipTriggerList = $('[data-bs-toggle="tooltip"]');
-      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-
-      $('#backToTop').hide();
-      // back to top
-      $(window).scroll(function() {
-        if ($(this).scrollTop() > 150) {
-          $('#backToTop').show().fadeIn();
-        } else {
-          $('#backToTop').hide().fadeOut();
-        }
-      });
-
-      $('#backToTop').click(function(e) {
-        e.preventDefault();
-        $('html, body').animate({ scrollTop: 0 }, 'slow');
-      });
-
-      // wow animation
-      const wow = new WOW({
-        boxClass:     'wow',
-        animateClass: 'animated',
-        offset:       25,
-        mobile:       true,
-        live:         true
-      })
-
-      wow.init();
-    })(jQuery)
-  </script>
-</body>
+ </body>
 </html>

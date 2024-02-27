@@ -17,7 +17,7 @@ class RouteServiceProvider extends ServiceProvider {
 	public const DASHBOARD = "v1.3/admin/dashboard";
 
 	/**
-	 * Define your route model bindings, pattern filters, and other route configuration.
+	 * Define your route model bindings, pattern filters, nd other route configuration.
 	 */
 	public function boot(): void {
 		RateLimiter::for('api', function (Request $request) {

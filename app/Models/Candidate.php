@@ -34,7 +34,7 @@ class Candidate extends Model {
 	}
 
 	// Make this 'Candidate' model have relationship to 'Vote' model
-	public function vote() {
+	public function votes() {
 		return $this->hasMany(Vote::class, 'candidate_id', 'cdid');
 	}
 }

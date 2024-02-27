@@ -13,11 +13,58 @@ const CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
   }, 10000);
 
   setTimeout(function() {
-  	getTotalNotFixedTicketReports();
-  }, 1000);
+  	getTotalNotFixedTicketReportsTest();
+  	getAllApplicationVersionsTest();
+  }, 5000);
 
 
-	// toastr config style
+const getTotalNotFixedTicketReportsTest = async () => {
+	$.ajax({
+    url: `/${APP_VERSION}/admin/manage/ticket/reports/count/all`,
+    method: 'get',
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+    success: (data) => {
+      $('.report-badge').text(data.totalReports);
+      $('#totalIssueReport').text(data.totalReports);
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+const getAllApplicationVersionsTest = async () => {
+  $.ajax({
+    url: `/${APP_VERSION}/admin/configuration/app-versions`,
+    method: 'get',
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+    success: (data) => {
+     	let switchVersions = `<ul class="dropdown-menu dropdown-menu-dark text-small shadow">`;
+
+		  if(typeof data === 'object' && data !== null) {
+   			Object.keys(data).forEach(key => {
+   				switchVersions += `<a class="dropdown-item" href="/${data[key].name}/admin/dashboard">
+       		 	<li>${data[key].name}</li>
+      		</a>
+      	`;
+   			});
+   		}	
+
+   		switchVersions += `</ul>`;
+
+   		$('#switchVersionsBody').html(switchVersions);
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+// toastr config style
 	toastr.options = {
 		"debug": false,
 		"rtl": false,

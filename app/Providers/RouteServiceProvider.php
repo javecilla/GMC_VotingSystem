@@ -14,13 +14,14 @@ class RouteServiceProvider extends ServiceProvider {
 	 * Typically, users are redirected here after authentication.
 	 */
 	public const DASHBOARD = APP_VERSION . "/admin/dashboard";
+	//public const DASHBOARD = "v1.2/admin/dashboard";
 
 	/**
 	 * Define your route model bindings, pattern filters, and other route configuration.
 	 */
 	public function boot(): void {
 		RateLimiter::for('api', function (Request $request) {
-			return Limit::perMinute(60)->by($request->user()?->uid ?: $request->ip());
+			return Limit::perMinute(100)->by($request->user()?->uid ?: $request->ip());
 		});
 
 		// Define the rate limiter for the web routes

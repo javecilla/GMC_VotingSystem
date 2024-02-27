@@ -14,6 +14,7 @@ $(document).ready(function() {
 
 		setTimeout(function() {
 			getPendingVerifiedTotalAmount();
+			getTotalNotFixedTicketReports();
 		}, 500);
 	});
 

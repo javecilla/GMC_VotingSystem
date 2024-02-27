@@ -16,10 +16,10 @@ class TicketReportFactory extends Factory {
 	public function definition(): array {
 		return [
 			'app_version_id' => 1,
-			'name' => fake()->unique()->name(),
-			'email' => fake()->unique()->safeEmail(),
-			'message' => fake()->paragraph(),
-			'image' => 'reports/lSEfnaCLORYuv0qWSW5QHUlSY8juTtJFcE1UFiQs.png',
+			'name' => 'test', //fake()->unique()->name()
+			'email' => 'test@gmail.com', //fake()->unique()->safeEmail()
+			'message' => 'test test', //fake()->paragraph()
+			'image' => null,
 			'status' => 1, //not fixed as default
 			'created_at' => now(),
 			'updated_at' => null,

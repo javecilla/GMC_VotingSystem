@@ -11,6 +11,7 @@
 							class="btn btn-light border-0 ">
 							<i class="fa-solid fa-arrow-left"></i> {{ __('Back') }}
 						</a>
+						<input type="hidden" value="3" id="candidateId"/>
 					</div>
 				</div>
 				<div class="card-body">

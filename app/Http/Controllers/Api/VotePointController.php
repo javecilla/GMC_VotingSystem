@@ -35,4 +35,10 @@ class VotePointController extends Controller {
 			return response()->json(['success' => false, 'message' => $recaptchaException->getMessage()]);
 		}
 	}
+
+	public function count(String $appVersion): JsonResponse {
+		$result = $this->voteService->countAllVotesByStatus($appVersion);
+		return response()->json($result);
+		//return response()->json(['success' => true, 'message' => 'test']);
+	}
 }

@@ -96,6 +96,7 @@ const getTotalNotFixedTicketReports = async () => {
     headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
     success: (data) => {
       $('.report-badge').text(data.totalReports);
+      $('#totalIssueReport').text(data.totalReports);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);

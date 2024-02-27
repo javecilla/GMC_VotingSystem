@@ -1,7 +1,7 @@
 (($) => {
 	"use-strict";
 
-	window.validateCandidateForm = (appVersion, category, candidateName, candidateImage) => {
+	window.validateCandidateForm = (appVersion, category, candidateNo, candidateName, candidateImage) => {
 		let isFormValid = true;
 
 		if(isEmpty(appVersion)) {
@@ -11,6 +11,11 @@
 
 	 	if(isEmpty(category)) {
 	 		$('#categorySelected').addClass('is-invalid');
+			isFormValid = false;
+	 	}
+
+	 	if(isEmpty(candidateNo)) {
+	 		$('#candidateNo').addClass('is-invalid');
 			isFormValid = false;
 	 	}
 

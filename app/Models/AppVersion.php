@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use CyrildeWit\EloquentViewable\Contracts\Viewable;
+use CyrildeWit\EloquentViewable\InteractsWithViews;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AppVersion extends Model {
+class AppVersion extends Model implements Viewable {
 	use HasFactory;
+	use InteractsWithViews;
 
+	protected $guarded = [];
 	protected $table = 'app_versions';
 	protected $primaryKey = 'avid';
 

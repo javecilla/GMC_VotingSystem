@@ -85,18 +85,21 @@ class VoteRepository implements IRepository {
 			->where('votes.status', 0)
 			->sum('vote_points.amount');
 
+		$totalVotes = Vote::where('app_version_id', $appVersion->avid)->count();
+
 		return [
 			'success' => true,
 			'message' => 'success',
 			'verified' => $verified,
 			'pending' => $pending,
 			'totalAmount' => $totalAmount,
+			'totalVotes' => $totalVotes,
 			'spam' => $spam,
 		];
 	}
 
 	public function getMostVotes(String $appVersionName, int $limit): object {
-		$appVersion = AppVersion::where('name', $appVersionName)->first();
+
 		//group the votes by candidates. Candidates must be unique candidates
 		// for example there is 2 votes that is categorize in  candidate 1
 		// this 2 votes will be in candidate 1, so that candidate 1 will
@@ -108,7 +111,7 @@ class VoteRepository implements IRepository {
 
 		//then return to the client side the 5 candidates with highest vote points and with its
 		//calculated vote points for each 5 candidates
-
+		$appVersion = AppVersion::where('name', $appVersionName)->first();
 		$mostVotesCandidates = Vote::with(['candidate', 'votePoint'])
 			->join('vote_points', 'votes.vote_points_id', '=', 'vote_points.vpid')
 			->where('votes.app_version_id', $appVersion->avid)
@@ -152,24 +155,31 @@ class VoteRepository implements IRepository {
 		//TwistedFate - with 720 vote points
 
 		//then return to the client side the 3 candidates with highest vote points per category
-		//and with its calculated vote points for each 3 candidates per category
+		//for specified app version and with its calculated vote points for each 3 candidates per category
+		$mostVotesCandidatesCategory = [];
 
+		//map app version
 		$appVersion = AppVersion::where('name', $appVersionName)->first();
 
-		$mostVotesCandidatesCategory = [];
-		$categories = Category::all();
+		//get all categories for specific app version
+		$categories = Category::where('app_version_id', $appVersion->avid)->get();
 
+		//get all candidates (na may votes) for each category
 		foreach ($categories as $category) {
-			$candidates = Candidate::where('category_id', $category->ctid)->get();
+			$candidates = Candidate::where('category_id', $category->ctid)
+				->with(['votes' => function ($query) use ($appVersion) {
+					$query->where('app_version_id', $appVersion->avid)
+						->where('status', 0)
+						->with('votePoint');
+				}])
+				->get();
+
 			$candidatesData = [];
 
+			//calculate the sum of all votes points for each candidates
 			foreach ($candidates as $candidate) {
-				$totalPoints = Vote::where('candidate_id', $candidate->cdid)
-					->join('vote_points', 'votes.vote_points_id', '=', 'vote_points.vpid')
-					->where('votes.app_version_id', $appVersion->avid)
-					->where('votes.status', 0)
-					->sum('vote_points.point');
-
+				$totalPoints = $candidate->votes->sum('votePoint.point');
+				//\Illuminate\Support\Facades\Log::info($candidate->vote);
 				$candidatesData[] = [
 					'candidate_name' => $candidate->name,
 					'total_points' => $totalPoints,

@@ -6,22 +6,49 @@
 	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="csrf-token" content="{{ csrf_token() }}"/>
-  <meta name="robots" content="noindex, nofollow"/>
-  <meta name="googlebot" content="noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
-  <meta name="bingbot" content="noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
+  <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
   <meta name="description" content="@isset($description) {{ $description }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}" />
   <meta name="abstract" content="Official Voting System of Golden Minds Bulacan"  />
   <meta name="copyright" content="Golden Minds Bulacan"  />
   <meta name='Classification' content='Website'/>
   <meta name='identifier-URL' content='{{ url()->current() }}'/>
   <meta name="msapplication-TileImage" content="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
+  <!--<meta name='developer' content='https://javecilla.vercel.app'/>-->
+  <!--The SEO Framework by Jerome Avecilla -->
+  <meta property="og:image"
+    content="{{ asset('/wp-content/uploads/app_ogimage.PNG') }}" />
+  <meta property="og:image:width" content="608">
+  <meta property="og:image:height" content="260">
+  <meta property="og:image:alt" content="{{ env('APP_NAME') }}" />
+  <meta property="og:image:secure_url" content="{{ asset('/wp-content/uploads/favicon.PNG') }}"/>
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ env('APP_NAME') }}" />
+  <meta property="og:description" content="Golden Minds Colleges Online Voting System! Our journey began in 2023 when we launched our first online voting system for Santa Maria Teen Model 2023, followed by Lakan, Lakambini, and Lakandyosa 2023. Since then, we have been committed to providing a seamless and reliable platform for democratic participation." />
+  <meta property="og:url" content="{{ url()->current() }}" />
+  <meta property="og:site_name" content="@isset($title) {{ $title }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }} - Golden Minds Colleges"/>
+  <meta property="article:author" content="https://www.facebook.com/gmcstamaria2015"/>
+  <meta property="article:publisher" content="https://www.facebook.com/gmcstamaria2015"/>
+  <meta property="fb:pages" content="100924508936440"/>
+  <meta property="fb:app_id" content="100924508936440"/>
+  <meta name="twitter:card" content="summary"/>
+  <meta name="twitter:site" content="https://twitter.com/goldenminds"/>
+  <meta name="twitter:creator" content="https://twitter.com/goldenminds"/>
+  <meta name="twitter:title" content="@isset($title) {{ $title }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}"/>
+  <meta name="twitter:description" content="Golden Minds Colleges Online Voting System! Our journey began in 2023 when we launched our first online voting system for Santa Maria Teen Model 2023, followed by Lakan, Lakambini, and Lakandyosa 2023. Since then, we have been committed to providing a seamless and reliable platform for democratic participation."/>
 	<title>@isset($title) {{ $title }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}</title>
 
 	<link rel="shortcut icon" type="image/png" sizes="16x16"
 		href="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
   <link rel="apple-touch-icon" type="image/png" sizes="16x16"
   	href="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
-
+  <link rel="canonical" href="https://admission.goldenmindsbulacan.com/" />
+  <link rel='shortlink' href="https://www.goldenmindsbulacan.com/" />
+  <link rel="alternate" type="text/xml+oembed" href="https://www.goldenmindsbulacan.com/sitemap.xml?url=https://www.goldenmindsbulacan.com/&format=xml" />
+  <link rel="alternate" type="application/rss+xml" title="Golden Minds Bulacan | News - Golden Minds Colleges is the private school that offers free education, produce graduates that are competitive in the current global trends." href="https://www.goldenmindsbulacan.com/news" />
+  <link rel="alternate" type="application/rss+xml" title="Golden Minds Bulacan Online Application | Enrollment - GMC Senior High School effectively equips students with above level skills. Seize your future! Enroll now at GMC Senior High. Dream big, aim higher. New students and transferees are welcome at all levels. Your journey starts here!" href="https://admission.goldenmindsbulacan.com/" />
   <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
   <link rel='dns-prefetch' href='https://fonts.gstatic.com' />
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -148,6 +175,5 @@
   <script src="{{ asset('/wp-content/themes/scripts/helper.js?v=1.3') }}" defer></script>
  	<script src="{{ asset('/wp-content/themes/scripts/app.js?v=1.3') }}" defer></script>
   <script src="{{ asset('/wp-content/themes/scripts/general.js?v=1.3') }}" defer></script>
-
  </body>
 </html>

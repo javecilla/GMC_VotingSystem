@@ -24,7 +24,7 @@ class CandidateService {
 		} catch (CreateDataException $e) {
 			return ['success' => false, 'message' => $e->getMessage()];
 		} catch (\Exception $e) {
-			\Illuminate\Support\Facades\Log::Error($e->getMessage());
+			\Illuminate\Support\Facades\Log::info($e->getMessage());
 			return ['success' => false, 'message' => 'An error occurred during creation.'];
 		}
 	}

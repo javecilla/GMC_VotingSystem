@@ -11,7 +11,7 @@ use App\Http\Controllers\App\Admin\VotePointController;
 use App\Http\Controllers\App\Admin\VotesController;
 use App\Http\Controllers\App\Auth\LogoutController;
 use App\Http\Controllers\App\Auth\SessionController;
-use App\Http\Controllers\App\Guest\PageController;
+use App\Http\Controllers\App\Guest\ViewController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web'])->group(function () {
@@ -21,10 +21,9 @@ Route::middleware(['web'])->group(function () {
 		|--------------------------------------------------------------------------
 	*/
 	Route::middleware(['guest'])->group(function () {
-		Route::get('/', [PageController::class, 'main'])->name('main.page');
+		Route::get('/', [ViewController::class, 'main'])->name('main.page');
 		Route::prefix('{title}')->group(function () {
-			Route::get('/candidates', [PageController::class, 'index'])->name('index.page');
-			Route::get('/{candidate}/candidates', [PageController::class, 'show'])->name('show.page');
+			Route::get('/candidates', [ViewController::class, 'index'])->name('index.page');
 		});
 	});
 
@@ -69,9 +68,9 @@ Route::middleware(['web'])->group(function () {
 					// School/Campus
 					Route::controller(CampusController::class)->prefix('campus')->group(function () {
 						Route::get('/', 'retrieve');
-						//Route::post('/store', 'store');
-						//Route::patch('/{campus}/update', 'update');
-						//Route::delete('/{campus}/destroy', 'destroy');
+						Route::post('/store', 'store');
+						Route::patch('/{campus}/update', 'update');
+						Route::delete('/{campus}/destroy', 'destroy');
 					});
 				});
 

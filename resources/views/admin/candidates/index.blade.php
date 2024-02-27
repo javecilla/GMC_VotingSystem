@@ -3,6 +3,7 @@
 	<x-section id="candidatesManagementContent" data-component="candidatesManagement">
 		<x-container>
 			<div id="indexUri" data-iurl="{{ route('candidates.index', request()->route('version')) }}" class="votes-management-card card">
+				<input type="hidden" value="3" id="candidateId"/>
 				<div class="card-header">
 					<div class="float-start">
 						<i class="fa-solid fa-list fs-4"></i>
@@ -16,6 +17,7 @@
 				      <div id="filterCategoryDataBody">
 				      	{{-- functions->configuration.js --}}
 				      </div>
+
 			    	</div>
 					</div>
 				</div>

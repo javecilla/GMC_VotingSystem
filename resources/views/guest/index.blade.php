@@ -7,7 +7,7 @@
 	      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
 	    </div>
 	    <div class="carousel-inner">
-	    	<div class="carousel-item active">
+	    	<div class="carousel-item active slider-image-overlay">
 	        <img class="bd-placeholder-img" src="{{ asset('/wp-content/uploads/dati2.jpg') }}" alt="img"
 	        loading="lazy"/>
 	        <div class="container p-0">
@@ -19,7 +19,7 @@
 	          </div>
 	        </div>
 	      </div>
-	      <div class="carousel-item">
+	      <div class="carousel-item slider-image-overlay">
 	        <img class="bd-placeholder-img" src="{{ asset('/wp-content/uploads/dati1.jpg') }}" alt="img"
 	        loading="lazy"/>
 	        <div class="container p-0">
@@ -31,7 +31,7 @@
 	          </div>
 	        </div>
 	      </div>
-	      <div class="carousel-item">
+	      <div class="carousel-item slider-image-overlay">
 	        <img class="bd-placeholder-img carousel-image" src="{{ asset('/wp-content/uploads/dati3.jpg') }}" alt="img" loading="lazy"/>
 	        <div class="container p-0">
 	          <div class="carousel-caption text-start">
@@ -63,10 +63,12 @@
 							<i class="fa-solid fa-arrow-left back_icon"></i>
 		  			</a>
 						<input type="search" class="search_input" name="search"
-						  placeholder="Search candidate name and hit enter or click search button icon"
+						  placeholder="Search candidate name and click search button icon"
 						  autocomplete="search"
-						  value="{{ (isset($_GET['search'])) ? $_GET['search'] : ''}}"
 						/>
+						<button type="button" id="searchBtn" class="btn btn-light rounded-3">
+							<i class="fa-solid fa-magnifying-glass filter_icon"></i>
+		  			</button>&nbsp;
 						<button type="button" class="dropdown-toggle btn btn-light rounded-3"
 							data-bs-toggle="dropdown" aria-expanded="false">
 		  				<i class="fa-solid fa-filter filter_icon"></i>
@@ -204,6 +206,117 @@
 						  	</center>
 						  </div>
 						</form>
+		    	</div>
+			   	<div class="modal-footer d-flex text-center align-items-center justify-content-center">
+			   		<center>
+			   			<small class="text-muted">&copy; {{ now()->year }} Golden Minds Colleges <br/>Maintain and Manage by Information System</small>
+			   		</center>
+			    </div>
+		  	</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="showCandidateInfoModal" data-bs-backdrop="static" aria-hidden="true" aria-labelledby="showCandidateInfoModal" tabindex="-1" >
+		  <div class="modal-dialog modal-fullscreen-xxl-down">
+		    <div class="modal-content container">
+		      <div class="modal-header">
+		        <h1 class="modal-title fs-5 mt-2 fw-bold">
+		        </h1>
+		        <button type="button" class="btn-close" id="showCandidateInfoModalClose" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		      	<div class="row">
+		      		<div class="col-md-5 mb-3">
+		      			<div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" id="showCardCandidateImage" style="height: 80vh!important;">
+				      <div id="cardOverlay" class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
+				        <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
+				        </ul>
+				      </div>
+				    </div>
+		      		</div>
+		      		<div class="col-md-7">
+		      			<div class="row">
+				      		<div class="col">
+						        <div class="card mb-4 rounded-3 shadow-sm"
+						        	style="border: 1px solid #00084d!important">
+						          <div class="card-header py-3"
+						          	style="background: #00084d!important;
+						          		border: 1px solid #00084d!important;
+						          		color: #ffffff">
+						            <h4 class="my-0 fw-normal">
+						            	<i class="fa-solid fa-check-to-slot fs-3"></i> Current Points</h4>
+						          </div>
+						          <div class="card-body">
+						            <h1 class="card-title pricing-card-title fw-bold" style="opacity: .8;"
+						            	id="totalCurrentVotePoints">
+						            	<i class="fas fa-spinner fa-spin fs-4"></i>
+						           	</h1>
+						            <span class="mt-3 mb-4">
+						             	Vote points will count if votes is verified.
+						            </span>
+						          </div>
+						        </div>
+						      </div>
+						      <div class="col">
+						        <div class="card mb-4 rounded-3 shadow-sm"
+						        	style="border: 1px solid #00084d!important">
+						          <div class="card-header py-3"
+						          	style="background: #00084d!important;
+						          		border: 1px solid #00084d!important;
+						          		color: #ffffff">
+						            <h4 class="my-0 fw-normal">
+						            	<i class="fas fa-users fs-3"></i> Total Votes
+						            </h4>
+						          </div>
+						          <div class="card-body">
+						            <h1 class="card-title pricing-card-title fw-bold" style="opacity: .8;"
+						            	id="totalVerifiedVoters">
+						            	<i class="fas fa-spinner fa-spin fs-4"></i></h1>
+						            <span class="mt-3 mb-4">
+						             	Total number of votes this count if vote is verified
+						            </span>
+						          </div>
+						        </div>
+						      </div>
+				      	</div>
+				      	<div class="card mb-4 rounded-3 shadow-sm">
+          				<div class="card-body">
+									  <div class="row mb-2">
+									    <label class="col-sm-2 col-form-label fw-bold">Name</label>
+									    <div class="col-sm-10">
+									      <input type="text" class="form-control border-0" readonly
+									      	id="candidateNameShow"
+									      	value="Katarina Zae" />
+									    </div>
+									  </div>
+									  <div class="row mb-2">
+									    <label class="col-sm-2 col-form-label fw-bold">Campus</label>
+									    <div class="col-sm-10">
+									      <input type="text" class="form-control border-0" readonly
+									      	id="candidateCampusShow"
+									      	value="Golden Minds Colleges of Sta.Maria Campus"/>
+									    </div>
+									  </div>
+									  <div class="row mb-2">
+									    <label class="col-sm-2 col-form-label fw-bold">Category</label>
+									    <div class="col-sm-10">
+									      <input type="text" class="form-control border-0" readonly
+									      	id="candidateCategoryShow"
+									      	value="Pride"/>
+									    </div>
+									  </div>
+									  <hr class="text-muted"/>
+				            <button type="button" class="w-100 btn btn-lg btn-light" style="background: #00084d!important;
+						          		border: 1px solid #00084d!important;
+						          		color: #ffffff">Vote this candidate
+				            	<i class="fa-solid fa-arrow-right fs-4"></i>
+				            </button>
+				          </div>
+				        </div>
+		      		</div>
+		      	</div>
+
+
 		    	</div>
 			   	<div class="modal-footer d-flex text-center align-items-center justify-content-center">
 			   		<center>

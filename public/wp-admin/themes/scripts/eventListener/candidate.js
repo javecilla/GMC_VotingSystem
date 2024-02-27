@@ -11,7 +11,7 @@
 		}, 2000);
 
 		setTimeout(function() {
-			getOneCandidates(($('#candidateId').val()) ? $('#candidateId').val() : '1');
+			getOneCandidates(isEmpty($('#candidateId').val()) ? '3' : $('#candidateId').val());
 			getAllCampus();
 		}, 1000);
 
@@ -45,7 +45,7 @@
 		const candidateImage = $('#candidateImage')[0]; 
 		let imageFile = candidateImage.files[0]; 
 
-	  if(validateCandidateForm(avid, ctid, candidateName, imageFile)) {
+	  if(validateCandidateForm(avid, ctid, candidateNo, candidateName, imageFile)) {
 	  	createNewCandidate(avid, scid, ctid, candidateNo, candidateName, candidateMotto, imageFile);
 	  }		
 	});

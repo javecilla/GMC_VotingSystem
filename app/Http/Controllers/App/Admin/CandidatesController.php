@@ -47,6 +47,7 @@ class CandidatesController extends Controller {
 	}
 
 	public function retrieve(String $appVersion, int $cdid): JsonResponse {
+
 		$result = $this->service->getOneCandidate($cdid);
 		return response()->json($result);
 	}

@@ -72,6 +72,71 @@
 			</div>
 			<hr class="text-muted"/>
 
+			{{--  Campus/School --}}
+			<div id="campusConfig" class="configuration-card card mt-3">
+				<div class="card-header">
+					<i class="fa-solid fa-list-check fs-4"></i>&nbsp;
+					 <label>{{ __("Campus") }}</label>
+					<small>{{ __('(Use this module to create and set up campus for voting)') }}</small>
+				</div>
+				<div class="card-body">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-6">
+								<fieldset>
+									<legend class="fs-5 fw-bold">{{ __('Add New Campus') }}</legend>
+									<hr class="text-muted"/>
+									<div class="mb-2">
+										<small class="text-muted">
+											{{ __('Select the version of voting you want to add this campus') }}
+										</small>
+										<div class="selectDataBody">
+											<label class="text-center">
+												{{ __('Loading') }} <i class="fas fa-spinner fa-spin"></i>
+											</label>
+									  </div>
+									</div>
+									<div class="form-floating mb-2">
+										<input type="text" class="form-control" id="newCampus" placeholder="campus"/>
+										<label for="newCampus">{{ __('Enter campus name') }}</label>
+									</div>
+									<button type="button" id="createCampusButton" class="btn btn-light w-100 btn-add">
+										{{ __('Add') }}
+				  					<i class="fas fa-spinner fa-spin loading-spinner d-none"></i>
+									</button>
+								</fieldset>
+							</div>
+							<div class="col-md-6">
+								<fieldset>
+									<legend class="fs-5 fw-bold">
+										<span class="float-start">{{ __('List of Campus') }}</span>
+									</legend>
+									<hr class="text-muted"/>
+									<div id="listOfCampusItem" class="table-responsive">
+										<table class="table">
+											<thead>
+												<tr>
+													<th>{{ __('Name') }}</th>
+													<th class="text-end">{{ __('Actions') }}</th>
+												</tr>
+											</thead>
+											<tbody id="campusDataBody">
+												<tr class="text-center">
+													<td rowspan="2">
+														<span class="text-center" >{{ __('Loading') }} <i class="fas fa-spinner fa-spin"></i></span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</fieldset>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr class="text-muted"/>
+
 			{{--  Category --}}
 			<div id="categoryConfig" class="configuration-card card mt-3">
 				<div class="card-header">
@@ -110,9 +175,6 @@
 								<fieldset>
 									<legend class="fs-5 fw-bold">
 										<span class="float-start">{{ __('List of Registered Category') }}</span>
-										<span class="float-end selectFilterBody">
-											{{-- data being fetch via ajax--}}
-										</span>
 									</legend>
 									<hr class="text-muted"/>
 									<div id="listOfCategoryItem" class="table-responsive">
@@ -141,7 +203,7 @@
 			</div>
 			<hr class="text-muted"/>
 
-			{{-- @TODO: VotePoints --}}
+			{{-- VotePoints --}}
 			<div id="VotePointsConfig" class="configuration-card card mt-3">
 				<div class="card-header">
 					<i class="fa-solid fa-list-check fs-4"></i>&nbsp;
@@ -206,9 +268,6 @@
 								<fieldset>
 									<legend class="fs-5 fw-bold">
 										<span class="float-start">{{ __('Equivalent Vote Points for each Amount') }}</span>
-										<span class="float-end selectFilterBodyVP">
-											{{-- data being fetch via ajax--}}
-										</span>
 									</legend>
 									<hr class="text-muted"/>
 									<div id="equivalentVotePointsItem" class="table-responsive">

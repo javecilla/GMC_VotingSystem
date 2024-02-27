@@ -1,5 +1,35 @@
 "use-strict";
 
+const validateReportForm = (name, email, message) => {
+	let isValid = true;
+
+	if(isEmpty(name)) {
+		$('.fullName').addClass('is-invalid');
+		$('.nameError').text('This field is required! Please enter your full name.');
+		isValid = false;
+	} 
+
+	if(isEmpty(email)) {
+		$('.email').addClass('is-invalid');
+		$('.emailError').text('This field is required! Please enter your email.');
+		isValid = false;
+	}
+
+	if(isEmpty(message)) {
+		$('.message').addClass('is-invalid');
+		$('.messageError').text('This field is required! Please enter your message.');
+		isValid = false;
+	}
+
+	if(!email.includes('@')) {
+		$('.email').addClass('is-invalid');
+		$('.emailError').text('Invalid email address! Please a valid email.');
+		isValid = false;
+	}
+
+	return isValid;
+};
+
 const validateFirstStepVoteForm = (dataFirstStep) => {
 	let isValid = true;
 
@@ -18,8 +48,8 @@ const validateFirstStepVoteForm = (dataFirstStep) => {
 		$('.amtOfPaymentError').text('This field is required! Select amount of payment.');
 		isValid = false;
 	}
-
-	if(!isValidEmail(dataFirstStep.email)) {
+	//!isValidEmail(dataFirstStep.email)
+	if(!dataFirstStep.email.includes('@')) {
 		$('.email').addClass('is-invalid');
 		$('.emailError').text('Invalid email address! Please enter a valid email address.');
 		isValid = false;
@@ -117,8 +147,16 @@ const isValidReferrenceNo = (referrenceNo) => {
 
 const runSpinner = () => {
 	$('.loading-spinner').removeClass('d-none');
+	$('.submit-icon').addClass('d-none')
 };
 
 const stopSpinner = () => {
 	$('.loading-spinner').addClass('d-none');
+	$('.submit-icon').removeClass('d-none')
+};
+
+const writeURI = (paramNames, query) => {
+	const currentUrl = window.location.href.split('?')[0];
+	const newUrl = currentUrl + (query ? '?'+paramNames+'=' + encodeURIComponent(query) : '');
+	return window.history.replaceState(null, null, newUrl);
 };

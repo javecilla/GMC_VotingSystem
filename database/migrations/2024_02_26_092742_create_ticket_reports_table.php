@@ -20,7 +20,7 @@ return new class extends Migration {
 			$table->string('name');
 			$table->string('email');
 			$table->text('message');
-			$table->text('image');
+			$table->text('image')->nullable();
 			$table->tinyInteger('status')->default('1')->comments('0 = fixed, 1 = not');
 			$table->timestamps();
 		});

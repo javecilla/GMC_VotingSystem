@@ -133,6 +133,11 @@ const displayAppVersions = (data) => {
   let selectDataVP = `<select class="form-select" id="appVersionSelectedVP"><option selected value="">-- SELECT --</option>`;
   let selectFilterVP = `<select class="form-select" id="versionFilterSelectedVP"><option selected value="${APP_VERSION}">${APP_VERSION}</option>`;
 
+
+  let switchVersions = `<ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+    <a class="dropdown-item active" href="/${$('#main').data('vrequest')}/admin/dashboard">
+      <li>${$('#main').data('vrequest')}</li>
+    </a>`;
   if(typeof data === 'object' && data !== null) {
    	Object.keys(data).forEach(key => {
      	tableData += `<tr class="appVersionItem_${data[key].avid}">
@@ -162,6 +167,11 @@ const displayAppVersions = (data) => {
        	</td>
       </tr>`;
 
+      switchVersions += `<a class="dropdown-item active" href="/${data[key].name}/admin/dashboard">
+        <li>${data[key].name}</li>
+      </a>
+      `;
+      
       selectData += `<option value="${data[key].avid}">${data[key].name}</option>`;
       selectFilter += `<option value="${data[key].name}">${data[key].name}</option>`;
       selectDataVP += `<option value="${data[key].avid}">${data[key].name}</option>`;
@@ -175,12 +185,14 @@ const displayAppVersions = (data) => {
     </tr>`;
   }
 
+  switchVersions += `</ul>`;
   selectData += `</select>`;
   selectFilter += `</select>`;
   selectDataVP += `</select>`;
   selectFilterVP += `</select>`;
 
 	$('#versionDataBody').html(tableData);
+  $('#switchVersions').html(switchVersions);
 
   $('.selectDataBody').html(selectData);
   $('.selectFilterBody').html(selectFilter);
@@ -188,6 +200,151 @@ const displayAppVersions = (data) => {
   $('.selectFilterBodyVP').html(selectFilterVP);
 };
 
+/*
+  |--------------------------------------------------------------------------
+  | Configuration >>> Campus
+  |--------------------------------------------------------------------------
+*/
+const getAllCampus = () => {
+  $.ajax({
+    url: `/${APP_VERSION}/${CONFIGURATION_URI}/campus`,
+    method: 'get',
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+    success: (data) => {
+      displayCampus(data);
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+const createNewCampus = (avid, campusName) => {
+  $.ajax({
+    url: `/${APP_VERSION}/${CONFIGURATION_URI}/campus/store`,
+    method: 'post',
+    data: {
+      'app_version_id': avid,
+      'name': campusName
+    },
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+    success: (response) => {
+      if(response.success) {
+        $('#newCampus').val('');
+        $('#appVersionSelected').val('');
+        stopSpinner();
+        getAllCampus();
+        toastr.success(response.message);
+      } else {
+        toastr.warning(response.message);
+      }
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+const updateCampus = async (scid, avid, campusName) => {
+  $.ajax({
+    url: `/${APP_VERSION}/${CONFIGURATION_URI}/campus/${scid}/update`,
+    method: 'patch',
+    data: { 
+      'app_version_id': avid,
+      'scid': scid,
+      'name': campusName,
+    },
+    dataType: 'json',
+    headers: { 
+      'X-CSRF-TOKEN': CSRF_TOKEN 
+    },
+    success: (response) => {
+      if(response.success) {
+        $(`.editCampusName_${scid}`).attr('contenteditable', 'false').removeClass('form-control');
+        $(`.editCampus-icon_${scid}`).removeClass('d-none');
+        $(`.saveCampus-icon_${scid}`).addClass('d-none');
+        $(`.closeCampus-icon_${scid}`).addClass('d-none');
+        $(`.deleteCampus-icon_${scid}`).removeClass('d-none');
+        getAllCampus();
+        toastr.success(response.message);
+      } else {
+        toastr.info(response.message);
+      }
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+const deleteCampus = async (campus) => {
+  $.ajax({
+    url: `/${APP_VERSION}/${CONFIGURATION_URI}/campus/${campus}/destroy`,
+    method: 'delete',
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+    success: (response) => {
+      if(response.success) {
+        $(`.campusItem_${campus}`).remove();
+        getAllCampus();
+        toastr.success(response.message);
+      } else {
+        toastr.error(response.message);
+      }
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+const displayCampus = (data) => {
+  let selectCampusData = `<select id="campusSelected" class="form-select"><option selected value="">-- SELECT --</option>`;
+  let tableCampusData = ``;
+
+  if(typeof data === 'object' && data !== null) {
+    Object.keys(data).forEach(key => {
+      selectCampusData += `<option value="${data[key].scid}">${data[key].name}</option>`;
+
+      tableCampusData += `<tr class="campusItem_${data[key].scid}">
+        <td><small id="colFormLabel" class="editCampusName_${data[key].scid} mb-0">
+          ${data[key].name}
+          </small>
+        </td>
+        <td class="text-end">
+          <a href="javascript:void(0)" data-id="${data[key].scid}" class="campusButtonEdit editCampus-icon_${data[key].scid}">
+            <i class="fa-solid fa-pen-to-square fs-5 me-2 text-muted"></i>
+          </a>
+          <a href="javascript:void(0)" data-id="${data[key].scid}" data-avid="${data[key].app_version_id}" class="campusButtonSave saveCampus-icon_${data[key].scid} d-none">
+            <i class="fa-solid fa-floppy-disk fs-5 me-2 text-muted"></i>
+          </a>
+          <a href="javascript:void(0)" data-id="${data[key].scid}" class="campusButtonClose closeCampus-icon_${data[key].scid} d-none">
+            <i class="fa-solid fa-circle-xmark fs-5 me-2 text-muted"></i>
+          </a>
+          <a href="javascript:void(0)" data-id="${data[key].scid}" class="campusButtonDelete deleteCampus-icon_${data[key].scid}">
+            <i class="fa-solid fa-trash fs-5 me-2 text-muted"></i>
+          </a>
+        </td>
+      </tr>`;
+    });
+  } else {
+    tableCampusData += `<tr class="text-center">
+      <td></td>
+      <td class="text-center text-muted" rowspan="2">No Record Found <i class="fa-solid fa-face-sad-tear"></i></td>
+    </tr>
+    `;
+  }
+  selectCampusData += `</select>`;
+  
+  $('.selectCampusBody').html(selectCampusData);
+  $('#campusDataBody').html(tableCampusData)
+};
 /*
 	|--------------------------------------------------------------------------
 	| Configuration >>> Category
@@ -563,39 +720,4 @@ const displayVotePoints = (data) => {
 
   $('#equivalentVotePointsBody').html(tableData);
   $('.voteAmountSelectDataBody').html(amountSelect);
-};
-
-/*
-	|--------------------------------------------------------------------------
-	| Configuration >>> Campus
-	|--------------------------------------------------------------------------
-*/
-
-const getAllCampus = () => {
-  $.ajax({
-    url: `/${APP_VERSION}/${CONFIGURATION_URI}/campus`,
-    method: 'get',
-    dataType: 'json',
-    headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
-    success: (data) => {
-      displayCampus(data);
-    },
-    error: (xhr, status, error) => {
-      const response = JSON.parse(xhr.responseText);
-      toastr.error(response.message);
-    }
-  });
-};
-
-const displayCampus = (data) => {
-	let selectCampusData = `<select id="campusSelected" class="form-select"><option selected value="">-- SELECT --</option>`;
- 	
- 	if(typeof data === 'object' && data !== null) {
-    Object.keys(data).forEach(key => {
-      selectCampusData += `<option value="${data[key].scid}">${data[key].name}</option>`;
-    });
-  } 
- 	selectCampusData += `</select>`;
-
-  $('.selectCampusBody').html(selectCampusData);
 };

@@ -13,6 +13,7 @@
 
 		setTimeout(function() {
 			getAllApplicationVersions();
+			getAllCampus();
 		}, 500);
 	});
 
@@ -101,6 +102,88 @@
 		});
 	});
 
+	/*
+		|--------------------------------------------------------------------------
+		| Configuration >>> Campus
+		|--------------------------------------------------------------------------
+	*/
+	$(document).on('click', '#createCampusButton', function() {
+		runSpinner();
+		const campusName = $('#newCampus').val();
+		const appVersionIdSelected = $('#appVersionSelected').val();
+
+		if(isEmpty(appVersionIdSelected)) {
+			$('#appVersionSelected').addClass('is-invalid');
+			stopSpinner();
+			return;
+		}
+
+		if(isEmpty(campusName)) {
+			$('#newCampus').addClass('is-invalid');
+			stopSpinner();
+			return;
+		}
+
+		createNewCampus(appVersionIdSelected, campusName);
+	});
+
+	$(document).on('click', '.campusButtonEdit', function() {
+		const scid = $(this).data('id');
+		$(`.editCampusName_${scid}`).attr('contenteditable', 'true').addClass('form-control');
+		$(`.editCampus-icon_${scid}`).addClass('d-none');
+		$(`.saveCampus-icon_${scid}`).removeClass('d-none');
+		$(`.closeCampus-icon_${scid}`).removeClass('d-none');
+		$(`.deleteCampus-icon_${scid}`).addClass('d-none');
+	});
+
+	$(document).on('click', '.campusButtonClose', function() {
+		const scid = $(this).data('id');
+		$(`.editCampusName_${scid}`).attr('contenteditable', 'false').removeClass('form-control');
+		$(`.editCampus-icon_${scid}`).removeClass('d-none');
+		$(`.saveCampus-icon_${scid}`).addClass('d-none');
+		$(`.closeCampus-icon_${scid}`).addClass('d-none');
+		$(`.deleteCampus-icon_${scid}`).removeClass('d-none');
+		getAllCampus();
+	});
+
+	$(document).on('click', '.campusButtonSave', function() {
+		const scid = $(this).data('id');
+		const avid = $(this).data('avid');
+		const campusName = $(this).closest('tr').find(`.editCampusName_${scid}`).text();
+
+		if(isEmpty(campusName)) {
+			toastr.info("Campus name is required.");
+			return;
+		}
+
+		updateCampus(scid, avid, campusName);
+	});
+
+	$(document).on('click', '.campusButtonDelete', function() {
+		const scid = $(this).data('id');
+		const campusName = $(this).closest('tr').find(`.editCampusName_${scid}`).text();
+		const deleteConfirm = Swal.mixin({
+			customClass: {
+			  confirmButton: "btn btn-lg btn-secondary me-2",
+			  cancelButton: "btn btn-lg btn-light",
+			},
+  		buttonsStyling: false
+		});
+
+		deleteConfirm.fire({
+      title: "Confirm Deletion",
+      html: `Are you sure you want to delete this campus <b>${campusName}</b>? Deleting an category will also remove all associated records. This action cannot be undone.`,
+      showConfirmButton: true,
+      confirmButtonText: "Okay",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+    }).then(function(response) {
+    	if(!response.isConfirmed) { 
+    		return false; 
+		  } 
+		  deleteCampus(scid);
+		});
+	});
 
 	/*
 		|--------------------------------------------------------------------------
@@ -286,10 +369,10 @@
 	});
 
 	// Remove the error style input
-	$(document).on('input', '#newVotingTitle, #newVotingVersion, #newCategory', function() {
+	$(document).on('input', '#newVotingTitle, #newVotingVersion, #newCategory, #newCampus', function() {
 		$('#newVotingTitle').removeClass('is-invalid');
 		$('#newVotingVersion').removeClass('is-invalid');
-
+		$('#newCampus').removeClass('is-invalid');
 		$('#newCategory').removeClass('is-invalid');
 	});
 

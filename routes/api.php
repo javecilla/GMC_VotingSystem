@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\CandidateController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\TicketReportController;
+use App\Http\Controllers\Api\ViewController;
 use App\Http\Controllers\Api\VotePointController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,5 +17,8 @@ Route::middleware(['web', 'guest'])->group(function () {
 		Route::get('/amount/vote-points', [VotePointController::class, 'retrieve']);
 		Route::get('/{votePointsId}/vote-points', [VotePointController::class, 'show']);
 		Route::post('/vote/store', [VotePointController::class, 'store']);
+		Route::get('/count/all/votes', [VotePointController::class, 'count']);
+		Route::get('/count/page/views', [ViewController::class, 'count']);
+		Route::post('/report/store', [TicketReportController::class, 'store']);
 	});
 });

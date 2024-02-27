@@ -17,7 +17,7 @@ class CandidateCreateRequest extends FormRequest {
 			'school_campus_id' => '',
 			'category_id' => 'required',
 			'candidate_no' => [
-				//'required',
+				'required',
 				// this check if the candidate no is already exist in database 'categories'
 				// for particular app version id and category id then it will not be accepted
 				Rule::unique('candidates')->where(function ($query) {

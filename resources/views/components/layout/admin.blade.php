@@ -110,12 +110,14 @@
 			        <i class="fa-solid fa-code-compare"></i>
 			        <span>&nbsp; {{ __('System Versioning') }}</span>
 			      </a>
-			      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-			        <a class="dropdown-item active"
-			        	href="{{ route('dashboard.index', ['version' => request()->route('version')]) }}"><li>
-			        	{{ env('APP_VERSION') }}</li>
-			        </a>
-			      </ul>
+			      <div id="switchVersionsBody">
+			      	<ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+				      	<a class="dropdown-item active" href="javascript:void(0)">
+	        				<li><i class="fas fa-spinner fa-spin" style="font-size: 10px;"></i></li>
+	      				</a>
+      				</ul>
+			      	{{-- data fetch via ajax functions/configuration.js --}}
+			      </div>
 			    </div>
 		    </div>
 	    </nav>
@@ -149,9 +151,7 @@
 			    </ul>
 			  </div>
 		  </div>
-
 		</div>
-
 	</x-header>
 
 	<!-- ======= Main ======= -->
@@ -177,7 +177,8 @@
 
  	<script src="{{ asset('/wp-admin/themes/scripts/helper.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/functions/auth.js') }}" defer></script>
- 	<script src="{{ asset('/wp-admin/themes/scripts/functions/reports.js') }}"></script>
+{{--  	<script src="{{ asset('/wp-admin/themes/scripts/functions/reports.js') }}" defer></script>
+ 	<script src="{{ asset('/wp-admin/themes/scripts/functions/configuration.js') }}" defer></script> --}}
  	<script src="{{ asset('/wp-admin/themes/scripts/eventListener/auth.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/validations.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/app.js') }}" defer></script>

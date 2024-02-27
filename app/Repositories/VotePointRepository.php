@@ -16,11 +16,7 @@ class VotePointRepository implements IRepository {
 	# @Override
 	public function getAll(String $appVersionName = ""): object {
 		$appVersion = AppVersion::where('name', $appVersionName)->first();
-		if ($appVersion) {
-			return VotePoint::where('app_version_id', $appVersion->avid)->get();
-		} else {
-			return VotePoint::all();
-		}
+		return VotePoint::where('app_version_id', $appVersion->avid)->get();
 	}
 
 	# @Override

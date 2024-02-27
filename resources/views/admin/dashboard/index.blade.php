@@ -42,7 +42,7 @@
 		          <div class="card-content">
 		            <h4><b>{{ __("Issue's Report") }}</b></h4>
 		            <h2 class="text-left"><i class="fa-solid fa-bug fs-2"></i>
-		              <span id="totalIssueReport">0</span>
+		              <span id="totalIssueReport"><i class="fas fa-spinner fa-spin"></i></span>
 		            </h2>
 		          </div>
 		        </div>

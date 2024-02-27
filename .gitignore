@@ -6,8 +6,8 @@
 /storage/*.key
 /vendor
 .env
-.env.backup
 .env.production
+.tag.production
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml

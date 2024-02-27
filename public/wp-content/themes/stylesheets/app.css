@@ -49,8 +49,12 @@ body {
 	background-color: var(--app-dirty-white);
   background-image: radial-gradient(#d6d6d6 1px, transparent 1px);
   background-size: 22px 22px;
-} .h-text-content { padding: 90px!important; } 
-.h-button-content { margin-top: -30px; }
+} 
+.h-text-content { padding: 90px!important; } 
+.h-button-content { 
+  margin-top: -30px; 
+  padding: 10px;
+}
 
 .main-header-title {
 	font-family: var(--app-font-poppins);	
@@ -60,6 +64,8 @@ body {
 	font-family: var(--app-font-poppins);	
 	font-size: 56px;
 } 
+
+
 .gradient-blue-text {
 	background: -webkit-gradient(linear,left top,right top,from(var(--app-dark-blue)),to(var(--app-light-blue)));
 	background-image: linear-gradient(90deg,var(--app-dark-blue) 0,var(--app-light-blue) 100%); 
@@ -331,6 +337,7 @@ body {
 } .faq-container {
   margin-top: -200px;
 } .card-faq {
+  height: 480px!important;
   background: rgba(16, 29, 39, 0.52);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -507,17 +514,22 @@ background: #ff0000;
 
 @media (max-width: 1000px) {
   .carousel-item {
-    height: 32rem;
+    height: 32rem!important;
   }
 }
 @media (max-width: 800px) {
   .carousel-item {
-    height: 29rem;
+    height: 29rem!important;
   }
 }
 @media (max-width: 600px) {
   .carousel-item {
-    height: 26rem;
+    height: 24rem!important;
+  }
+}
+@media (max-width: 400px) {
+  .carousel-item {
+    height: 20rem!important;
   }
 }
 
@@ -715,6 +727,11 @@ background: #ff0000;
   color: var(--bs-dropdown-link-hover-color);
   background-color: var(--bs-dropdown-link-hover-bg);
 }
+.slider-image-overlay {
+  color-stop(55%, rgba(0, 0, 0, .6)), to(rgba(0, 0, 0, 2)))!important;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .6) 80%, rgba(0, 0, 0, 2) 100%)!important;
+  background-blend-mode: multiply!important;
+}
 #cardOverlay {
   width: 100%;
   height: 100%;
@@ -722,6 +739,23 @@ background: #ff0000;
   color-stop(55%, rgba(0, 0, 0, .6)), to(rgba(0, 0, 0, 2)));
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .1) 80%, rgba(0, 0, 0, .9) 100%)!important;
   background-blend-mode: multiply;
+}
+
+@media (max-width: 1000px) {
+  .card-cover { 
+     height: 70vh!important;
+  }
+}
+@media (max-width: 800px) {
+  .search_input::placeholder {
+    font-size: 16px;
+  }
+}
+@media (max-width: 600px) {
+  .search_input::placeholder {
+    text-indent: 1px;
+    font-size: 14px;
+  }
 }
 
 /** progres bar */
@@ -817,4 +851,492 @@ background: #ff0000;
 .c-vote-points-header-title {
   font-family: var(--app-font-poppins); 
   font-size: 72px;
+}
+
+@media only screen and (max-width: 1200px) {
+  /*hero section*/
+  #heroSection {
+    padding-bottom: 50px!important;
+  } 
+  .h-text-content { padding: 60px!important; } 
+  .h-button-content { 
+    padding: 20px;
+    margin-top: -40px;
+  }
+  .main-header-title {
+    font-size: 45px;
+  }
+  .h-label-text {
+    font-size: 20px!important;
+  } 
+  /*second section*/
+  .tracker-svg {
+    margin-top: -10px!important;
+  }.tracker-container {
+    margin-top: -90px;
+  } 
+  /*3rd section*/
+  .htv-svg {
+    margin-top: -20px;
+  } .htv-container {
+    margin-top: -100px;
+  }  .description-text-htv {
+    font-size: 18px!important;
+  }
+  .sub-header-title {
+    font-size: 40px;
+  } 
+  /*4th section*/
+  .faq-svg {
+    margin-top: -20px;
+  } .faq-container {
+    margin-top: -100px;
+  } .card-faq {
+    height: 470px!important;
+  } .sub-text-faq {
+    font-size: 25px!important;
+  } .description-text-faq {
+    font-size: 17px!important;
+  }
+  /*5th section*/
+  .about-svg {
+    margin-top: -20px;
+  }
+ .about-container {
+    margin-top: -80px;
+  }
+  .description-text-about {
+    font-size: 19px!important;
+  } 
+ .about-description-content {
+    margin-top: -40px;
+  }
+  /*6th sectons*/
+  .contact-svg {
+    margin-top: -20px;
+  } .contact-admins {
+    margin-top: -30px;
+  } .report-concern {
+    margin-top: -60px;
+  } .description-text-contact {
+    font-size: 18px!important;
+  } 
+  /*7th sections*/
+  #footer {
+    background-color: #f9f9f9!important; 
+    margin-bottom: 0px;
+  } .f-container {
+    margin-top: -70px;
+  } .f-svg {
+    margin-top: -90px;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  /*hero section*/
+  #heroSection {
+    padding-bottom: 50px!important;
+  } 
+  .h-text-content { padding: 60px!important; } 
+  .h-button-content { 
+    padding: 20px;
+    margin-top: -40px;
+  }
+  .main-header-title {
+    font-size: 45px;
+  }
+  .h-label-text {
+    font-size: 20px!important;
+  } 
+  /*second section*/
+  .tracker-svg {
+    margin-top: -10px!important;
+  }.tracker-container {
+    margin-top: -90px;
+  } 
+  /*3rd section*/
+  .htv-svg {
+    margin-top: -20px;
+  } .htv-container {
+    margin-top: -100px;
+  }  .description-text-htv {
+    font-size: 18px!important;
+  }
+  .sub-header-title {
+    font-size: 40px;
+  } 
+  /*4th section*/
+  .faq-svg {
+    margin-top: -20px;
+  } .faq-container {
+    margin-top: -100px;
+  } .card-faq {
+    height: 460px!important;
+  } .sub-text-faq {
+    font-size: 25px!important;
+  } .description-text-faq {
+    font-size: 17px!important;
+  }
+  /*5th section*/
+  .about-svg {
+    margin-top: -20px;
+  }
+ .about-container {
+    margin-top: -80px;
+  }
+  .description-text-about {
+    font-size: 19px!important;
+  } 
+ .about-description-content {
+    margin-top: -40px;
+  }
+  /*6th sectons*/
+  .contact-svg {
+    margin-top: -20px;
+  } .contact-admins {
+    margin-top: -30px;
+  } .report-concern {
+    margin-top: -60px;
+  } .description-text-contact {
+    font-size: 18px!important;
+  } 
+  /*7th sections*/
+  #footer {
+    background-color: #f9f9f9!important; 
+    margin-bottom: 0px;
+  } .f-container {
+    margin-top: -70px;
+  } .f-svg {
+    margin-top: -90px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  /*hero section*/
+  #heroSection {
+    padding-bottom: 50px!important;
+  } 
+  .h-text-content { padding: 60px!important; } 
+  .h-button-content { 
+    padding: 20px;
+    margin-top: -40px;
+  }
+  .main-header-title {
+    font-size: 50px;
+  }
+  .h-label-text {
+    font-size: 25px!important;
+  } 
+  /*second section*/
+  .tracker-svg {
+    margin-top: -20px!important;
+  }.tracker-container {
+    margin-top: -90px;
+  } 
+  /*3rd section*/
+  .htv-svg {
+    margin-top: -20px;
+  } .htv-container {
+    margin-top: -100px;
+  }  .description-text-htv {
+    font-size: 18px!important;
+  }
+  .sub-header-title {
+    font-size: 40px;
+  } 
+  /*4th section*/
+  .faq-svg {
+    margin-top: -20px;
+  } .faq-container {
+    margin-top: -100px;
+  } .card-faq {
+    height: 460px!important;
+  } .sub-text-faq {
+    font-size: 25px!important;
+  } .description-text-faq {
+    font-size: 17px!important;
+  }
+  /*5th section*/
+  .about-svg {
+    margin-top: -20px;
+  }
+ .about-container {
+    margin-top: -80px;
+  }
+  .description-text-about {
+    font-size: 19px!important;
+  } 
+ .about-description-content {
+    margin-top: -40px;
+  }
+  /*6th sectons*/
+  .contact-svg {
+    margin-top: -20px;
+  } .contact-admins {
+    margin-top: -30px;
+  } .report-concern {
+    margin-top: -60px;
+  } .description-text-contact {
+    font-size: 18px!important;
+  } 
+  /*7th sections*/
+  #footer {
+    background-color: #f9f9f9!important; 
+    margin-bottom: 0px;
+  } .f-container {
+    margin-top: -70px;
+  } .f-svg {
+    margin-top: -90px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  /*hero section*/
+  #heroSection {
+    padding-bottom: 50px!important;
+  } 
+  .h-text-content { padding: 60px!important; } 
+  .h-button-content { 
+    padding: 20px;
+    margin-top: -40px;
+  }
+  .main-header-title {
+    font-size: 45px;
+  }
+  .h-label-text {
+    font-size: 20px!important;
+  } 
+  /*second section*/
+  .tracker-svg {
+    margin-top: -20px!important;
+  }.tracker-container {
+    margin-top: -90px;
+  } 
+  /*3rd section*/
+  .htv-svg {
+    margin-top: -20px;
+  } .htv-container {
+    margin-top: -100px;
+  }  .description-text-htv {
+    font-size: 18px!important;
+  }
+  .sub-header-title {
+    font-size: 40px;
+  } 
+  /*4th section*/
+  .faq-svg {
+    margin-top: -20px;
+  } .faq-container {
+    margin-top: -100px;
+  } .card-faq {
+    height: 430px!important;
+  } .sub-text-faq {
+    font-size: 25px!important;
+  } .description-text-faq {
+    font-size: 17px!important;
+  }
+  /*5th section*/
+  .about-svg {
+    margin-top: -20px;
+  }
+ .about-container {
+    margin-top: -80px;
+  }
+  .description-text-about {
+    font-size: 19px!important;
+  } 
+ .about-description-content {
+    margin-top: -40px;
+  }
+  /*6th sectons*/
+  .contact-svg {
+    margin-top: -20px;
+  } .contact-admins {
+    margin-top: -30px;
+  } .report-concern {
+    margin-top: -60px;
+  } .description-text-contact {
+    font-size: 18px!important;
+  } 
+  /*7th sections*/
+  #footer {
+    background-color: #f9f9f9!important; 
+    margin-bottom: 0px;
+  } .f-container {
+    margin-top: -70px;
+  } .f-svg {
+    margin-top: -90px;
+  }
+}
+
+@media only screen and (max-width: 552px) {
+  /*hero section*/
+  #heroSection {
+    padding-bottom: 50px!important;
+  } 
+  .h-text-content { padding: 50px!important; } 
+  .h-button-content { 
+    padding: 30px;
+    margin-top: -50px;
+  }
+  .main-header-title {
+    font-size: 45px;
+  }
+  .h-sub-text {
+    font-size: 17px!important;
+  }
+  .h-label-text {
+    font-size: 15px!important;
+  } 
+  /*second section*/
+  .tracker-svg {
+    margin-top: -20px!important;
+  }.tracker-container {
+    margin-top: -90px;
+  } 
+  /*3rd section*/
+  .htv-svg {
+    margin-top: -20px;
+  } .htv-container {
+    margin-top: -100px;
+  }  .description-text-htv {
+    font-size: 17px!important;
+  }
+  .sub-header-title {
+    font-size: 28px;
+  } 
+  /*4th section*/
+  .faq-svg {
+    margin-top: -10px;
+  } .faq-container {
+    margin-top: -80px;
+  } .card-faq {
+    height: 410px!important;
+  } .sub-text-faq {
+    font-size: 25px!important;
+  } .description-text-faq {
+    font-size: 17px!important;
+  }
+  /*5th section*/
+  .about-svg {
+    margin-top: -20px;
+  }
+ .about-container {
+    margin-top: -80px;
+  }
+  .description-text-about {
+    font-size: 17px!important;
+  } 
+ .about-description-content {
+    margin-top: -40px;
+    padding: 10px;
+  }
+  /*6th sectons*/
+  .contact-svg {
+    margin-top: -20px;
+  } .contact-admins {
+    margin-top: -30px;
+    padding: 10px;
+  } .report-concern {
+    margin-top: -60px;
+  } .description-text-contact {
+    font-size: 18px!important;
+  }  .description-text-contact {
+    font-size: 17px!important;
+  }
+  /*7th sections*/
+  #footer {
+    background-color: #f9f9f9!important; 
+    margin-bottom: 0px;
+  } .f-container {
+    margin-top: -70px;
+  } .f-svg {
+    margin-top: -90px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  /*hero section*/
+  #heroSection {
+    padding-bottom: 50px!important;
+  } 
+  .h-text-content { padding: 50px!important; } 
+  .h-button-content { 
+    padding: 30px;
+    margin-top: -50px;
+  }
+  .main-header-title {
+    font-size: 35px;
+  }
+  .h-sub-text {
+    font-size: 17px!important;
+  }
+  .h-label-text {
+    font-size: 15px!important;
+  } 
+  /*second section*/
+  .tracker-svg {
+    margin-top: -20px!important;
+  }.tracker-container {
+    margin-top: -90px;
+  } 
+  /*3rd section*/
+  .htv-svg {
+    margin-top: -20px;
+  } .htv-container {
+    margin-top: -100px;
+  }  .description-text-htv {
+    font-size: 17px!important;
+  }
+  .sub-header-title {
+    font-size: 28px;
+  } 
+  /*4th section*/
+  .faq-svg {
+    margin-top: -10px;
+  } .faq-container {
+    margin-top: -80px;
+  } .card-faq {
+    height: 380px!important;
+  } .sub-text-faq {
+    font-size: 25px!important;
+  } .description-text-faq {
+    font-size: 17px!important;
+  }
+  /*5th section*/
+  .about-svg {
+    margin-top: -20px;
+  }
+ .about-container {
+    margin-top: -80px;
+  }
+  .description-text-about {
+    font-size: 17px!important;
+  } 
+ .about-description-content {
+    margin-top: -40px;
+    padding: 10px;
+  }
+  /*6th sectons*/
+  .contact-svg {
+    margin-top: -20px;
+  } .contact-admins {
+    margin-top: -30px;
+    padding: 10px;
+  } .report-concern {
+    margin-top: -60px;
+  } .description-text-contact {
+    font-size: 18px!important;
+  }  .description-text-contact {
+    font-size: 17px!important;
+  }
+  /*7th sections*/
+  #footer {
+    background-color: #f9f9f9!important; 
+    margin-bottom: 0px;
+  } .f-container {
+    margin-top: -70px;
+  } .f-svg {
+    margin-top: -90px;
+  }
 }

@@ -68,7 +68,7 @@ const getRecentlyVoters = async (limit, offset) => {
 		dataType: 'json',
 		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
 		success: (data) => {
-			console.log(data);
+			//console.log(data);
 			displayRecentlyVotes(data);
 		},
 		erorr: (xhr, status, error) => {

@@ -3,6 +3,7 @@
 const appVersion = $('.main-content').data('app');
 const csrfToken = $('meta[name="csrf-token"]').attr('content');
 const votingTitle = $('.main-content').data('vtitle');
+const INDEX_URI = $('#indexURI').val();
 
 const getAllCandidates = async () => {
 	$.ajax({
@@ -12,6 +13,7 @@ const getAllCandidates = async () => {
 		headers: { 'X-CSRF-TOKEN': csrfToken },
 		success: (data) => {
 			displayCandidates(data);
+			window.history.replaceState(null, null, INDEX_URI);
 		},
 		error: (xhr, status, error) => {
 			const response = JSON.parse(xhr.responseText);
@@ -84,6 +86,40 @@ const getOneCandidatesById = async (candidateId) => {
 	});
 };
 
+const getCountTotalVoters = async () => {
+	$.ajax({
+		url: `/api/${encodeURIComponent(appVersion)}/count/all/votes`,
+		method: 'get',
+		dataType: 'json',
+		headers: { 'X-CSRF-TOKEN': csrfToken },
+		success: (data) => {
+			$('#totalVotes').text(data.totalVotes);
+			//toastr.success(data.message);
+		},
+		error: (xhr, status, error) => {
+			const response = JSON.parse(xhr.responseText);
+			toastr.error(response.message);
+		}
+	});
+};
+
+const getCountTotalPageViews = async () => {
+	$.ajax({
+		url: `/api/${encodeURIComponent(appVersion)}/count/page/views`,
+		method: 'get',
+		dataType: 'json',
+		headers: { 'X-CSRF-TOKEN': csrfToken },
+		success: (data) => {
+			$('#totalPageViews').text(data.totalPageViews);
+			//toastr.success(data.message);
+		},
+		error: (xhr, status, error) => {
+			const response = JSON.parse(xhr.responseText);
+			toastr.error(response.message);
+		}
+	});
+};
+
 const filterCandidatesBySearch = async (searchQuery) => {
 	$.ajax({
 		url: `/api/${encodeURIComponent(appVersion)}/${encodeURIComponent(searchQuery)}/search`,
@@ -101,16 +137,13 @@ const filterCandidatesBySearch = async (searchQuery) => {
 };
 
 const filterCandidatesByCategory = async (categoryQuery) => {
-	const currentUrl = window.location.href.split('?')[0];
-  const newUrl = categoryQuery ? `${currentUrl}?category=${encodeURIComponent(categoryQuery)}` : currentUrl;
-  window.history.replaceState(null, null, newUrl);
-
 	$.ajax({
 		url: `/api/${encodeURIComponent(appVersion)}/${encodeURIComponent(categoryQuery)}/category`,
 		method: 'get',
 		dataType: 'json',
 		headers: { 'X-CSRF-TOKEN': csrfToken },
 		success: (data) => {
+			writeURI('category', categoryQuery);
 			displayCandidates(data);
 		},
 		error: (xhr, status, error) => {
@@ -149,7 +182,40 @@ const storeSubmittedVotes = async (dataForm) => {
 	});
 };
 
-// @Functions displays components
+const storeSubmittedReport = async (dataForm) => {
+	runSpinner();
+	$('#submitReportBtn').attr('disabled', true);
+	$.ajax({
+		url: `/api/${appVersion}/report/store`,
+		method: 'post',
+		data: dataForm,
+		processData: false, 
+    contentType: false,
+		dataType: 'json',
+		headers: {'X-CSRF-TOKEN': csrfToken},
+		success: (response) => {
+			if(response.success) {
+				$('#submitReportForm')[0].reset();
+				toastr.success(response.message);
+			} else {
+				toastr.error(response.message);
+			}
+
+			stopSpinner();
+			$('#submitReportBtn').removeAttr('disabled');
+			grecaptcha.reset();
+		},
+		error: (xhr, status, error) => {
+			const response = JSON.parse(xhr.responseText);
+			toastr.error(response.message);
+			stopSpinner();
+			$('#submitReportBtn').removeAttr('disabled');
+			grecaptcha.reset();
+		}
+	});
+};
+
+// Functions displays components
 const displayCandidates = (data) => {
 	let dataListofCandidatesItem = `<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 ">`;
 		if(Array.isArray(data) && data.length > 0) { 
@@ -162,13 +228,19 @@ const displayCandidates = (data) => {
 				        <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
 				          <ul class="d-flex list-unstyled mt-auto">
 				            <li class="me-auto" style="margin-top: 5px">
-				             <a href="#" class="button-links"
+				             <a href="javascript:void(0)" class="button-links"
+				             		id="copyLinkButton"
+				             		data-id="${data[key].cdid}"
 				              	data-bs-toggle="tooltip" data-bs-placement="bottom"
 									      data-bs-custom-class="custom-tooltip"
 									      data-bs-title="Copy link and share">
-				              	<i class="fa-solid fa-share-nodes button-links-icon"></i>
+				              	<i class="fa-solid fa-share-nodes button-links-icon share_${data[key].cdid}"></i>
+				              	<i class="fa-solid fa-check button-links-icon d-none check_${data[key].cdid}"></i>
 				            </a>
-				            <a href="/${votingTitle}/${data[key].cdid}/candidates" class="button-links"
+				            <a href="javascript:void(0)" class="button-links" id="showCandidateOpenModal"
+				            	data-id="${data[key].cdid}"
+				            	data-name="${data[key].name}"
+				            	data-no="${data[key].candidate_no}"
 				            	data-bs-toggle="tooltip" data-bs-placement="bottom"
 									   	data-bs-custom-class="custom-tooltip"
 									   	data-bs-title="View more information">
@@ -284,55 +356,14 @@ const displayQRCodeOfPayments = (data) => {
 };
 
 const displayCandidatesById = (data) => {
-	let dataOneCandidatesItem = `<div class="row">`;
-	if(Array.isArray(data) && data.length > 0) {
-		Object.keys(data).forEach(key => {
-			dataOneCandidatesItem += `
-				<div class="col-md-6">
-							<div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg"
-						      style="background-image: url('/storage/${data[key].image}'); height: 65vh!important;">
-						      <div id="cardOverlay" class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
-						        <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
-						      </div>
-						    </div>
-						</div>
-						<div class="col-md-6">
-							<div class="c-vote-points-info">
-								<label class="c-vote-points-label-text gradient-blue-text">01 - Reyna</label>
-				    		<h1 class="c-vote-points-header-title gradient-blue-text">Zoe Delph</h1>
-								<label class="c-vote-points-sub-text">Your vote counts, your vote is matter, make it heard!</label>
-								<div class="row">
-									<div class="col-md-6 mt-2">
-										<span class="badge d-flex align-items-center p-1 pe-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-pill">
-					    				<img class="me-1" width="24" height="24" src="/wp-content/uploads/star.png" alt="">
-					     				Vote Points
-								    	<span class="vr mx-2"></span>
-								    	<a href="#" class="text-decoration-none">5040</a>&nbsp; <i class="fa-solid fa-caret-up float-end"></i>
-								 		</span>
-									</div>
-									<div class="col-md-6 mt-2">
-										<span class="badge d-flex align-items-center p-1 pe-2 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-pill">
-		    							<img class="me-1" width="24" height="24" src="/wp-content/uploads/star.png" alt="">
-		    							Number of Votes
-		    							<span class="vr mx-2"></span>
-		    							<a href="#" class="text-decoration-none">5040</a>&nbsp; <i class="fa-solid fa-caret-up float-end"></i>
-	  								</span>
-									</div>
-								</div>
-							  <hr class="text-muted"/>
-							  <a href="/${votingTitle}/candidates" class="btn btn-primary">Back <i class="fa-solid fa-arrow-right"></i></a>
-							</div>
-						</div>
-			`;
-		});
+	if(typeof data === 'object' && data !== null) {
+		$('#showCardCandidateImage').css('background-image', `url(/storage/${data.candidate.image})`);
+		$('#totalCurrentVotePoints').text(data.totalVotePoints);
+		$('#totalVerifiedVoters').text(data.totalVotes);
+		$('#candidateNameShow').val(data.candidate.name);
+		$('#candidateCampusShow').val(data.candidate.campus.name ?? '---');
+		$('#candidateCategoryShow').val(data.candidate.category.name);
 	} else {
-		dataOneCandidatesItem += `
-			<div class="text-muted mt-3 d-flex align-items-center justify-content-center text-center">
-				<i class="fas fa-spinner fa-spin loading-spinner fs-4"></i>
-				<span class="fs-4">&nbsp;{{ __('Loading...') }}</span>
-			</div>
-		`;
+		toastr.error("Something went wrong!");
 	}
-	dataOneCandidatesItem += `</div>`;
-	$('#dataOneCandidatesBody').html(dataOneCandidatesItem);
 };

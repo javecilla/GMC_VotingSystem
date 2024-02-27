@@ -341,7 +341,7 @@ const displayAllCandidates = (data) => {
       candidatesInSelect += `<option data-name="${data[key].name}" class="optionDataCandidate_${data[key].cdid}" value="${data[key].cdid}">${data[key].name}</option>`;
     });
   } else {
-  	candidatesDataBody += `<option value="">No record found</option>`;
+  	candidatesInSelect += `<option value="">No record found</option>`;
   }
 
   candidatesInSelect += `</select><div class="invalid-feedback candidateIdError"></div>`;
@@ -447,7 +447,7 @@ const displayOneCandidates = (data) => {
     //show
     $('#showCardCandidateImage').css('background-image', `url(/storage/${data.candidate.image})`);
     $('#votingVersion').val(data.candidate.app_version.title);
-    $('#campusCandidate').val(data.candidate.campus.name ?? '---');
+    $('#campusCandidate').val(data.candidate.campus?.name === null ? '---' : data.candidate.campus?.name);
     $('#categoryCandidate').val(data.candidate.category.name);
     $('#nameCandidate').val(data.candidate.name);
     $('#noCandidate').val(data.candidate.candidate_no);
@@ -460,7 +460,7 @@ const displayOneCandidates = (data) => {
     $('#editCandidateNoText').text(data.candidate.candidate_no);
 
     $('#editCandidateVersion').val(data.candidate.app_version.name);
-    $('#editCandidateCampus').val(data.candidate.campus.name ?? '---');
+    $('#editCandidateCampus').val(data.candidate.campus?.name === null ? '---' : data.candidate.campus?.name);
     $('#editCandidateCategory').val(data.candidate.category.name);
     $('#editCandidateName').val(data.candidate.name);
     $('#editCandidateNo').val(data.candidate.candidate_no);

@@ -64,43 +64,44 @@ class CandidateRepository implements IRepository {
 	}
 
 	public function getOne(int $candidateId): object {
+		// \Log::info("id: " . $candidateId);
 		// get information for a single candidate
 		$candidate = Candidate::with(['appVersion', 'campus', 'category'])
 			->where('cdid', $candidateId)
 			->first();
 
 		// get all votes records for this candidates (verified|pending|spam)
-		$votes = Vote::with(['candidate', 'votePoint'])->where('candidate_id', $candidate->cdid)->get();
+		$votes = Vote::with(['candidate', 'votePoint'])->where('candidate_id', $candidateId)->get();
 
 		// calculate the total votes of this candidate (only verified lang will count)
-		$totalVotes = Vote::where('candidate_id', $candidate->cdid)
+		$totalVotes = Vote::where('candidate_id', $candidateId)
 			->where('status', 0)
 			->count();
 
 		// calculate the total amount of this candidate (only verified lang will count)
-		$totalAmount = Vote::where('candidate_id', $candidate->cdid)
+		$totalAmount = Vote::where('candidate_id', $candidateId)
 			->where('status', 0)
 			->join('vote_points', 'votes.vote_points_id', '=', 'vote_points.vpid')
 			->sum('vote_points.amount');
 
 		// calculate the total vote points of this candidates (only if is verfied lang)
-		$totalVotePoints = Vote::where('candidate_id', $candidate->cdid)
+		$totalVotePoints = Vote::where('candidate_id', $candidateId)
 			->where('status', 0)
 			->join('vote_points', 'votes.vote_points_id', '=', 'vote_points.vpid')
 			->sum('vote_points.point');
 
 		// calculate the total pending vote of this candidates
-		$totalPendingVotes = Vote::where('candidate_id', $candidate->cdid)
+		$totalPendingVotes = Vote::where('candidate_id', $candidateId)
 			->where('status', 1)
 			->count();
 
 		// calculate the total spam vote of this candidates
-		$totalSpamVotes = Vote::where('candidate_id', $candidate->cdid)
+		$totalSpamVotes = Vote::where('candidate_id', $candidateId)
 			->where('status', 2)
 			->count();
 
 		// calculate the all total vote of this candidates (verified|pending|spam)
-		$totalOfAllVotes = Vote::where('candidate_id', $candidate->cdid)
+		$totalOfAllVotes = Vote::where('candidate_id', $candidateId)
 			->count();
 
 		// object para i hold lahat ng information about candidates
@@ -113,7 +114,14 @@ class CandidateRepository implements IRepository {
 		$result->totalPendingVotes = $totalPendingVotes;
 		$result->totalSpamVotes = $totalSpamVotes;
 		$result->totalOfAllVotes = $totalOfAllVotes;
-		// \Illuminate\Support\Facades\Log::info($result);
+		// \Log::info("Candidate: " . json_encode($result->candidate));
+		// \Log::info("Votes: " . json_encode($result->votes));
+		// \Log::info("Total Votes: " . $result->totalVotes);
+		// \Log::info("Total Amount: " . $result->totalAmount);
+		// \Log::info("Total Vote Points: " . $result->totalVotePoints);
+		// \Log::info("Total Pending Votes: " . $result->totalPendingVotes);
+		// \Log::info("Total Spam Votes: " . $result->totalSpamVotes);
+		// \Log::info("Total Of All Votes: " . $result->totalOfAllVotes);
 		return $result;
 	}
 

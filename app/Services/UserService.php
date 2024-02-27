@@ -20,11 +20,12 @@ class UserService {
 			$request->session()->regenerate();
 			//upon login successfull, track the last activity time
 			$request->session()->put('last_activity', now());
-			//return the response
+			//return the response APP_VERSION
 			return ['success' => true,
 				'message' => 'Login successfully',
-				'redirect' => route('dashboard.index', APP_VERSION),
+				'redirect' => route('dashboard.index', 'v1.3'),
 			];
+
 		} else {
 			$loginAttempts++; //increment attemp if login is failed
 			$request->session()->put('loginAttempts', $loginAttempts);

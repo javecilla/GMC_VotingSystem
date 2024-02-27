@@ -13,8 +13,8 @@ class RouteServiceProvider extends ServiceProvider {
 	 * The path to your application's "dashbaord" route.
 	 * Typically, users are redirected here after authentication.
 	 */
-	public const DASHBOARD = APP_VERSION . "/admin/dashboard";
-	//public const DASHBOARD = "v1.2/admin/dashboard";
+	//public const DASHBOARD = APP_VERSION . "/admin/dashboard";
+	public const DASHBOARD = "v1.3/admin/dashboard";
 
 	/**
 	 * Define your route model bindings, pattern filters, and other route configuration.

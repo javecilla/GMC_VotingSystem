@@ -1,9 +1,10 @@
 <x-layout.admin title="Candidates Management">
 <x-slot name="version">{{ request()->route('version') }}</x-slot>
 	<x-section id="candidatesManagementContent" data-component="candidatesManagement">
-		<x-container>
-			<div id="indexUri" data-iurl="{{ route('candidates.index', request()->route('version')) }}" class="votes-management-card card">
-				<input type="hidden" value="3" id="candidateId"/>
+		<x-container data-iurl="{{ route('candidates.index', request()->route('version')) }}">
+			{{-- Hidden data inputs --}}
+			<input type="hidden" value="3" id="candidateId"/>
+			<div class="votes-management-card card">
 				<div class="card-header">
 					<div class="float-start">
 						<i class="fa-solid fa-list fs-4"></i>
@@ -12,12 +13,11 @@
 					<div class="float-end">
 					  <div class="dropdown rounded-5">
 				      <a href="javascript:void(0)" class="browse-listing d-flex align-items-center dropdown-toggle text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
-				        <strong>Filter Category</strong>
+				        <strong>{{ __('Filter Category') }}</strong>
 				      </a>
 				      <div id="filterCategoryDataBody">
-				      	{{-- functions->configuration.js --}}
+				      	{{-- data fetch via ajax functions->configuration.js --}}
 				      </div>
-
 			    	</div>
 					</div>
 				</div>
@@ -44,21 +44,10 @@
 							<i class="fas fa-spinner fa-spin loading-spinner fs-4"></i>
 							<span class="fs-4">&nbsp;{{ __('Loading...') }}</span>
 						</div>
-						{{-- data fetch via ajax --}}
+						{{-- data fetch via ajax functions/candidates.js --}}
 					</div>
 
-					<div class="float-end mt-3">
-					 	<button type="button" id="prevPaginateBtn" class="btn btn-dark btn-sm"
-					 		title="reduce load data votes records" disabled>
-					 		<i class="fa-solid fa-chevron-left reduce-icon"></i>
-					 		<i class="fas fa-spinner fa-spin d-none"></i>
-					 	</button>
-					 	<button type="button" id="nextPaginateBtn" class="btn btn-dark btn-sm"
-					 		 title="load more votes records">
-					 		<i class="fa-solid fa-chevron-right load-icon"></i>
-					 		<i class="fas fa-spinner fa-spin spinner-icon d-none"></i>
-					 	</button>
-					</div>
+					@include('components.partial._pagination')
 				</div>
 			</div>
 		</x-container>

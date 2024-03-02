@@ -1,7 +1,9 @@
 <x-layout.admin title="Create Candidate">
 	<x-slot name="version">{{ request()->route('version') }}</x-slot>
 	<x-section id="candidatesManagementContent" data-component="candidatesManagement">
-		<x-container>
+		<x-container data-iurl="{{ route('candidates.index', request()->route('version')) }}">
+			{{-- Hidden data inputs --}}
+			<input type="hidden" value="3" id="candidateId"/>
 			<div class="votes-management-card card bg-white">
 				<div class="card-header">
 					<i class="fa-solid fa-user-plus fs-4"></i>&nbsp;
@@ -11,7 +13,6 @@
 							class="btn btn-light border-0 ">
 							<i class="fa-solid fa-arrow-left"></i> {{ __('Back') }}
 						</a>
-						<input type="hidden" value="3" id="candidateId"/>
 					</div>
 				</div>
 				<div class="card-body">
@@ -65,7 +66,7 @@
 								    		{{ __('Select the version of voting you want to add this candidate') }}
 								    	</small>
 								    	<div class="selectDataBody">
-								    		{{-- data fetch via ajax --}}
+								    		{{-- data fetch via ajax  functions/configurations.js --}}
 								    	</div>
 								    </div>
 								  </div>
@@ -79,7 +80,7 @@
 								    		{{ __('Select the campus candidate. Leave it blank if not applicable.') }}
 								    	</small>
 								    	<div class="selectCampusBody">
-									      {{-- data fetch via ajax --}}
+									      {{-- data fetch via ajax  functions/configurations.js --}}
 									  	</div>
 								    </div>
 								  </div>
@@ -90,7 +91,7 @@
 								    </label>
 								    <div class="col-sm-10">
 								    	<div class="selectCategoryBody">
-								    		{{-- data fetch via ajax --}}
+								    		{{-- data fetch via ajax functions/configurations.js--}}
 									    </div>
 								    </div>
 								  </div>

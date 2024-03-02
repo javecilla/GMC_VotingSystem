@@ -21,32 +21,31 @@
 		}, 500);
 	});
 
-	$(document).on('submit', '#searchForm', function(e) {
-		e.preventDefault();
-		const searchQuery = $('#searchCandidate').val().trim().toLowerCase();
-		writeURI('search', searchQuery);
-		filterCandidatesBySearch(searchQuery);
-	});
-
-	$(document).on('input', '.search-input', function() {
-		const searchInput = $(this).val();
-		isEmpty(searchInput) ? loadMoreCandidatesRecord(9, 0) : '';
-	});
-
 	$(document).on('submit', '#createCandidateForm', function(e) {
 		e.preventDefault();
-
-		const avid = $('#appVersionSelected').val();
-		const scid = $('#campusSelected').val();
-		const ctid = $('#categorySelected').val();
-		const candidateName = $('#candidateName').val();
-		const candidateNo = $('#candidateNo').val();
-		const candidateMotto = $('#candidateMottoDescription').val();
 		const candidateImage = $('#candidateImage')[0]; 
-		let imageFile = candidateImage.files[0]; 
+		const dataIinput = {
+			'avid': $('#appVersionSelected').val(),
+			'scid': $('#campusSelected').val(),
+			'ctid': $('#categorySelected').val(),
+			'candidateName': $('#candidateName').val(),
+			'candidateNo': $('#candidateNo').val(),
+			'candidateMotto': $('#candidateMottoDescription').val(),
+			'candidateImage': $('#candidateImage').val(),
+			'imageFile': candidateImage.files[0],
+		};
 
-	  if(validateCandidateForm(avid, ctid, candidateNo, candidateName, imageFile)) {
-	  	createNewCandidate(avid, scid, ctid, candidateNo, candidateName, candidateMotto, imageFile);
+		const formData = new FormData();
+	  formData.append('app_version_id', $('#appVersionSelected').val());
+	  formData.append('school_campus_id', $('#campusSelected').val());
+	  formData.append('category_id', $('#categorySelected').val());
+	  formData.append('candidate_no', $('#candidateNo').val());
+	  formData.append('name', $('#candidateName').val());
+	  formData.append('motto_description', $('#candidateMottoDescription').val());
+	  formData.append('image', candidateImage.files[0]);
+
+	  if(validateCandidateForm(formData)) {
+	  	createNewCandidate(formData);
 	  }		
 	});
 
@@ -65,6 +64,43 @@
 	  checkFormData(formData);
 
 	  updateCandidates(cdid, formData);
+	});
+
+	$(document).on('click', '#deleteCandidateButton', function() {
+		const cdid = $(this).data('id');
+		const deleteConfirm = Swal.mixin({
+			customClass: {
+			  confirmButton: "btn btn-lg btn-secondary me-2",
+			  cancelButton: "btn btn-lg btn-light",
+			},
+  		buttonsStyling: false
+		});
+
+		deleteConfirm.fire({
+      title: "Confirm Deletion",
+      html: `Are you sure you want to delete this candidate? This action cannot be undone.`,
+      showConfirmButton: true,
+      confirmButtonText: "Okay",
+      showCancelButton: true,
+      cancelButtonText: "Cancel",
+    }).then(function(response) {
+    	if(!response.isConfirmed) { 
+    		return false; 
+		  } 
+		  deleteCandidate(cdid);
+		});
+	});
+
+	$(document).on('submit', '#searchForm', function(e) {
+		e.preventDefault();
+		const searchQuery = $('#searchCandidate').val().trim().toLowerCase();
+		writeURI('search', searchQuery);
+		filterCandidatesBySearch(searchQuery);
+	});
+
+	$(document).on('input', '.search-input', function() {
+		const searchInput = $(this).val();
+		isEmpty(searchInput) ? loadMoreCandidatesRecord(9, 0) : '';
 	});
 
 	$(document).on('change', '#appVersionSelected', function() {
@@ -114,31 +150,6 @@
 		$('#editCandidateNoText').text($(this).val());		
 	});
 
-	$(document).on('click', '#deleteCandidateButton', function() {
-		const cdid = $(this).data('id');
-		const deleteConfirm = Swal.mixin({
-			customClass: {
-			  confirmButton: "btn btn-lg btn-secondary me-2",
-			  cancelButton: "btn btn-lg btn-light",
-			},
-  		buttonsStyling: false
-		});
-
-		deleteConfirm.fire({
-      title: "Confirm Deletion",
-      html: `Are you sure you want to delete this candidate? This action cannot be undone.`,
-      showConfirmButton: true,
-      confirmButtonText: "Okay",
-      showCancelButton: true,
-      cancelButtonText: "Cancel",
-    }).then(function(response) {
-    	if(!response.isConfirmed) { 
-    		return false; 
-		  } 
-		  deleteCandidate(cdid);
-		});
-	});
-
 	let offset = 0;
 	let page = 1;
 	let limit = 9;
@@ -173,5 +184,4 @@
 	  $('#tabPaneInformation').removeClass('show active');
     $('#tabPaneRecords').addClass('show active');
 	});
-
 })(jQuery)

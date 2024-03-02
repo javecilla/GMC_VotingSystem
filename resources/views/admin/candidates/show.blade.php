@@ -1,16 +1,18 @@
 <x-layout.admin title="Show Candidate">
 	<x-slot name="version">{{ request()->route('version') }}</x-slot>
 	<x-section id="candidatesManagementContent" data-component="candidatesManagement">
-		<x-container>
+		<x-container data-iurl="{{ route('candidates.index', request()->route('version')) }}">
+			{{-- Hidden data inputs --}}
+			<input type="hidden" value="{{ request()->route('candidate')}}" id="candidateId"/>
 			<div class="votes-management-card card bg-white">
 				<div class="card-header">
 					<div class="float-start">
 						<ul class="nav nav-tabs">
 						  <li class="nav-item">
-						    <a class="nav-link active" id="tabInformation" data-bs-toggle="tab" href="javascript:void(0)">Information</a>
+						    <a class="nav-link active" id="tabInformation" data-bs-toggle="tab" href="javascript:void(0)">{{ __('Information') }}</a>
 						  </li>
 						  <li class="nav-item">
-						    <a class="nav-link text-white" id="tabRecords" data-bs-toggle="tab" href="javascript:void(0)">Vote Records</a>
+						    <a class="nav-link text-white" id="tabRecords" data-bs-toggle="tab" href="javascript:void(0)">{{ __('Vote Records') }}</a>
 						  </li>
 						</ul>
 					</div>
@@ -21,7 +23,7 @@
 						</a>
 					</div>
 				</div>
-				<input type="hidden" value="{{ request()->route('candidate')}}" id="candidateId"/>
+
 				<div class="card-body">
 					<div class="container" id="showDataBody">
 						<div class="tab-content" id="myTabContent">
@@ -30,7 +32,7 @@
 						        <div class="col">
 						          <div class="dashboard-card-black card">
 						            <div class="card-content">
-							            <h4><b>Current Points</b></h4>
+							            <h4><b>{{ __('Current Points') }}</b></h4>
 							            <h2 class="text-left"><i class="fa-solid fa-check-to-slot fs-2t"></i>
 							              <span id="totalCurrentVotePoints">
 							                <i class="fas fa-spinner fa-spin"></i>
@@ -42,7 +44,7 @@
 						        <div class="col">
 						          <div class="dashboard-card-black card">
 						            <div class="card-content">
-						              <h4><b>Total Verified Votes</b></h4>
+						              <h4><b>{{ __('Total Verified Votes') }}</b></h4>
 						              <h2 class="text-left"><i class="fa-solid fa-circle-check fs-2"></i></i>
 						                <span id="totalVoters"><i class="fas fa-spinner fa-spin"></i></span>
 						              </h2>
@@ -52,8 +54,8 @@
 						        <div class="col">
 						          <div class="dashboard-card-black card">
 						            <div class="card-content">
-						              <h4><b>Total Amount</b></h4>
-						              <h2 class="text-left"><span class="fs-2">₱</span>
+						              <h4><b>{{ __('Total Amount') }}</b></h4>
+						              <h2 class="text-left"><span class="fs-2">{{ __('₱') }}</span>
 						                <span id="totalAmount"><i class="fas fa-spinner fa-spin"></i></span>
 						              </h2>
 						            </div>
@@ -73,38 +75,39 @@
 							        <br/>
 							        <div>
 							          <div class="row mb-3">
-							            <label for="candidateAppVersion" class="col-sm-2 col-form-label">Voting</label>
+							            <label for="candidateAppVersion" class="col-sm-2 col-form-label">
+							            	{{ __('Voting')}}</label>
 							            <div class="col-sm-10">
 							              <input type="text" id="votingVersion" class="form-control" value="loading..." readonly/>
 							            </div>
 							          </div>
 							          <div class="row mb-3">
-							            <label for="selectCampus" class="col-sm-2 col-form-label">Campus</label>
+							            <label for="selectCampus" class="col-sm-2 col-form-label">{{ __('Campus') }}</label>
 							            <div class="col-sm-10">
 							              <input type="text" id="campusCandidate" class="form-control" value="loading..." readonly/>
 							            </div>
 							          </div>
 							          <div class="row mb-3">
-							            <label for="candidateCategory" class="col-sm-2 col-form-label">Category</label>
+							            <label for="candidateCategory" class="col-sm-2 col-form-label">{{ __('Category') }}</label>
 							              <div class="col-sm-10">
 							                <input type="text" id="categoryCandidate" class="form-control" value="loading..." readonly/>
 							              </div>
 							            </div>
 							            <div class="row mb-3">
-							              <label for="candidateInfo" class="col-sm-2 col-form-label">Info</label>
+							              <label for="candidateInfo" class="col-sm-2 col-form-label">{{ __('Info') }}</label>
 							                <div class="col-sm-10" id="candidateInfo">
 							                	<div class="row">
 							                		<div class="col-md-6">
-							                			<small class="text-muted">Candidate name</small>
+							                			<small class="text-muted">{{ __('Candidate name') }}</small>
 							                			<input type="text" id="nameCandidate" class="form-control" value="loading..." readonly/>
 							                		</div>
 							                		<div class="col-md-6">
-							                			<small class="text-muted">Candidate no.</small>
+							                			<small class="text-muted">{{ __('Candidate no.') }}</small>
 							                			<input type="text" id="noCandidate" class="form-control" value="loading..." readonly/>
 							                		</div>
 							                	</div>
 							                  <div class="form-floating mt-3">
-							                    <textarea class="form-control" placeholder="Leave a comment here" id="candidateMottoDescription">loading...</textarea>
+							                    <textarea class="form-control" placeholder="Leave a comment here" id="candidateMottoDescription">{{ __('loading...') }}</textarea>
 							                    <label for="candidateMottoDescription"><small class="text-muted"></small></label>
 							                  </div>
 							                </div>
@@ -112,15 +115,15 @@
 							            </div>
 							            <hr class="text-muted"/>
 							            <div class="row mb-3">
-							              <label for="candidateInfo" class="col-sm-2 col-form-label">Timestamps</label>
+							              <label for="candidateInfo" class="col-sm-2 col-form-label">{{ __('Timestamps') }}</label>
 							                <div class="col-sm-10" id="candidateInfo">
 							                	<div class="row">
 							                		<div class="col-md-6">
-							                			<small class="text-muted">Created at</small>
+							                			<small class="text-muted">{{ __('Created at') }}</small>
 							                			<input type="text" id="dateCreated" class="form-control" value="loading..." readonly/>
 							                		</div>
 							                		<div class="col-md-6">
-							                			<small class="text-muted">Updated at</small>
+							                			<small class="text-muted">{{ __('Updated at') }}</small>
 							                			<input type="text" id="dateUpdated" class="form-control" value="loading..." readonly/>
 							                		</div>
 							                	</div>
@@ -169,13 +172,13 @@
 									<table class="table table-striped">
 									  <thead>
 									  	<tr>
-									  		<th>VID</th>
-									  		<th>Candidate Name</th>
-									  		<th>Payment</th>
-									  		<th>Points</th>
-									  		<th>Referrence no.</th>
-									  		<th>Status</th>
-									  		<th>Datetime</th>
+									  		<th>{{ __('VID') }}</th>
+									  		<th>{{ __('Candidate Name') }}</th>
+									  		<th>{{ __('Payment') }}</th>
+									  		<th>{{ __('Points') }}</th>
+									  		<th>{{ __('Referrence no.') }}</th>
+									  		<th>{{ __('Status') }}</th>
+									  		<th>{{ __('Datetime') }}</th>
 									  	</tr>
 									  </thead>
 									  <tbody id="candidatesVotesRecordsBody">

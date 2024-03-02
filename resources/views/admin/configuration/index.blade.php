@@ -1,10 +1,8 @@
 <x-layout.admin title="Configuration">
 	<x-slot name="version">{{ request()->route('version') }}</x-slot>
 	<x-section id="configurationContent" data-component="configuration">
-		<x-container>
-			{{-- Application Versioning --}}
-			<div id="indexUri" data-iurl="{{ route('configuration.index', request()->route('version')) }}"
-				class="configuration-card card">
+		<x-container data-iurl="{{ route('configuration.index', request()->route('version')) }}">
+			<div class="configuration-card card">
 				<div class="card-header">
 					<i class="fa-solid fa-list-check fs-4"></i>&nbsp;
 					 <label>{{ __("Application") }}</label>
@@ -274,13 +272,13 @@
 										<table class="table">
 											<thead>
 												<tr>
-													<th>Amount (₱)</th>
-													<th>Points</th>
-													<th class="text-end">Actions</th>
+													<th>{{ __('Amount (₱)') }}</th>
+													<th>{{ __('Points') }}</th>
+													<th class="text-end">{{ __('Actions') }}</th>
 												</tr>
 											</thead>
 											<tbody id="equivalentVotePointsBody">
-												{{-- Data fetch via ajax request --}}
+												{{-- Data fetch via ajax request functions/configuration.js --}}
 											</tbody>
 										</table>
 									</div>

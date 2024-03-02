@@ -3,7 +3,8 @@
 const CANDIDATES_URI = 'admin/manage/candidates';
 const CANDIDATES_INDEX_URI = $('#indexUri').data('iurl');
 // APP_VERSION & CSRF_TOKEN (variable)-> wp-admin/themes/scripts/main.js
-  
+
+// Get all candidates (Without limit) 
 const getAllCandidates = async () => {
   $.ajax({
     url: `/${APP_VERSION}/${CANDIDATES_URI}/retrieves`,
@@ -21,6 +22,7 @@ const getAllCandidates = async () => {
   });
 };
 
+// Get candidates (With limit)
 const loadMoreCandidatesRecord = async (limit, offset) => {
   $.ajax({
     url: `/${APP_VERSION}/${CANDIDATES_URI}/load/${limit}/offset/${offset}`,
@@ -28,11 +30,9 @@ const loadMoreCandidatesRecord = async (limit, offset) => {
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
     success: (data) => {
-      //kapag ang offset is greater than 0, prev button will be undisabled
-      if (offset > 0) {
+      if (offset > 0) { //kapag ang offset is greater than 0, prev button will be undisabled
         $('#prevPaginateBtn').removeAttr('disabled');
-      } else {
-        //otherwise, it will be disabled
+      } else {  //otherwise, it will be disabled
         $('#prevPaginateBtn').attr('disabled', true);
       }
 
@@ -52,6 +52,7 @@ const loadMoreCandidatesRecord = async (limit, offset) => {
   });
 };
 
+// Get data of candidates by its id
 const getOneCandidates = async (cdid) => {
   $.ajax({
     url: `/${APP_VERSION}/${CANDIDATES_URI}/${cdid}/retrieve`,
@@ -59,7 +60,8 @@ const getOneCandidates = async (cdid) => {
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
     success: (data) => {
-      displayOneCandidates(data);
+      displayCandidatesInformation(data);
+      displayCandidatesVoteRecords(data);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -68,6 +70,7 @@ const getOneCandidates = async (cdid) => {
   });
 };
 
+// Get overall candidates ranking 
 const getOverallCandidatesRanking = async (limit) => {
   $.ajax({
     url: `/${APP_VERSION}/${CANDIDATES_URI}/candidates/ranking/overall/${limit}`,
@@ -75,57 +78,8 @@ const getOverallCandidatesRanking = async (limit) => {
     dataType: 'json',
     headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
     success: (data) => {
-      //console.log(data);
-      const candidatesNames = data.map(candidate => candidate.candidate.name);
-      const totalVotePoints = data.map(candidate => candidate.total_points);
-      const totalNumberOfVoters = data.map(candidate => candidate.total_voters);
-
-      const ctxOverallRankingChart = $('#overallRankingChart');
-      new Chart(ctxOverallRankingChart, {
-        type: 'bar',
-        data: {
-          labels: candidatesNames,
-          datasets: [
-            {
-              axis: 'y',
-              label: "Total Vote Points",
-              backgroundColor: "#363b42",
-              data: totalVotePoints
-            }, {
-              axis: 'y',
-              label: "Total Number of Voters",
-              backgroundColor: "#5E6267",
-              data: totalNumberOfVoters
-            },
-          ]
-        },
-        options: {
-          responsive: true,
-          title: {
-            display: true,
-            text: 'Overall Candidates Ranking'
-          },
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          },
-          indexAxis: 'y',
-        }
-      });
-
-      let candidatesRankingDataBody = ``;
-      data.forEach(candidate => {
-        candidatesRankingDataBody += `<div style="padding: -5px;" class="d-flex flex-column flex-md-row align-items-center justify-content-center">
-          <div class="list-group mt-2">
-            <a style="background: transparent; padding: 15px" href="/${APP_VERSION}/admin/manage/candidates/${candidate.candidate.cdid}/show" class="list-group-item list-group-item-action d-flex gap-3 rounded-4" aria-current="true">
-              <img src="/storage/${candidate.candidate.image}" alt="img" width="32" height="32" class="rounded-circle flex-shrink-0">
-              <h6 class="mt-1">${candidate.candidate.name}</h6>
-            </a>
-          </div>
-        </div>`;
-      });
-      $('#candidateRankingDataBody').html(candidatesRankingDataBody);
+      displayCandidatesOverallRankingChart(data);
+      displayCandidatesOverallRankingSidebar(data);
     },
     erorr: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -134,6 +88,7 @@ const getOverallCandidatesRanking = async (limit) => {
   });
 };
 
+// Get the candidates ranking for each category
 const getCandidatesRankingByCategory = async (limit) => {
   $.ajax({
     url: `/${APP_VERSION}/${CANDIDATES_URI}/candidates/ranking/category/${limit}`,
@@ -141,56 +96,7 @@ const getCandidatesRankingByCategory = async (limit) => {
     dataType: 'json',
     headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
     success: (data) => {
-      console.log(data);
-      let rankingPerCategory = `<div class="row">`;
-      Object.keys(data).forEach((category, index) => {
-        rankingPerCategory += `
-          <div class="col-md-4">
-            <div class="issue-report-card card mt-3">
-              <div class="card-header">
-                <i class="fa-solid fa-chart-simple fs-3"></i>&nbsp;
-                <label>Ranking for ${data[category].category_name} Category</label>
-              </div>
-              <div class="card-body">
-                <canvas id="chartRankingFor_${index}"></canvas>
-              </div>
-            </div>
-          </div>
-        `;
-
-        setTimeout(() => {
-          let ctxRankingCategoryChart = $(`#chartRankingFor_${index}`);
-          new Chart(ctxRankingCategoryChart, {
-            type: 'bar',
-            data: {
-              labels: data[category].top_candidates.map(candidate => candidate.candidate_name),
-              datasets: [{
-                  label: 'Total Vote Points',
-                  data: data[category].top_candidates.map(candidate => candidate.total_points),
-                  fill: false,
-                  backgroundColor: '#949496',
-                  borderColor: 'rgb(201, 203, 207)',
-                  borderWidth: 1
-                },
-              ]
-            },
-            options: {
-              title: {
-                display: true,
-                text: `Ranking for ${data[category].category_name} Category`
-              },
-              responsive: true,
-              scales: {
-                y: {
-                  beginAtZero: true
-                }
-              },
-            }
-          });
-        }, 1000 * index);
-      });
-      rankingPerCategory += `</div>`;
-      $('#categoryRankingData').html(rankingPerCategory);  
+      displayCandidatesRankingPerCategory(data);
     },
     erorr: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -199,6 +105,7 @@ const getCandidatesRankingByCategory = async (limit) => {
   });
 };
 
+// Filter candidates by search (name)
 const filterCandidatesBySearch = async (query) => {
   $.ajax({
     url: `/${APP_VERSION}/${CANDIDATES_URI}/${query}/search`,
@@ -207,7 +114,6 @@ const filterCandidatesBySearch = async (query) => {
     headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
     success: (data) => {
       displayAllCandidates(data);
-      displayLimitCandidates(data);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -216,6 +122,7 @@ const filterCandidatesBySearch = async (query) => {
   });
 };
 
+// Filter candidates by category
 const filterCandidatesByCategory = async (ctid) => {
   writeURI('category', ctid);
 
@@ -226,7 +133,6 @@ const filterCandidatesByCategory = async (ctid) => {
     headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
     success: (data) => {
       displayAllCandidates(data);
-      displayLimitCandidates(data);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -235,18 +141,10 @@ const filterCandidatesByCategory = async (ctid) => {
   });
 };
 
-const createNewCandidate = async (avid, scid, ctid, candidateNo, candidateName, candidateMotto, candidateImage) => {
+// Create new candidate records
+const createNewCandidate = async (formData) => {
   runSpinner();
-  //toastr.success("test");
-  const formData = new FormData();
-  formData.append('app_version_id', avid);
-  formData.append('school_campus_id', scid);
-  formData.append('category_id', ctid);
-  formData.append('candidate_no', candidateNo);
-  formData.append('name', candidateName);
-  formData.append('motto_description', candidateMotto);
-  formData.append('image', candidateImage);
-  //checkFormData(formData);
+
   $.ajax({
     url: `/${APP_VERSION}/${CANDIDATES_URI}/store`,
     method: 'post',
@@ -278,6 +176,7 @@ const createNewCandidate = async (avid, scid, ctid, candidateNo, candidateName, 
   });
 };
 
+// Update the candidates
 const updateCandidates = async (cdid, formData) =>  {
   runSpinner();
   $.ajax({
@@ -311,6 +210,7 @@ const updateCandidates = async (cdid, formData) =>  {
   });
 };
 
+// Delete the candidates
 const deleteCandidate = async (cdid) => {
   $.ajax({
     url: `/${APP_VERSION}/${CANDIDATES_URI}/${cdid}/destroy`,
@@ -334,13 +234,16 @@ const deleteCandidate = async (cdid) => {
   })
 };
 
+//--------------function display helpers--------------//
+
 const displayAllCandidates = (data) => {
   let candidatesInSelect = `<select class="form-select candidateSelected"><option value="" id="selectedCandidate" selected>-- SELECT --</option>`;
-  if(Array.isArray(data) && data.length > 0) { 
+  if(typeof data === 'object' && data !== null) { 
     Object.keys(data).forEach(key => {
       candidatesInSelect += `<option data-name="${data[key].name}" class="optionDataCandidate_${data[key].cdid}" value="${data[key].cdid}">${data[key].name}</option>`;
     });
   } else {
+    toastr.error("Something went wrong! Failed to display candidates");
   	candidatesInSelect += `<option value="">No record found</option>`;
   }
 
@@ -351,7 +254,7 @@ const displayAllCandidates = (data) => {
 
 const displayLimitCandidates = (data) => {
   let candidatesDataBody = `<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-1">`;
-  if(Array.isArray(data) && data.length > 0) { 
+  if(typeof data === 'object' && data !== null) { 
     Object.keys(data).forEach(key => {
       candidatesDataBody += `
         <div class="col candidatesItem_${data[key].cdid}">
@@ -388,6 +291,7 @@ const displayLimitCandidates = (data) => {
       `;
     });
   } else {
+    toastr.error("Something went wrong! Failed to display candidates");
     candidatesDataBody += `<center class="mt-3">
       <div class="text-muted mt-3 d-flex align-items-center justify-content-center text-center">
         <i class="fa-solid fa-face-sad-tear  fs-4"></i><span class="fs-4">&nbsp; No record found.</span>
@@ -399,7 +303,7 @@ const displayLimitCandidates = (data) => {
   $('.candidatesDataRecords').html(candidatesDataBody);
 };
 
-const displayOneCandidates = (data) => {
+const displayCandidatesInformation = (data) => {
   if(typeof data === 'object' && data !== null) {
     let candidateVotesRecords = ``;
     if(data.votes.length > 0) {
@@ -434,10 +338,16 @@ const displayOneCandidates = (data) => {
         <td></td>
         <td></td>
       </tr>`;
-    }
-    
+    } 
 
     $('#candidatesVotesRecordsBody').html(candidateVotesRecords);
+  } else { 
+    toastr.error("Something went wrong! Failed to display candidates information");
+  }
+};
+
+const displayCandidatesVoteRecords = (data) => {
+  if(typeof data === 'object' && data !== null) {
     $('#totalCurrentVotePoints').text(data.totalVotePoints);
     $('#totalVoters').text(data.totalVotes);
     $('#totalAmount').text(data.totalAmount);
@@ -469,6 +379,111 @@ const displayOneCandidates = (data) => {
     $('#editPrevPicture').val(`/storage/${data.candidate.image}`);
     $('#editActiveCandidate').val(data.candidate.cdid);
   }  else {
-    console.log("error");
+    toastr.error("Something went wrong! Failed to display candidates vote records.");
   }
+};
+
+const displayCandidatesOverallRankingChart = (data) => {
+  const candidatesNames = data.map(candidate => candidate.candidate.name);
+  const totalVotePoints = data.map(candidate => candidate.total_points);
+  const totalNumberOfVoters = data.map(candidate => candidate.total_voters);
+
+  const ctxOverallRankingChart = $('#overallRankingChart');
+  new Chart(ctxOverallRankingChart, {
+    type: 'bar',
+    data: {
+      labels: candidatesNames,
+      datasets: [
+        {
+          axis: 'y',
+          label: "Total Vote Points",
+          backgroundColor: "#363b42",
+          data: totalVotePoints
+        }, {
+          axis: 'y',
+          label: "Total Number of Voters",
+          backgroundColor: "#5E6267",
+          data: totalNumberOfVoters
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      title: {
+        display: true,
+        text: 'Overall Candidates Ranking'
+      },
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      indexAxis: 'y',
+    }
+  });
+};
+
+const displayCandidatesOverallRankingSidebar = (data) => {
+  let candidatesRankingDataBody = ``;
+  data.forEach(candidate => {
+    candidatesRankingDataBody += `<div style="padding: -5px;" class="d-flex flex-column flex-md-row align-items-center justify-content-center">
+      <div class="list-group mt-2">
+        <a style="background: transparent; padding: 15px" href="/${APP_VERSION}/admin/manage/candidates/${candidate.candidate.cdid}/show" class="list-group-item list-group-item-action d-flex gap-3 rounded-4" aria-current="true">
+          <img src="/storage/${candidate.candidate.image}" alt="img" width="32" height="32" class="rounded-circle flex-shrink-0">
+          <h6 class="mt-1">${candidate.candidate.name}</h6>
+        </a>
+      </div>
+    </div>`;
+  });
+  $('#candidateRankingDataBody').html(candidatesRankingDataBody);
+};
+
+const displayCandidatesRankingPerCategory = (data) => {
+  let rankingPerCategory = `<div class="row">`;
+    Object.keys(data).forEach((category, index) => {
+      rankingPerCategory += `<div class="col-md-4">
+        <div class="issue-report-card card mt-3">
+          <div class="card-header">
+            <i class="fa-solid fa-chart-simple fs-3"></i>&nbsp;
+            <label>Ranking for ${data[category].category_name} Category</label>
+          </div>
+          <div class="card-body">
+            <canvas id="chartRankingFor_${index}"></canvas>
+          </div>
+        </div>
+      </div>`;
+
+      setTimeout(() => {
+        let ctxRankingCategoryChart = $(`#chartRankingFor_${index}`);
+        new Chart(ctxRankingCategoryChart, {
+          type: 'bar',
+          data: {
+            labels: data[category].top_candidates.map(candidate => candidate.candidate_name),
+            datasets: [{
+              label: 'Total Vote Points',
+              data: data[category].top_candidates.map(candidate => candidate.total_points),
+              fill: false,
+              backgroundColor: '#949496',
+              borderColor: 'rgb(201, 203, 207)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            title: {
+            display: true,
+            text: `Ranking for ${data[category].category_name} Category`
+          },
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+        }
+      });
+    }, 1000 * index);
+  });
+
+  rankingPerCategory += `</div>`;
+  $('#categoryRankingData').html(rankingPerCategory);  
 };

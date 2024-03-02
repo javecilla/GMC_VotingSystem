@@ -11,15 +11,12 @@ const loadMoreReportsRecord = async (limit, offset) => {
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
     success: (data) => {
-      //kapag ang offset is greater than 0, prev button will be undisabled
       if (offset > 0) {
         $('#prevPaginateBtn').removeAttr('disabled');
       } else {
-        //otherwise, it will be disabled
         $('#prevPaginateBtn').attr('disabled', true);
       }
 
-      // If the number of records fetched is less than the limit, disable the next button
       if (data.length < limit) {
         $('#nextPaginateBtn').attr('disabled', true);
       } else {
@@ -27,6 +24,23 @@ const loadMoreReportsRecord = async (limit, offset) => {
       }
 
       displayLimitTicketReports(data);
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+const getTotalNotFixedTicketReports = async () => {
+	$.ajax({
+    url: `/${APP_VERSION}/${TICKET_REPORTS_URI}/count/all`,
+    method: 'get',
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+    success: (data) => {
+      $('.report-badge').text(data.totalReports);
+      $('#totalIssueReport').text(data.totalReports);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -88,19 +102,3 @@ const displayLimitTicketReports = (data) => {
 	$('#dashboardReportDataBody').html(dashboardReportDataBody);
 };
 
-const getTotalNotFixedTicketReports = async () => {
-	$.ajax({
-    url: `/${APP_VERSION}/${TICKET_REPORTS_URI}/count/all`,
-    method: 'get',
-    dataType: 'json',
-    headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
-    success: (data) => {
-      $('.report-badge').text(data.totalReports);
-      $('#totalIssueReport').text(data.totalReports);
-    },
-    error: (xhr, status, error) => {
-      const response = JSON.parse(xhr.responseText);
-      toastr.error(response.message);
-    }
-  });
-};

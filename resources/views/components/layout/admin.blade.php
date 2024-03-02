@@ -15,16 +15,16 @@
   <meta name="copyright" content="Golden Minds Bulacan"  />
   <meta name='Classification' content='Website'/>
   <meta name='identifier-URL' content='{{ url()->current() }}'/>
-  <meta name="msapplication-TileImage" content="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
+  <meta name="msapplication-TileImage" content="{{ asset('/wp-content/uploads/favicon.png') }}" />
 	<title>
 		@isset($title) {{ $title }} | @endisset {{ env('APP_NAME') }}
 		@if(isset($version)) {{ $version }} @else {{ env('APP_VERSION') }} @endif
 	</title>
 
 	<link rel="shortcut icon" type="image/png" sizes="16x16"
-		href="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
+		href="{{ asset('/wp-content/uploads/favicon.png') }}" />
   <link rel="apple-touch-icon" type="image/png" sizes="16x16"
-  	href="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
+  	href="{{ asset('/wp-content/uploads/favicon.png') }}" />
 
   <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
   <link rel='dns-prefetch' href='https://fonts.gstatic.com' />
@@ -177,8 +177,6 @@
 
  	<script src="{{ asset('/wp-admin/themes/scripts/helper.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/functions/auth.js') }}" defer></script>
-{{--  	<script src="{{ asset('/wp-admin/themes/scripts/functions/reports.js') }}" defer></script>
- 	<script src="{{ asset('/wp-admin/themes/scripts/functions/configuration.js') }}" defer></script> --}}
  	<script src="{{ asset('/wp-admin/themes/scripts/eventListener/auth.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/validations.js') }}" defer></script>
  	<script src="{{ asset('/wp-admin/themes/scripts/app.js') }}" defer></script>

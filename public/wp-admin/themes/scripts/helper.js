@@ -21,8 +21,11 @@ const isValidImageFile = (file) => {
 	// Check if a file is selected
 	if (file) {
 		// Check the file type/format
-		const validFileFormat = ['image/png', 'image/jpeg', 'image/jpg'];
-		const fileType = file.type.toLowerCase(); // Convert to lowercase for case-insensitive comparison
+		const validFileFormat = [
+			'image/png', 'image/jpeg', 'image/jpg',
+			'image/PNG', 'image/JPEG', 'image/JPG'
+		];
+		const fileType = file.type; // Convert to lowercase for case-insensitive comparison
 		if(validFileFormat.includes(fileType)) {
 			return { isValid: true, error: 'meron' }; // Valid file type
 		} else {

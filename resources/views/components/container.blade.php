@@ -1,6 +1,5 @@
 <div {{ $attributes->merge([
-	'id' => '',
-	'data-aos' => 'fade-in',
+	'id' => 'indexUri',
 	'class' => 'container',
 	'style' => '',
 	])}}>

@@ -1,31 +1,31 @@
 (($) => {
 	"use-strict";
 
-	window.validateCandidateForm = (appVersion, category, candidateNo, candidateName, candidateImage) => {
+	window.validateCandidateForm = (data) => {
 		let isFormValid = true;
 
-		if(isEmpty(appVersion)) {
+		if(isEmpty(data.get('app_version_id'))) {
 	 		$('#appVersionSelected').addClass('is-invalid');
 			isFormValid = false;
 	 	}
 
-	 	if(isEmpty(category)) {
+	 	if(isEmpty(data.get('category_id'))) {
 	 		$('#categorySelected').addClass('is-invalid');
 			isFormValid = false;
 	 	}
 
-	 	if(isEmpty(candidateNo)) {
+	 	if(isEmpty(data.get('candidate_no'))) {
 	 		$('#candidateNo').addClass('is-invalid');
 			isFormValid = false;
 	 	}
 
-	 	if(isEmpty(candidateName)) {
+	 	if(isEmpty(data.get('name'))) {
 	 		$('#candidateName').addClass('is-invalid');
 			isFormValid = false;
 	 	}
 
 	 	// Validate image file input
-		const imageValidationResult = isValidImageFile(candidateImage);
+		const imageValidationResult = isValidImageFile(data.get('image'));
 		if(!imageValidationResult.isValid) {
 			$('.imageFile').addClass('is-invalid');
 			$('.imageValidationFeedBack').text(imageValidationResult.error);

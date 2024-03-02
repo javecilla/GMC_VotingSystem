@@ -1,8 +1,8 @@
 <x-layout.admin title="Dashboard">
 	<x-slot name="version">{{ request()->route('version') }}</x-slot>
-	<x-section data-component="dashboard" id="dashboardContent">
-	  <x-container>
-	  	<div id="indexUri" data-iurl="{{ route('dashboard.index', request()->route('version')) }}">
+	<x-section id="dashboardContent" data-component="dashboard">
+	  <x-container data-iurl="{{ route('dashboard.index', request()->route('version')) }}">
+	  	<div>
 		    <div class="row">
 		      <div class="col-md-6 col-xl-3">
 		        <div class="dashboard-card-black card">
@@ -30,7 +30,7 @@
 		        <div class="dashboard-card-black card">
 		          <div class="card-content">
 		            <h4><b>{{ __('Total Amount') }}</b></h4>
-		            <h2 class="text-left"><span class="fs-2">₱</span>
+		            <h2 class="text-left"><span class="fs-2">{{ __('₱') }}</span>
 		              <span id="totalAmountVerified"><i class="fas fa-spinner fa-spin"></i></span>
 		            </h2>
 		          </div>
@@ -86,10 +86,10 @@
 						  		<table class="table table-striped">
 						  			<thead>
 						  				<tr>
-						  					<th>Status</th>
-						  					<th>References no.</th>
-						  					<th>Payment</th>
-						  					<th>Email</th>
+						  					<th>{{ __('Status') }}</th>
+						  					<th>{{ __('References no.') }}</th>
+						  					<th>{{ __('Payment') }}</th>
+						  					<th>{{ __('Email') }}</th>
 						  				</tr>
 						  			</thead>
 						  			<tbody id="recentlyDataTableBody">
@@ -129,7 +129,6 @@
 	  </x-container>
 	</x-section>
 </x-layout.admin>
-{{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
 <script src="{{ asset('/wp-admin/plugins/chartjs/chart.js') }}"></script>
 <script src="{{ asset('/wp-admin/themes/scripts/functions/dashboard.js') }}"></script>
 <script src="{{ asset('/wp-admin/themes/scripts/functions/reports.js') }}"></script>

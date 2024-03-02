@@ -1,8 +1,8 @@
 <x-layout.admin title="Ticket Reports">
 	<x-slot name="version">{{ request()->route('version') }}</x-slot>
 	<x-section data-component="ticketReport" id="ticketReportContent">
-	  <x-container>
-	  	<div id="indexUri" data-iurl="{{ route('reports.index', request()->route('version')) }}">
+	  <x-container data-iurl="{{ route('reports.index', request()->route('version')) }}">
+	  	<div>
 	  		<div class="mt-2">
 	  			<div class="chart-card card">
 						  <div class="card-header">

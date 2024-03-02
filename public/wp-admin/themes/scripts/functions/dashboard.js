@@ -4,6 +4,7 @@ const DASHBOARD_URI = 'admin/dashboard';
 const DASHBOARD_INDEX_URI = $('#indexUri').data('iurl');
 // APP_VERSION & CSRF_TOKEN (variable)-> wp-admin/themes/scripts/main.js
 
+// Get the candidates that has most votes(points)
 const getMostVotesCandidates = async (limit) => {
 	$.ajax({
 		url: `/${APP_VERSION}/${DASHBOARD_URI}/most/votes/candidates/limit/${limit}`,
@@ -11,7 +12,6 @@ const getMostVotesCandidates = async (limit) => {
 		dataType: 'json',
 		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
 		success: (data) => {
-			//console.log(data);
 			const candidatesNames = data.map(candidate => candidate.candidate.name);
 			const totalVotePoints = data.map(candidate => candidate.total_points);
 
@@ -43,6 +43,7 @@ const getMostVotesCandidates = async (limit) => {
 	});
 };
 
+// Get the total count of the pending, verified and amount
 const getPendingVerifiedTotalAmount = async () => {
 	$.ajax({
 		url: `/${APP_VERSION}/${DASHBOARD_URI}/count/all`,
@@ -61,6 +62,7 @@ const getPendingVerifiedTotalAmount = async () => {
 	});
 };
 
+// Get the recently voter's
 const getRecentlyVoters = async (limit, offset) => {
 	$.ajax({
 		url: `/${APP_VERSION}/${DASHBOARD_URI}/load/limit/${limit}/offset/${offset}`,
@@ -68,7 +70,6 @@ const getRecentlyVoters = async (limit, offset) => {
 		dataType: 'json',
 		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
 		success: (data) => {
-			//console.log(data);
 			displayRecentlyVotes(data);
 		},
 		erorr: (xhr, status, error) => {
@@ -78,6 +79,7 @@ const getRecentlyVoters = async (limit, offset) => {
 	});
 };
 
+// Display the recently voter's in card
 const displayRecentlyVotes = (data) => {
 	let recentlyVoteData = ``;
 	if(typeof data === 'object' && data !== null) {
@@ -109,7 +111,8 @@ const displayRecentlyVotes = (data) => {
 	$('#recentlyDataTableBody').html(recentlyVoteData);
 };
  
-
+// TODO: 
+// Get the total number of views page's each day
 const getDataPageViews = async () => {
 	const ctxPageViews = $('#pageViewChart');
   new Chart(ctxPageViews, {
@@ -119,10 +122,10 @@ const getDataPageViews = async () => {
       datasets: [{
         label: '# Page Views by Day',
         data: [50, 75, 100, 120, 90, 110, 130],
-        fill: true, // To make it a line instead of an area
-        borderColor: '#363b42', // Set your custom color here
+        fill: true, 
+        borderColor: '#363b42', 
         borderWidth: 2,
-        pointBackgroundColor: '#363b42', // Set your custom color for data points
+        pointBackgroundColor: '#363b42', 
         pointRadius: 5,
         pointHoverRadius: 7
       }]

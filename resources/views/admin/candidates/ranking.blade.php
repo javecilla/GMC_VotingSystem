@@ -1,8 +1,8 @@
 <x-layout.admin title="Ranking">
 	<x-slot name="version">{{ request()->route('version') }}</x-slot>
-	<x-section data-component="dashboard" id="candidatesRankingContent">
-	  <x-container>
-	  	<div id="indexUri" data-iurl="{{ route('candidates.ranking', request()->route('version')) }}">
+	<x-section id="candidatesRankingContent" data-component="dashboard">
+	  <x-container data-iurl="{{ route('candidates.ranking', request()->route('version')) }}">
+	  	<div>
 		    <div class="row">
 		    	<div class="col-md-9">
 		    		<div class="chart-card card mt-3">
@@ -12,9 +12,11 @@
 							</div>
 							<div class="card-body">
 								<canvas id="overallRankingChart"></canvas>
+								{{-- data fetch via ajax functions/candidates.js --}}
 							</div>
 						</div>
 		    	</div>
+
 		    	<div class="col-md-3">
 		    		<div class="chart-card card mt-3">
 							<div class="card-header">
@@ -24,7 +26,7 @@
 							<div class="card-body">
 								<div id="candidateRankingDataBody">
 									<h4 class="text-center text-secondary mt-2">
-										<i class="fa-solid fa-spinner fa-spin"></i> Loading...
+										<i class="fa-solid fa-spinner fa-spin"></i> {{ __('Loading...') }}
 									</h4>
 								</div>
 							</div>
@@ -39,7 +41,6 @@
 	  </x-container>
 	</x-section>
 </x-layout.admin>
-{{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
 <script src="{{ asset('/wp-admin/plugins/chartjs/chart.js') }}"></script>
 <script src="{{ asset('/wp-admin/themes/scripts/functions/candidate.js') }}"></script>
 <script src="{{ asset('/wp-admin/themes/scripts/eventListener/candidate.ranking.js') }}"></script>

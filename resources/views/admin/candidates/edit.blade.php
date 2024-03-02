@@ -1,7 +1,12 @@
 <x-layout.admin title="Edit Candidate">
 	<x-slot name="version">{{ request()->route('version') }}</x-slot>
 	<x-section id="candidatesManagementContent" data-component="candidatesManagement">
-		<x-container>
+		<x-container data-iurl="{{ route('candidates.index', request()->route('version')) }}">
+			{{-- Hidden data inputs --}}
+			{{-- active candidate id --}}
+			<input type="hidden" value="{{ request()->route('candidate') }}" id="candidateId"/>
+			<input type="hidden" id="editPrevPicture"/>
+			<input type="hidden" id="editActiveCandidate"/>
 			<div class="votes-management-card card bg-white">
 				<div class="card-header">
 					<i class="fa-solid fa-eye fs-4"></i>&nbsp;
@@ -13,8 +18,7 @@
 						</a>
 					</div>
 				</div>
-				{{-- active candidate id --}}
-				<input type="hidden" value="{{ request()->route('candidate') }}" id="candidateId"/>
+
 				<div class="card-body" id="editDataBody">
 					<div class="row">
 							{{-- preview --}}
@@ -66,7 +70,7 @@
 								    			<input type="text" id="editCandidateVersion" class="form-control" readonly/>
 								    		</div>
 								    		<div class="col-md-2 selectDataBody">
-								    			{{-- data fetch via ajax --}}
+								    			{{-- data fetch via ajax functions/candidates.js --}}
 								    		</div>
 								    	</div>
 								    </div>
@@ -82,7 +86,7 @@
 								    			<input type="text" id="editCandidateCampus" class="form-control" placeholder="---" readonly/>
 								    		</div>
 								    		<div class="col-md-2 selectCampusBody">
-								    			{{-- data fetch via ajax --}}
+								    			{{-- data fetch via ajax functions/configuration.js --}}
 								    		</div>
 								    	</div>
 								    </div>
@@ -98,23 +102,23 @@
 								    			<input type="text" id="editCandidateCategory" class="form-control" readonly/>
 								    		</div>
 								    		<div class="col-md-2 selectCategoryBody">
-								    			{{-- data fetch via ajax --}}
+								    			{{-- data fetch via ajax functions/configuration.js --}}
 								    		</div>
 								    	</div>
 								    </div>
 								  </div>
 
 								  <div class="row mb-3">
-								    <label for="candidateInfo" class="col-sm-2 col-form-label">Info</label>
+								    <label for="candidateInfo" class="col-sm-2 col-form-label">{{ __('Info') }}</label>
 								    <div class="col-sm-10" id="candidateInfo">
 								    	<div class="row">
 								    		<div class="col-8">
-								    			<small class="text-muted">Candidate name</small>
+								    			<small class="text-muted">{{ __('Candidate name') }}</small>
 								    			<input type="text" class="form-control" placeholder="Name"
 								    			id="editCandidateName"/>
 								    		</div>
 								    		<div class="col-4">
-								    			<small class="text-muted">Candidate no</small>
+								    			<small class="text-muted">{{ __('Candidate no.') }}</small>
 								    			<input type="text" class="form-control" placeholder="Candidate no."
 								    			id="editCandidateNo"/>
 								    		</div>
@@ -137,8 +141,7 @@
 								  			<i class="fa-solid fa-trash"></i> {{ __('Remove') }}
 								  		</small>
 								  	</label>
-								  	<input type="hidden" id="editPrevPicture"/>
-								  	<input type="hidden" id="editActiveCandidate"/>
+
 								    <div class="col-sm-10 ">
 								    	<input type="file" class="form-control imageFile" id="editCandidateImage"
 								    	accept="image/png, image/jpg, image/jpeg" />

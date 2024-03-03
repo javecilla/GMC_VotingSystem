@@ -32,19 +32,19 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet"/>
 
-	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/bootstrap/bootstrap@5.3.2/css/bootstrap.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/fontawesome/css/all.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/toastr/toastr.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/sweetalert/sweetalert2@11/dist/sweetalert2.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-admin/plugins/aos/aos.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-admin/plugins/bootstrap-icons/bootstrap-icons.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-admin/plugins/boxicons/css/boxicons.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-admin/plugins/glightbox/css/glightbox.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-admin/plugins/swiper/swiper-bundle.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/bootstrap/bootstrap@5.3.2/css/bootstrap.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/fontawesome/css/all.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/toastr/toastr.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/sweetalert/sweetalert2@11/dist/sweetalert2.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/aos/aos.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/bootstrap-icons/bootstrap-icons.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/boxicons/css/boxicons.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/glightbox/css/glightbox.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/swiper/swiper-bundle.min.css') }}"/>
 
-	<link rel="stylesheet" href="{{ asset('/wp-admin/themes/stylesheets/sidebar.css') }}" defer/>
-	<link rel="stylesheet" href="{{ asset('/wp-admin/themes/stylesheets/main.css') }}" defer/>
-	<script src="{{ asset('/wp-content/plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
+	<link rel="stylesheet" href="{{ asset('/wp-content/admin/themes/stylesheets/sidebar.css') }}" defer/>
+	<link rel="stylesheet" href="{{ asset('/wp-content/admin/themes/stylesheets/main.css') }}" defer/>
+	<script src="{{ asset('/wp-plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
 </head>
 <body class="app-body" id="body">
 	<!-- ======= Mobile nav toggle button ======= -->
@@ -54,7 +54,7 @@
 	<x-sidebar>
 	  <div class="d-flex flex-column">
 	   	<div class="mt-3">
-	      <img src="{{ asset('/wp-admin/uploads/vslogo-white.png') }}" alt="logo"
+	      <img src="{{ asset('/wp-content/admin/uploads/vslogo-white.png') }}" alt="logo"
 	      	class="img-fluid" loading="lazy"/>
 	    </div>
 	    <hr class="text-white"/>
@@ -130,7 +130,7 @@
 			<div class="mt-auto">
 			  <div id="headerProfile" class="dropdown rounded-5">
 			    <a href="javascript:void(0)" class="d-flex align-items-center dropdown-toggle text-decoration-none text-white" data-bs-toggle="dropdown" aria-expanded="false">
-			      <img src="{{ asset('/wp-admin/uploads/profile.jpg') }}" alt="" width="32" height="32" class="rounded-circle me-2">
+			      <img src="{{ asset('/wp-content/admin/uploads/profile.jpg') }}" alt="" width="32" height="32" class="rounded-circle me-2">
 			      <strong>{{ auth()->user()->name }}</strong>
 			    </a>
 			    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
@@ -163,23 +163,23 @@
  	<footer>
  	</footer>
 
- 	<script src="{{ asset('/wp-content/plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script>
- 	<script src="{{ asset('/wp-content/plugins/fontawesome/js/all.min.js') }}"></script>
-	<script src="{{ asset('/wp-content/plugins/toastr/toastr.min.js') }}"></script>
-	<script src="{{ asset('/wp-content/plugins/sweetalert/sweetalert2@11/dist/sweetalert2.all.min.js') }}"></script>
-	<script src="{{ asset('/wp-admin/plugins/purecounter/purecounter_vanilla.js') }}"></script>
- 	<script src="{{ asset('/wp-admin/plugins/aos/aos.js') }}"></script>
- 	<script src="{{ asset('/wp-admin/plugins/glightbox/js/glightbox.min.js') }}"></script>
- 	<script src="{{ asset('/wp-admin/plugins/isotope-layout/isotope.pkgd.min.js') }}"></script>
- 	<script src="{{ asset('/wp-admin/plugins/swiper/swiper-bundle.min.js') }}"></script>
- 	<script src="{{ asset('/wp-admin/plugins/typed.js/typed.min.js') }}"></script>
- 	<script src="{{ asset('/wp-admin/plugins/waypoints/noframework.waypoints.js') }}"></script>
+ 	<script src="{{ asset('/wp-plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script>
+ 	<script src="{{ asset('/wp-plugins/fontawesome/js/all.min.js') }}"></script>
+	<script src="{{ asset('/wp-plugins/toastr/toastr.min.js') }}"></script>
+	<script src="{{ asset('/wp-plugins/sweetalert/sweetalert2@11/dist/sweetalert2.all.min.js') }}"></script>
+	<script src="{{ asset('/wp-plugins/purecounter/purecounter_vanilla.js') }}"></script>
+ 	<script src="{{ asset('/wp-plugins/aos/aos.js') }}"></script>
+ 	<script src="{{ asset('/wp-plugins/glightbox/js/glightbox.min.js') }}"></script>
+ 	<script src="{{ asset('/wp-plugins/isotope-layout/isotope.pkgd.min.js') }}"></script>
+ 	<script src="{{ asset('/wp-plugins/swiper/swiper-bundle.min.js') }}"></script>
+ 	<script src="{{ asset('/wp-plugins/typed.js/typed.min.js') }}"></script>
+ 	<script src="{{ asset('/wp-plugins/waypoints/noframework.waypoints.js') }}"></script>
 
- 	<script src="{{ asset('/wp-admin/themes/scripts/helper.js') }}" defer></script>
- 	<script src="{{ asset('/wp-admin/themes/scripts/functions/auth.js') }}" defer></script>
- 	<script src="{{ asset('/wp-admin/themes/scripts/eventListener/auth.js') }}" defer></script>
- 	<script src="{{ asset('/wp-admin/themes/scripts/validations.js') }}" defer></script>
- 	<script src="{{ asset('/wp-admin/themes/scripts/app.js') }}" defer></script>
- 	<script src="{{ asset('/wp-admin/themes/scripts/main.js') }}" defer></script>
+ 	<script src="{{ asset('/wp-content/admin/themes/scripts/helper.js') }}" defer></script>
+ 	<script src="{{ asset('/wp-content/admin/themes/scripts/functions/auth.js') }}" defer></script>
+ 	<script src="{{ asset('/wp-content/admin/themes/scripts/eventListener/auth.js') }}" defer></script>
+ 	<script src="{{ asset('/wp-content/admin/themes/scripts/validations.js') }}" defer></script>
+ 	<script src="{{ asset('/wp-content/admin/themes/scripts/app.js') }}" defer></script>
+ 	<script src="{{ asset('/wp-content/admin/themes/scripts/main.js') }}" defer></script>
 </body>
 </html>

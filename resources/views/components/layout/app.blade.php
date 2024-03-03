@@ -56,23 +56,65 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Roboto+Flex:opsz,wght@8..144,300&display=swap"
 		defer/>
 
-	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/bootstrap/bootstrap@5.3.2/css/bootstrap.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/fontawesome/css/all.min.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('/wp-content/plugins/wow/wow.min.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('/wp-content/plugins/toastr/toastr.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-content/themes/stylesheets/app.css?v=1.3') }}" defer/>
-	<script src="{{ asset('/wp-content/plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/bootstrap/bootstrap@5.3.2/css/bootstrap.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/fontawesome/css/all.min.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('/wp-plugins/wow/wow.min.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('/wp-plugins/toastr/toastr.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/app.css?v=1.3') }}" defer/>
+	<script src="{{ asset('/wp-plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
 
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  @production
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CH1S28LJ16"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-CH1S28LJ16');
+    </script>
+  @endproduction
 </head>
 <body>
+  @production
+    <div id="fb-root"></div>
+
+    <div id="fb-customer-chat" class="fb-customerchat">
+    </div>
+
+    <script>
+      var chatbox = document.getElementById('fb-customer-chat');
+      chatbox.setAttribute("page_id", "100924508936440");
+      chatbox.setAttribute("attribution", "biz_inbox");
+    </script>
+
+    <!-- SDK code -->
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          xfbml            : true,
+          version          : 'v17.0'
+        });
+      };
+
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script>
+  @endproduction
 	<header id="header" class="header-content">
 		<div class="h-nav-container">
 			<div class="container p-0">
         <div class="row">
         	{{-- Admission Promotion --}}
   	      <div class="col-md-6 d-none d-lg-inline ">
-  	        <img src="{{ asset('/wp-content/uploads/icon-new.svg') }}" alt="svg"
+  	        <img src="{{ asset('/wp-content/guest/uploads/icon-new.svg') }}" alt="svg"
   	        	class="h-admission-image" />
   	        <a href="#" target="_blank" class="h-nav-link">
   	        	<span class="h-admission-text">
@@ -111,7 +153,7 @@
 	<nav class="navbar bg-white border-bottom">
 	  <div class="container p-0">
 	    <a class="navbar-brand" href="#">
-	      {{-- <img src="{{ asset('/wp-content/uploads/logo.png') }}"
+	      {{-- <img src="{{ asset('/wp-content/guest/uploads/logo.png') }}"
 	      	alt="VotingSystem" width="160"> --}}
 	    </a>
 	  </div>
@@ -167,13 +209,13 @@
     </a>
   </div>
 
- 	<script src="{{ asset('/wp-content/plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script>
- 	<script src="{{ asset('/wp-content/plugins/fontawesome/js/all.min.js') }}"></script>
-  <script src="{{ asset('/wp-content/plugins/toastr/toastr.min.js') }}"></script>
-  <script src="{{ asset('/wp-content/plugins/wow/wow.min.js') }}"></script>
-  <script src="{{ asset('/wp-content/themes/scripts/functions.js?v=1.3') }}" defer></script>
-  <script src="{{ asset('/wp-content/themes/scripts/helper.js?v=1.3') }}" defer></script>
- 	<script src="{{ asset('/wp-content/themes/scripts/app.js?v=1.3') }}" defer></script>
-  <script src="{{ asset('/wp-content/themes/scripts/general.js?v=1.3') }}" defer></script>
+ 	<script src="{{ asset('/wp-plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script>
+ 	<script src="{{ asset('/wp-plugins/fontawesome/js/all.min.js') }}"></script>
+  <script src="{{ asset('/wp-plugins/toastr/toastr.min.js') }}"></script>
+  <script src="{{ asset('/wp-plugins/wow/wow.min.js') }}"></script>
+  <script src="{{ asset('/wp-content/guest/themes/scripts/functions.js?v=1.3') }}" defer></script>
+  <script src="{{ asset('/wp-content/guest/themes/scripts/helper.js?v=1.3') }}" defer></script>
+ 	<script src="{{ asset('/wp-content/guest/themes/scripts/app.js?v=1.3') }}" defer></script>
+  <script src="{{ asset('/wp-content/guest/themes/scripts/general.js?v=1.3') }}" defer></script>
  </body>
 </html>

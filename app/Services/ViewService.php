@@ -2,28 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\AppVersion;
+use App\Repositories\ViewRepository;
 
 class ViewService {
-	public function getAllTotalCount(String $appVersion): array {
-		$appVersion = AppVersion::where('name', 'v1.2')->first();
-		$totalPageViews = views($appVersion)->remember()->count();
-		//\Illuminate\Support\Facades\Log::info($totalPageViews);
-		return [
-			'success' => true,
-			'message' => 'Tested',
-			'totalPageViews' => $totalPageViews,
-		];
+	public function __construct(protected ViewRepository $repository) {}
+
+	//count the views page unique base on its coockie stored in database
+	public function getPageViews(String $appVersion): array {
+		return $this->repository->pageViews($appVersion);
 	}
 
-	public function getAllTotalCountPerDay(String $appVersion): array {
-		$appVersion = AppVersion::where('name', 'v1.2')->first();
-		$totalPageViews = views($appVersion)->remember()->count();
-		//\Illuminate\Support\Facades\Log::info($totalPageViews);
-		return [
-			'success' => true,
-			'message' => 'Tested',
-			'totalPageViews' => $totalPageViews,
-		];
+	//count the views page per day
+	public function getPageViewsPerDay(String $appVersion, int $limit): array {
+		return $this->repository->pageViewsPerDay($appVersion, $limit);
 	}
 }

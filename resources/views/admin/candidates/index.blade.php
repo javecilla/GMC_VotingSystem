@@ -53,6 +53,6 @@
 		</x-container>
 	</x-section>
 </x-layout.admin>
-<script src="{{ asset('/wp-admin/themes/scripts/eventListener/candidate.js') }}"></script>
-<script src="{{ asset('/wp-admin/themes/scripts/functions/candidate.js') }}"></script>
-<script src="{{ asset('/wp-admin/themes/scripts/functions/configuration.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/eventListener/candidate.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/functions/candidate.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/functions/configuration.js') }}"></script>

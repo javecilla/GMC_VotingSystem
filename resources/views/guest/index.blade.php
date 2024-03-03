@@ -8,7 +8,7 @@
 	    </div>
 	    <div class="carousel-inner">
 	    	<div class="carousel-item active slider-image-overlay">
-	        <img class="bd-placeholder-img" src="{{ asset('/wp-content/uploads/dati2.jpg') }}" alt="img"
+	        <img class="bd-placeholder-img" src="{{ asset('/wp-content/guest/uploads/dati2.jpg') }}" alt="img"
 	        loading="lazy"/>
 	        <div class="container p-0">
 	          <div class="carousel-caption text-start">
@@ -20,7 +20,7 @@
 	        </div>
 	      </div>
 	      <div class="carousel-item slider-image-overlay">
-	        <img class="bd-placeholder-img" src="{{ asset('/wp-content/uploads/dati1.jpg') }}" alt="img"
+	        <img class="bd-placeholder-img" src="{{ asset('/wp-content/guest/uploads/dati1.jpg') }}" alt="img"
 	        loading="lazy"/>
 	        <div class="container p-0">
 	          <div class="carousel-caption text-start">
@@ -32,7 +32,7 @@
 	        </div>
 	      </div>
 	      <div class="carousel-item slider-image-overlay">
-	        <img class="bd-placeholder-img carousel-image" src="{{ asset('/wp-content/uploads/dati3.jpg') }}" alt="img" loading="lazy"/>
+	        <img class="bd-placeholder-img carousel-image" src="{{ asset('/wp-content/guest/uploads/dati3.jpg') }}" alt="img" loading="lazy"/>
 	        <div class="container p-0">
 	          <div class="carousel-caption text-start">
 	            <h4>{{ __('Lakan, Lakambini at Lakamdyosa 2022 Coronation') }}</h4>
@@ -191,7 +191,7 @@
 						  <div class="form-step" id="stepThree" data-step="3" data-mode="finish" style="display: none;">
 						  	<center class="container">
 						  		<div class="card mb-3" style="border: 1px solid #f3f3f3">
-									  <img src="{{ asset('/wp-content/uploads/vote-success.PNG') }}" class="card-img-top" alt="vote success">
+									  <img src="{{ asset('/wp-content/guest/uploads/vote-success.PNG') }}" class="card-img-top" alt="vote success">
 									  <div class="card-body">
 									  	<div class="row">
 									  		<div class="col-md-6 mt-2">

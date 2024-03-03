@@ -23,7 +23,7 @@ class UserService {
 			//return the response APP_VERSION
 			return ['success' => true,
 				'message' => 'Login successfully',
-				'redirect' => route('dashboard.index', 'v1.3'),
+				'redirect' => route('dashboard.index', env('APP_VERSION')),
 			];
 
 		} else {

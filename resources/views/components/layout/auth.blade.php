@@ -6,9 +6,9 @@
 	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="csrf-token" content="{{ csrf_token() }}"/>
-  <meta name="robots" content="noindex, no"/>
-  <meta name="googlebot" content="noindex, no, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
-  <meta name="bingbot" content="noindex, no, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="googlebot" content="noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
+  <meta name="bingbot" content="noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
   <meta name="description" content="@isset($description) {{ $description }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}" />
   <meta name="abstract" content="Official Voting System of Golden Minds Bulacan"  />
   <meta name="copyright" content="Golden Minds Bulacan"  />
@@ -42,9 +42,9 @@
 	<title>@isset($title) {{ $title }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}</title>
 
 	<link rel="shortcut icon" type="image/png" sizes="16x16"
-		href="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
+		href="{{ asset('/wp-content/uploads/favicon.png') }}" />
   <link rel="apple-touch-icon" type="image/png" sizes="16x16"
-  	href="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
+  	href="{{ asset('/wp-content/uploads/favicon.png') }}" />
 
   <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
   <link rel='dns-prefetch' href='https://fonts.gstatic.com' />
@@ -53,17 +53,59 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&family=Roboto+Flex:opsz,wght@8..144,300&display=swap"
 		defer/>
 
-	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/bootstrap/bootstrap@5.3.2/css/bootstrap.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-content/plugins/fontawesome/css/all.min.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('/wp-content/plugins/wow/wow.min.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('/wp-content/plugins/toastr/toastr.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-content/themes/stylesheets/app.css?v=1.3') }}" async defer/>
-	<link rel="stylesheet" href="{{ asset('/wp-content/themes/stylesheets/auth.css?v=1.3') }}" async defer/>
-	<script src="{{ asset('/wp-content/plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
-	<script src="{{ asset('/wp-content/themes/scripts/auth.js?v=1.3') }}" defer></script>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/bootstrap/bootstrap@5.3.2/css/bootstrap.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-plugins/fontawesome/css/all.min.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('/wp-plugins/wow/wow.min.css') }}"/>
+  <link rel="stylesheet" href="{{ asset('/wp-plugins/toastr/toastr.min.css') }}"/>
+	<link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/app.css?v=1.3') }}" async defer/>
+	<link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/auth.css?v=1.3') }}" async defer/>
+	<script src="{{ asset('/wp-plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
+	<script src="{{ asset('/wp-content/guest/themes/scripts/auth.js?v=1.3') }}" defer></script>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  @production
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CH1S28LJ16"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-CH1S28LJ16');
+    </script>
+  @endproduction
 </head>
 <body class="auth-body" oncontextmenu="return false">
+  @production
+    <div id="fb-root"></div>
+
+    <div id="fb-customer-chat" class="fb-customerchat">
+    </div>
+
+    <script>
+      var chatbox = document.getElementById('fb-customer-chat');
+      chatbox.setAttribute("page_id", "100924508936440");
+      chatbox.setAttribute("attribution", "biz_inbox");
+    </script>
+
+    <!-- SDK code -->
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          xfbml            : true,
+          version          : 'v17.0'
+        });
+      };
+
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+    </script>
+  @endproduction
  	<main class="p-2">
  		{{ $slot }}
  	</main> <!-- /main -->
@@ -94,10 +136,10 @@
     </ul>
   </aside>
 
- 	<script src="{{ asset('/wp-content/plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script>
- 	<script src="{{ asset('/wp-content/plugins/fontawesome/js/all.min.js') }}"></script>
-  <script src="{{ asset('/wp-content/plugins/wow/wow.min.js') }}"></script>
-  <script src="{{ asset('/wp-content/plugins/toastr/toastr.min.js') }}"></script>
-  <script src="{{ asset('/wp-content/themes/scripts/general.js?v=1.3') }}"></script>
+ 	<script src="{{ asset('/wp-plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script>
+ 	<script src="{{ asset('/wp-plugins/fontawesome/js/all.min.js') }}"></script>
+  <script src="{{ asset('/wp-plugins/wow/wow.min.js') }}"></script>
+  <script src="{{ asset('/wp-plugins/toastr/toastr.min.js') }}"></script>
+  <script src="{{ asset('/wp-content/guest//themes/scripts/general.js?v=1.3') }}"></script>
 </body>
 </html>

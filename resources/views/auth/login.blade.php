@@ -1,11 +1,11 @@
 <x-layout.auth title="Portal">
 	<x-slot name="description">{{ __('Admin Portal - Online Voting System of Golden Minds Colleges') }}</x-slot>
-	<x-slot name="ogimage">{{ asset('/wp-content/uploads/vsogimage.PNG') }}</x-slot>
+	<x-slot name="ogimage">{{ asset('/wp-content/guest/uploads/vsogimage.PNG') }}</x-slot>
 	<section id="loginAuthSection">
 		<form id="authForm">
 			<div class="d-flex justify-content-center align-items-center">
 				<div class="form-signin w-100 card rounded-4 shadow border-0">
-	   			<img class="mb-2" src="{{ asset('/wp-content/uploads/logo3.png') }}"
+	   			<img class="mb-2" src="{{ asset('/wp-content/guest/uploads/logo3.png') }}"
 	   				alt="vslogo" width="280" height="90" loading="lazy"/><br/>
 	   			<fieldset id="inputField">
 					  <div class="form-floating">

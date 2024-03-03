@@ -31,9 +31,8 @@ class TicketReportService {
 		} catch (CreateDataException $e) {
 			return ['success' => true, 'message' => $e->getMessage()];
 		} catch (\Exception $e) {
-			\Illuminate\Support\Facades\Log::info($e->getMessage());
+			//\Illuminate\Support\Facades\Log::info($e->getMessage());
 			return ['success' => true, 'message' => 'Something went wrong! Failed to submit ticket report.'];
-
 		}
 	}
 

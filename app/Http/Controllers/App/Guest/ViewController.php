@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 
 class ViewController extends Controller {
 	public function main(Request $request) {
-		$appVersion = AppVersion::where('name', 'v1.2')->first();
-
+		$appVersion = AppVersion::where('name', env('APP_VERSION'))->first();
+		//\Illuminate\Support\Facades\Log::info($appVersion);
 		if ($appVersion) {
 			views($appVersion)->record();
 		}

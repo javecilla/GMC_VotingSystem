@@ -57,7 +57,9 @@
 						    <label>{{ __('Candidates with Most Vote Points') }}</label>
 						  </div>
 						  <div class="card-body">
-						  	<canvas id="mostVotesCandidatesChart"></canvas>
+						  	<canvas id="mostVotesCandidatesChart">
+						  		<i class="fas fa-spinner fa-spin fs-2"></i>
+						  	</canvas>
 						  </div>
 						</div>
 		    	</div>
@@ -68,7 +70,9 @@
 						    <label>{{ __("Page's View") }}</label>
 						  </div>
 						  <div class="card-body">
-						  	<canvas id="pageViewChart"></canvas>
+						  	<canvas id="pageViewChart">
+						  		<i class="fas fa-spinner fa-spin fs-2"></i>
+						  	</canvas>
 						  </div>
 						</div>
 		    	</div>
@@ -129,7 +133,7 @@
 	  </x-container>
 	</x-section>
 </x-layout.admin>
-<script src="{{ asset('/wp-admin/plugins/chartjs/chart.js') }}"></script>
-<script src="{{ asset('/wp-admin/themes/scripts/functions/dashboard.js') }}"></script>
-<script src="{{ asset('/wp-admin/themes/scripts/functions/reports.js') }}"></script>
-<script src="{{ asset('/wp-admin/themes/scripts/eventListener/dashboard.js') }}"></script>
+<script src="{{ asset('/wp-plugins/chartjs/chart.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/functions/dashboard.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/functions/reports.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/eventListener/dashboard.js') }}"></script>

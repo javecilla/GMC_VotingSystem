@@ -24,7 +24,7 @@ class CandidateService {
 		} catch (CreateDataException $e) {
 			return ['success' => false, 'message' => $e->getMessage()];
 		} catch (\Exception $e) {
-			\Illuminate\Support\Facades\Log::info($e->getMessage());
+			// \Illuminate\Support\Facades\Log::info($e->getMessage());
 			return ['success' => false, 'message' => 'An error occurred during creation.'];
 		}
 	}
@@ -49,7 +49,7 @@ class CandidateService {
 		} catch (UpdateDataException $e) {
 			return ['success' => false, 'message' => $e->getMessage()];
 		} catch (\Exception $e) {
-			\Illuminate\Support\Facades\Log::info('error: ' . $e->getMessage());
+			// \Illuminate\Support\Facades\Log::info('error: ' . $e->getMessage());
 			return ['success' => false, 'message' => 'An error occurred during updation.'];
 		}
 	}

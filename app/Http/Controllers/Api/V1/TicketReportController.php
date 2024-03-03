@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\ReportCreateRequest;
+use App\Http\Requests\Api\V1\ReportCreateRequest;
 use App\Services\Auth\RecaptchaService;
 use App\Services\TicketReportService;
 use Illuminate\Http\JsonResponse;

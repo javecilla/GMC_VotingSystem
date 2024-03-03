@@ -46,7 +46,7 @@ const getAllApplicationVersionsSidebar = async () => {
 
 		  if(typeof data === 'object' && data !== null) {
    			Object.keys(data).forEach(key => {
-   				switchVersions += `<a class="dropdown-item" href="/${data[key].name}/admin/dashboard">
+   				switchVersions += `<a class="dropdown-item" href="/${APP_VERSION}/admin/switching/version?request_version=${data[key].name}">
        		 	<li>${data[key].name}</li>
       		</a>
       	`;

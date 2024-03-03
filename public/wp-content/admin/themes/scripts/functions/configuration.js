@@ -128,15 +128,18 @@ const deleteApplicationVersion = async (avid) => {
 const displayAppVersionsTable = (data) => {
   let tableData = ``;
   if(typeof data === 'object' && data !== null) {
-    Object.keys(data).forEach(key => {
+    Object.keys(data).forEach(key => {  
       tableData += `<tr class="appVersionItem_${data[key].avid}">
         <td>
-          <small data-name="${data[key].name}" class="editNameVersion_${data[key].avid}">
+          <small data-name="${data[key].name}" 
+            class="editNameVersion_${data[key].avid}
+            ${(data[key].name === APP_VERSION) ? 'fw-bold' : ''}">
             ${data[key].name}
           </small>
         </td>
         <td>
-          <small data-title="${data[key].title}" class="editTitleVersion_${data[key].avid}">
+          <small data-title="${data[key].title}" class="editTitleVersion_${data[key].avid}
+            ${(data[key].name === APP_VERSION) ? 'fw-bold' : ''}">
             ${data[key].title}
           </small>
         </td>

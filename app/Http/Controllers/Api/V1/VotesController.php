@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Exceptions\Auth\InvalidRecaptchaException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\App\Admin\VoteCreateRequest;
+use App\Http\Requests\Api\V1\VoteCreateRequest as ClientRequest;
+use App\Http\Requests\App\Admin\VoteCreateRequest as AdminRequest;
 use App\Http\Requests\App\Admin\VoteUpdateRequest;
 use App\Services\Auth\RecaptchaService;
 use App\Services\VoteService;
@@ -46,15 +47,15 @@ class VotesController extends Controller {
 		return response()->json($result);
 	}
 
-	public function storeAdmin(VoteCreateRequest $request): JsonResponse {
+	public function storeAdmin(AdminRequest $request): JsonResponse {
 		$result = $this->service->createNewVote($request->validated());
 		return response()->json($result);
 	}
 
-	public function storeClient(VoteCreateRequest $request): JsonResponse {
+	public function storeClient(ClientRequest $request): JsonResponse {
 		try {
 			$this->recaptchaService->verify($request->validated('g_recaptcha_response'));
-			$result = $this->voteService->createNewVote($request->validated());
+			$result = $this->service->createNewVote($request->validated());
 
 			return response()->json($result);
 		} catch (InvalidRecaptchaException $recaptchaException) {

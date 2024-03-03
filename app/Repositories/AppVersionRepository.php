@@ -65,7 +65,7 @@ class AppVersionRepository implements IRepository {
 
 	# @Override
 	public function getAll(String $condition = ""): object {
-		return AppVersion::all();
+		return AppVersion::orderBy('created_at', 'desc')->get();
 	}
 
 	# @Override

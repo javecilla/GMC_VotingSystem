@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\App\Admin\AppVersionController;
 use App\Http\Controllers\App\Admin\CandidatesController;
 use App\Http\Controllers\App\Admin\ConfigurationController;
 use App\Http\Controllers\App\Admin\DashboardController;
@@ -60,12 +61,16 @@ Route::middleware(['web'])->group(function () {
 				# Configuration
 				Route::get('/configuration',
 					[ConfigurationController::class, 'index'])->name('configuration.index');
+
+				# Switching App Version
+				Route::get('/switching/version', [AppVersionController::class, 'show']);
 			});
 
 			# Logout
 			Route::post('/logout/user', [LogoutController::class, 'destroy']);
 			Route::post('/check/user/session', [SessionController::class, 'check']);
 		});
+
 	});
 
 	require __DIR__ . '/errors.php';

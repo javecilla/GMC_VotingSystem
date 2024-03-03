@@ -14,15 +14,15 @@
   <meta name="copyright" content="Golden Minds Bulacan"  />
   <meta name='Classification' content='Website'/>
   <meta name='identifier-URL' content='{{ url()->current() }}'/>
-  <meta name="msapplication-TileImage" content="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
+  <meta name="msapplication-TileImage" content="{{ asset('/wp-content/uploads/favicon.png') }}" />
   <!--<meta name='developer' content='https://javecilla.vercel.app'/>-->
   <!--The SEO Framework by Jerome Avecilla -->
   <meta property="og:image"
-    content="{{ asset('/wp-content/uploads/app_ogimage.PNG') }}" />
+    content="{{ asset('/wp-content/uploads/app_ogimage.png') }}" />
   <meta property="og:image:width" content="608">
   <meta property="og:image:height" content="260">
   <meta property="og:image:alt" content="{{ env('APP_NAME') }}" />
-  <meta property="og:image:secure_url" content="{{ asset('/wp-content/uploads/favicon.PNG') }}"/>
+  <meta property="og:image:secure_url" content="{{ asset('/wp-content/uploads/favicon.png') }}"/>
   <meta property="og:locale" content="en_US">
   <meta property="og:type" content="website">
   <meta property="og:title" content="{{ env('APP_NAME') }}" />
@@ -41,9 +41,9 @@
 	<title>@isset($title) {{ $title }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}</title>
 
 	<link rel="shortcut icon" type="image/png" sizes="16x16"
-		href="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
+		href="{{ asset('/wp-content/uploads/favicon.png') }}" />
   <link rel="apple-touch-icon" type="image/png" sizes="16x16"
-  	href="{{ asset('/wp-content/uploads/favicon.PNG') }}" />
+  	href="{{ asset('/wp-content/uploads/favicon.png') }}" />
   <link rel="canonical" href="https://admission.goldenmindsbulacan.com/" />
   <link rel='shortlink' href="https://www.goldenmindsbulacan.com/" />
   <link rel="alternate" type="text/xml+oembed" href="https://www.goldenmindsbulacan.com/sitemap.xml?url=https://www.goldenmindsbulacan.com/&format=xml" />

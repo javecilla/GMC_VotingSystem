@@ -32,5 +32,5 @@
 	  </x-container>
 	</x-section>
 </x-layout.admin>
-<script src="{{ asset('/wp-admin/themes/scripts/eventListener/reports.js') }}"></script>
-<script src="{{ asset('/wp-admin/themes/scripts/functions/reports.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/eventListener/reports.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/functions/reports.js') }}"></script>

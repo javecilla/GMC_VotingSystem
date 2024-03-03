@@ -44,7 +44,7 @@ class CandidateRepository implements IRepository {
 						->orWhere('candidate_no', 'like', '%' . $searchQuery . '%');
 				});
 
-			// Return candidates
+			//\Illuminate\Support\Facades\Log::info($query->get());
 			return $query->get();
 		} else {
 			// Return an empty collection if app version is not found
@@ -115,13 +115,6 @@ class CandidateRepository implements IRepository {
 		$result->totalSpamVotes = $totalSpamVotes;
 		$result->totalOfAllVotes = $totalOfAllVotes;
 		// \Log::info("Candidate: " . json_encode($result->candidate));
-		// \Log::info("Votes: " . json_encode($result->votes));
-		// \Log::info("Total Votes: " . $result->totalVotes);
-		// \Log::info("Total Amount: " . $result->totalAmount);
-		// \Log::info("Total Vote Points: " . $result->totalVotePoints);
-		// \Log::info("Total Pending Votes: " . $result->totalPendingVotes);
-		// \Log::info("Total Spam Votes: " . $result->totalSpamVotes);
-		// \Log::info("Total Of All Votes: " . $result->totalOfAllVotes);
 		return $result;
 	}
 

@@ -88,7 +88,7 @@
 										<small class="text-muted">
 											{{ __('Select the version of voting you want to add this campus') }}
 										</small>
-										<div class="selectDataBody">
+										<div class="selectDataBodyCampus">
 											<label class="text-center">
 												{{ __('Loading') }} <i class="fas fa-spinner fa-spin"></i>
 											</label>
@@ -153,7 +153,7 @@
 										<small class="text-muted">
 											{{ __('Select the version of voting you want to add this category') }}
 										</small>
-										<div class="selectDataBody">
+										<div class="selectDataBodyCategory">
 											<label class="text-center">
 												{{ __('Loading') }} <i class="fas fa-spinner fa-spin"></i>
 											</label>
@@ -219,7 +219,7 @@
 										<small class="text-muted">
 											{{ __('Select the version of voting you want to add this category') }}
 										</small>
-										<div class="selectDataBodyVP">
+										<div class="selectDataBodyVotePoints">
 											<label class="text-center">
 												{{ __('Loading') }} <i class="fas fa-spinner fa-spin"></i>
 											</label>
@@ -291,5 +291,5 @@
 		</x-container>
 	</x-section>
 </x-layout.admin>
-<script src="{{ asset('/wp-admin/themes/scripts/eventListener/configuration.js') }}"></script>
-<script src="{{ asset('/wp-admin/themes/scripts/functions/configuration.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/eventListener/configuration.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/functions/configuration.js') }}"></script>

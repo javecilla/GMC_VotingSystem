@@ -25,7 +25,7 @@
 							<div class="col-md-5">
 								<div class="card card-cover overflow-hidden text-bg-dark rounded-4 shadow-sm"
 									id="editCardCandidateImage"
-									style="background-image: url({{ asset('/wp-admin/uploads/noimg-yet.PNG') }});">
+									style="background-image: url({{ asset('/wp-content/admin/uploads/noimg-yet.PNG') }});">
 				          <div id="cardOverlay" class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
 				            <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
 				            <ul class="d-flex list-unstyled mt-auto">
@@ -161,6 +161,6 @@
 		</x-container>
 	</x-section>
 </x-layout.admin>
-<script src="{{ asset('/wp-admin/themes/scripts/eventListener/candidate.js') }}"></script>
-<script src="{{ asset('/wp-admin/themes/scripts/functions/candidate.js') }}"></script>
-<script src="{{ asset('/wp-admin/themes/scripts/functions/configuration.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/eventListener/candidate.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/functions/candidate.js') }}"></script>
+<script src="{{ asset('/wp-content/admin/themes/scripts/functions/configuration.js') }}"></script>

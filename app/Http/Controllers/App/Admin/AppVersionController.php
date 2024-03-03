@@ -17,8 +17,8 @@ class AppVersionController extends Controller {
 	public function __construct(protected AppVersionService $service) {
 	}
 
-	public function retrieve(String $categoryName): JsonResponse {
-		$result = $this->service->getAllAppVersion($categoryName);
+	public function getRecordsAll(): JsonResponse {
+		$result = $this->service->getAllAppVersion();
 		return response()->json($result);
 	}
 

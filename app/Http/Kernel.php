@@ -54,7 +54,7 @@ class Kernel extends HttpKernel {
 		],
 
 		'guest' => [
-			//\App\Http\Middleware\ValidateAppName::class,
+
 		],
 	];
 

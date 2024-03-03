@@ -12,6 +12,38 @@ use Illuminate\Support\Arr;
 class VoteService {
 	public function __construct(protected VoteRepository $repository) {}
 
+	public function getAllVotes(String $appVersion): object {
+		return $this->repository->getAll($appVersion);
+	}
+
+	public function loadMoreVotes(String $appVersion, int $limit, int $offset): object {
+		return $this->repository->loadMoreData($appVersion, $limit, $offset);
+	}
+
+	public function getOneVotes(String $appVersion, int $votesId): object {
+		return $this->repository->getOne($votesId);
+	}
+
+	public function getVotesByStatus(String $appVersion, int $status): object {
+		return $this->repository->getAllByStatus($appVersion, $status);
+	}
+
+	public function getVotesBySearch(String $appVersion, String $search): object {
+		return $this->repository->getAllBySearch($appVersion, $search);
+	}
+
+	public function getMostVotesCandidates(String $appVersion, int $limit): object {
+		return $this->repository->getMostVotes($appVersion, $limit);
+	}
+
+	public function getMostVotesCandidatesByCategory(String $appVersion, int $limit): object {
+		return $this->repository->getMostVotesCategory($appVersion, $limit);
+	}
+
+	public function countAllVotesByStatus(String $appVersion): array {
+		return $this->repository->count($appVersion);
+	}
+
 	public function createNewVote(array $data): array {
 		try {
 			$filteredData = Arr::only($data, [
@@ -49,38 +81,6 @@ class VoteService {
 			return ['success' => false, 'message' => 'An error occurred during updation. Please try again later.'];
 			//\Illuminate\Support\Facades\Log::info('error: ' . $e->getMessage());
 		}
-	}
-
-	public function getAllVotes(String $appVersion): object {
-		return $this->repository->getAll($appVersion);
-	}
-
-	public function loadMoreVotes(String $appVersion, int $limit, int $offset): object {
-		return $this->repository->loadMoreData($appVersion, $limit, $offset);
-	}
-
-	public function getOneVotes(String $appVersion, int $votesId): object {
-		return $this->repository->getOne($votesId);
-	}
-
-	public function getVotesByStatus(String $appVersion, int $status): object {
-		return $this->repository->getAllByStatus($appVersion, $status);
-	}
-
-	public function getVotesBySearch(String $appVersion, String $search): object {
-		return $this->repository->getAllBySearch($appVersion, $search);
-	}
-
-	public function getMostVotesCandidates(String $appVersion, int $limit): object {
-		return $this->repository->getMostVotes($appVersion, $limit);
-	}
-
-	public function getMostVotesCandidatesByCategory(String $appVersion, int $limit): object {
-		return $this->repository->getMostVotesCategory($appVersion, $limit);
-	}
-
-	public function countAllVotesByStatus(String $appVersion): array {
-		return $this->repository->count($appVersion);
 	}
 
 	public function updateVotesByStatus(array $data): array {

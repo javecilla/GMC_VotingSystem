@@ -57,7 +57,7 @@
 		        </p>
 	        </div>
 	      </div>
-	      <img src="{{ asset('/wp-content/uploads/cp2.png') }}" alt="image"
+	      <img src="{{ asset('/wp-content/guest/uploads/cp2.png') }}" alt="image"
 	      	class="tracker-image d-none d-lg-inline"/>
     	</div>
   	</div>
@@ -68,7 +68,7 @@
   	<div class="container px-4 py-5 htv-container">
   		<div class="row align-items-center g-5 py-5">
   			<div class="col-10 col-sm-8 col-lg-6">
-	        <img src="{{ asset('/wp-content/uploads/howtovote.png') }}" class="d-block mx-lg-auto img-fluid" alt="img" width="700" height="500" loading="lazy">
+	        <img src="{{ asset('/wp-content/guest/uploads/howtovote.png') }}" class="d-block mx-lg-auto img-fluid" alt="img" width="700" height="500" loading="lazy">
 	      </div>
 	      <div class="col-lg-6">
 	      	<label class="gradient-blue-text h-sub-text fw-bold">{{ __('How to Vote?') }}</label>

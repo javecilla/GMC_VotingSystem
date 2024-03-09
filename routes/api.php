@@ -16,20 +16,30 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('api')->group(function () {
 	/*
 		|--------------------------------------------------------------------------
+		| Test API Routes
+		|--------------------------------------------------------------------------
+	*/
+	Route::get('/{version}/retrieve/candidates/{id}', [CandidatesController::class, 'getRecordsOne']);
+	Route::get('/link', function () {
+		Artisan::call('storage:link');
+	});
+
+	/*
+		|--------------------------------------------------------------------------
 		| Guest API Routes
 		|--------------------------------------------------------------------------
 	*/
 	Route::middleware('guest')->group(function () {
 		Route::prefix('{version}')->group(function () {
 			Route::get('/candidates', [CandidatesController::class, 'getRecordsAll']);
-			Route::get('/{candidate}/candidates', [CandidatesController::class, 'getById']);
+			Route::get('/{candidate}/candidates', [CandidatesController::class, 'getRecordsOne']);
 			Route::get('/{searchQuery}/search', [CandidatesController::class, 'getBySearch']);
 			Route::get('/{categoryQuery}/category', [CandidatesController::class, 'getByCategory']);
 
 			Route::get('/category', [CategoryController::class, 'getRecordsAll']);
 
 			Route::get('/amount/vote-points', [VotePointController::class, 'getRecordsAll']);
-			Route::get('/{votePointsId}/vote-points', [VotePointController::class, 'show']);
+			Route::get('/{votePointsId}/vote-points', [VotePointController::class, 'getRecordsOne']);
 
 			Route::post('/vote/client/store', [VotesController::class, 'storeClient']);
 			Route::get('/count/all/votes', [VotesController::class, 'countPendingVerifiedSpam']);
@@ -67,10 +77,10 @@ Route::middleware('api')->group(function () {
 					->prefix('/manage/votes')->group(function () {
 					Route::get('/all/records', 'getRecordsAll');
 					Route::get('/limit/records/{limit}/{offset}', 'getRecordsLimit');
-					Route::get('/id/{votes}', 'getById');
+					Route::get('/id/{votes}', 'getRecordsOne');
+					Route::get('/status/{status}', 'getRecordsByStatus');
+					Route::get('/search/{search}', 'getRecordsBySearch');
 					Route::get('/count/pending/verified/spam', 'countPendingVerifiedSpam');
-					Route::get('/status/{status}', 'getByStatus');
-					Route::get('/search/{search}', 'getBySearch');
 					Route::post('/store', 'storeAdmin');
 					Route::patch('/id/{votes}/update', 'update');
 					Route::patch('/id/{votes}/status/{status}/update', 'updateByStatus');
@@ -82,7 +92,7 @@ Route::middleware('api')->group(function () {
 					->prefix('manage/candidates')->group(function () {
 					Route::get('/all/records', 'getRecordsAll');
 					Route::get('/limit/records/{limit}/{offset}', 'getRecordsLimit');
-					Route::get('/id/{candidate}', 'getById');
+					Route::get('/id/{candidate}', 'getRecordsOne');
 					Route::get('/search/{search}', 'getBySearch');
 					Route::get('/category/{category}', 'getByCategory');
 					Route::get('/ranking/overall/{limit}', 'getOverallRanking');

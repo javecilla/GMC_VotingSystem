@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Exceptions\App\Admin\CreateDataException;
+use App\Exceptions\App\Admin\DeleteDataException;
+use App\Exceptions\App\Admin\UpdateDataException;
 use App\Exceptions\Auth\InvalidRecaptchaException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\VoteCreateRequest as ClientRequest;
@@ -9,6 +12,7 @@ use App\Http\Requests\App\Admin\VoteCreateRequest as AdminRequest;
 use App\Http\Requests\App\Admin\VoteUpdateRequest;
 use App\Services\Auth\RecaptchaService;
 use App\Services\VoteService;
+use Illuminate\Http\Facades\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,64 +21,134 @@ class VotesController extends Controller {
 	public function __construct(protected VoteService $service,
 		protected RecaptchaService $recaptchaService) {}
 
-	public function getRecordsAll(String $appVersion): JsonResponse {
-		$result = $this->service->getAllVotes($appVersion);
-		return response()->json($result);
+	public function getRecordsAll(String $appVersionName) {
+		try {
+			return $this->service->getAllVotes($appVersionName);
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Throwable $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured. Code[VID]']);
+		}
 	}
 
-	public function getRecordsLimit(String $appVersion, int $limit, int $offset): JsonResponse {
-		$result = $this->service->loadMoreVotes($appVersion, $limit, $offset);
-		return response()->json($result);
+	public function getRecordsLimit(String $appVersionName, int $limit, int $offset) {
+		try {
+			return $this->service->loadMoreVotes($appVersionName, $limit, $offset);
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Throwable $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured. Code[VID]']);
+		}
 	}
 
-	public function getById(String $appVersion, int $votes): JsonResponse {
-		$result = $this->service->getOneVotes($appVersion, $votes);
-		return response()->json($result);
+	public function getRecordsOne(String $appVersionName, int $voteId) {
+		try {
+			return $this->service->getOneVotes($voteId);
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Throwable $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured. Code[VID]']);
+		}
 	}
 
-	public function countPendingVerifiedSpam(String $appVersion): JsonResponse {
-		$result = $this->service->countAllVotesByStatus($appVersion);
-		return response()->json($result);
+	public function getRecordsByStatus(String $appVersionName, int $status) {
+		try {
+			return $this->service->getVotesByStatus($appVersionName, $status);
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Throwable $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured. Code[VID]']);
+		}
 	}
 
-	public function getByStatus(String $appVersion, int $status): JsonResponse {
-		$result = $this->service->getVotesByStatus($appVersion, $status);
-		return response()->json($result);
+	public function getRecordsBySearch(String $appVersionName, String $search) {
+		try {
+			return $this->service->getVotesBySearch($appVersionName, $search);
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Throwable $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured. Code[VID]']);
+		}
 	}
 
-	public function getBySearch(String $appVersion, String $search): JsonResponse {
-		$result = $this->service->getVotesBySearch($appVersion, $search);
-		return response()->json($result);
+	public function countPendingVerifiedSpam(String $appVersionName) {
+		try {
+			return $this->service->countAllVotesByStatus($appVersionName);
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Throwable $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured. Code[VID]']);
+		}
 	}
 
 	public function storeAdmin(AdminRequest $request): JsonResponse {
-		$result = $this->service->createNewVote($request->validated());
-		return response()->json($result);
+		try {
+			return $this->service->createNewVote($request->validated());
+		} catch (CreateDataException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured during creation . Code[VID]']);
+		}
 	}
 
 	public function storeClient(ClientRequest $request): JsonResponse {
 		try {
 			$this->recaptchaService->verify($request->validated('g_recaptcha_response'));
-			$result = $this->service->createNewVote($request->validated());
-
-			return response()->json($result);
-		} catch (InvalidRecaptchaException $recaptchaException) {
-			return response()->json(['success' => false, 'message' => $recaptchaException->getMessage()]);
+			return $this->service->createNewVote($request->validated());
+		} catch (InvalidRecaptchaException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (CreateDataException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured during vote submission . Code[VID]']);
 		}
 	}
 
 	public function update(VoteUpdateRequest $request): JsonResponse {
-		$result = $this->service->updateVote($request->validated());
-		return response()->json($result);
+		try {
+			return $this->service->updateVote($request->validated());
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (UpdateDataException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured during updation. Code[VID]']);
+		}
 	}
 
 	public function updateByStatus(Request $request): JsonResponse {
-		$result = $this->service->updateVotesByStatus($request->all());
-		return response()->json($result);
+		try {
+			return $this->service->updateVotesByStatus($request->all());
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (UpdateDataException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured during updation. Code[VID]']);
+		}
 	}
 
-	public function destroy(String $appVersion, int $votesId): JsonResponse {
-		$result = $this->service->deleteVote($appVersion, $votesId);
-		return response()->json($result);
+	public function destroy(String $appVersionName, int $voteId): JsonResponse {
+		try {
+			return $this->service->deleteVote($voteId);
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (DeleteDataException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured during updation. Code[VID]']);
+		}
 	}
 }

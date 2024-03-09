@@ -3,74 +3,88 @@
 namespace App\Services;
 
 use App\Exceptions\App\Admin\CreateDataException;
-use App\Exceptions\App\Admin\DeleteDataException;
 use App\Exceptions\App\Admin\UpdateDataException;
-use App\Repositories\CategoryRepository;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Arr;
+use App\Http\Resources\Api\CategoryResource;
+use App\Models\AppVersion;
+use App\Models\Category;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class CategoryService {
 
-	public function __construct(protected CategoryRepository $repository) {}
-
-	public function getAllCategory(String $appVersionName): object {
-		return $this->repository->getAll($appVersionName);
+	public function getAllCategory(String $appVersionName) {
+		return Cache::remember('categories', 60 * 60 * 24, function () use ($appVersionName) {
+			$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
+			$category = Category::orderBy('created_at', 'desc')
+				->where('app_version_id', $appVersion->avid)->get();
+			return CategoryResource::collection($category);
+		});
 	}
 
-	public function createCategory(array $data): array {
-		try {
-			$filteredData = Arr::only($data, ['app_version_id', 'name']);
-			return $this->repository->create($filteredData);
-		} catch (CreateDataException $e) {
-			return ['success' => false, 'message' => $e->getMessage()];
-		} catch (\Exception $e) {
-			return ['success' => false, 'message' => 'An error occurred during creation.'];
-		}
-	}
+	public function createCategory(array $data) {
+		return DB::transaction(function () use ($data) {
+			$created = Category::query()->create([
+				'app_version_id' => data_get($data, 'app_version_id', null),
+				'name' => data_get($data, 'name', null),
+				'created_at' => data_get($data, 'created_at', now()),
+				'updated_at' => data_get($data, 'updated_at', null),
+			]);
 
-	public function updateCategory(array $data): array {
-		try {
-			if (!$this->hasChangesOccurred($data)) {
-				return ['success' => false, 'message' => 'No changes occured', 'type' => 'info'];
+			if (!$created) {
+				throw new CreateDataException('Failed to create new category');
 			}
 
-			if ($this->isDuplicateCategory($data)) {
-				return ['success' => false, 'message' => 'Cannot duplicate category.', 'type' => 'warning'];
-			}
-
-			$filteredData = Arr::only($data, ['ctid', 'name']);
-			return $this->repository->update($filteredData);
-		} catch (ModelNotFoundException $e) {
-			return ['success' => false, 'message' => 'Category not found'];
-		} catch (UpdateDataException $e) {
-			return ['success' => false, 'message' => $e->getMessage()];
-		} catch (\Exception $e) {
-			return ['success' => false, 'message' => 'An error occurred during updation.'];
-		}
+			return response()->json(['success' => true, 'message' => 'New category created successfully']);
+		});
 	}
 
-	public function deleteCategory(int $categoryId): array {
-		try {
-			return $this->repository->delete($categoryId);
-		} catch (ModelNotFoundException $e) {
-			return ['success' => false, 'message' => 'Category not found'];
-		} catch (DeleteDataException $e) {
-			return ['success' => false, 'message' => $e->getMessage()];
-		} catch (\Exception $e) {
-			return ['success' => false, 'message' => 'An error occurred during deletion.'];
+	public function updateCategory(array $data) {
+		if (!$this->hasChangesOccurred($data)) {
+			return response()->json(['success' => false, 'message' => 'No changes occured', 'type' => 'info']);
 		}
+
+		if ($this->isDuplicateCategory($data)) {
+			return response()->json(['success' => false, 'message' => 'Cannot duplicate category.', 'type' => 'warning']);
+		}
+
+		$category = Category::findOrFail($data['ctid']);
+		return DB::transaction(function () use ($category, $data) {
+			$updated = $category->update(['name' => data_get($data, 'name', $category->name)]);
+			if (!$updated) {
+				throw new UpdateDataException('Failed to update category');
+			}
+
+			return response()->json(['success' => true, 'message' => 'Category updated successfully.']);
+		});
+	}
+
+	public function deleteCategory(int $categoryId) {
+		$category = Category::findOrFail($categoryId);
+		return DB::transaction(function () use ($category) {
+			$deleted = $category->delete();
+			if (!$deleted) {
+				throw new DeleteDataException('Failed to delete category');
+			}
+
+			return response()->json(['success' => true, 'message' => 'Category deleted successfully']);
+		});
 	}
 
 	private function isDuplicateCategory(array $data): bool {
-		// Name must be unique, but only if it's changing
-		return $this->repository->nameExists($data['name'], $data['app_version_id'], $data['ctid']);
+		return $this->nameExists($data['name'], $data['app_version_id'], $data['ctid']);
 	}
 
 	private function hasChangesOccurred(array $data): bool {
-		// This check if there is any changes occured or not
-		$category = $this->repository->findCategory($data['ctid']);
+		$category = Category::findOrFail($data['ctid']);
 		$category->fill($data);
 
 		return $category->isDirty();
+	}
+
+	private function nameExists(string $name, int $avid, int $ctid): bool {
+		return Category::where('name', $name)
+			->where('app_version_id', $avid)
+			->where('ctid', '<>', $ctid)
+			->exists();
 	}
 }

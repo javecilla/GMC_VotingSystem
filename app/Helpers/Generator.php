@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Dto;
+namespace App\Helpers;
 
-class HelperDto {
+class Generator {
 
 	public static function generateReferrenceNumber() {
 		$referrenceNumber = '';

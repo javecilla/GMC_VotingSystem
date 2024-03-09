@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Exceptions\App\Admin\CreateDataException;
+use App\Exceptions\App\Admin\DeleteDataException;
+use App\Exceptions\App\Admin\UpdateDataException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\App\Admin\CategoryCreateRequest;
 use App\Http\Requests\App\Admin\CategoryUpdateRequest;
@@ -11,24 +14,49 @@ use Illuminate\Http\JsonResponse;
 class CategoryController extends Controller {
 	public function __construct(protected CategoryService $service) {}
 
-	//get all the category
-	public function getRecordsAll(String $appVersionName): JsonResponse {
-		$result = $this->service->getAllCategory($appVersionName);
-		return response()->json($result);
+	public function getRecordsAll(String $appVersionName) {
+		try {
+			return $this->service->getAllCategory($appVersionName);
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Throwable $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured. Code[CTID]']);
+		}
 	}
 
 	public function store(CategoryCreateRequest $request): JsonResponse {
-		$result = $this->service->createCategory($request->validated());
-		return response()->json($result);
+		try {
+			return $this->service->createCategory($request->validated());
+		} catch (CreateDataException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured during creation. Code[CTID]']);
+		}
 	}
 
 	public function update(CategoryUpdateRequest $request): JsonResponse {
-		$result = $this->service->updateCategory($request->validated());
-		return response()->json($result);
+		try {
+			return $this->service->updateCategory($request->validated());
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (UpdateDataException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured during updation. Code[CTID]']);
+		}
 	}
 
 	public function destroy(String $appVersionName, int $categoryId): JsonResponse {
-		$result = $this->service->deleteCategory($categoryId);
-		return response()->json($result);
+		try {
+			return $this->service->deleteCategory($categoryId);
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (DeleteDataException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured during deletion. Code[CTID]']);
+		}
 	}
 }

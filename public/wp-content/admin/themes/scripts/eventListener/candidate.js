@@ -101,6 +101,7 @@
 	$(document).on('input', '.search-input', function() {
 		const searchInput = $(this).val();
 		isEmpty(searchInput) ? loadMoreCandidatesRecord(9, 0) : '';
+		window.history.replaceState(null, null, $('#indexUri').data('iurl'));
 	});
 
 	$(document).on('change', '#appVersionSelected', function() {
@@ -130,7 +131,7 @@
 		$(this).addClass('d-none');
 		
 		$('#imageLabel').removeClass('d-none');	
-		$('#cardCandidateImage').css('background-image', `url('/wp-admin/uploads/noimg-yet.PNG')`);
+		$('#cardCandidateImage').css('background-image', `url('/wp-content/admin/uploads/noimg-yet.PNG')`);
 		$('#candidateImage').val(""); 
 
 		const editPrevImg = $('#editPrevPicture').val();

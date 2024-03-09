@@ -96,7 +96,7 @@ const getPageViewsPerDay = async (limit) => {
 		    data: {
 		      labels: dates,
 		      datasets: [{
-		        label: '# Page Views by Day',
+		        label: '# Page Views',
 		        data: totalCounts,
 		        fill: true, 
 		        borderColor: '#363b42', 

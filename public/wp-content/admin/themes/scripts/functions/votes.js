@@ -33,6 +33,7 @@ const loadMoreVotesRecord = async (limit, offset) => {
 		success: (data) => {
 			//kapag ang offset is greater than 0, prev button will be undisabled
 			if (offset > 0) {
+				window.history.replaceState(null, null, VOTES_INDEX_URI);
         $('#prevPaginateBtn').removeAttr('disabled');
      	} else {
      		//otherwise, it will be disabled

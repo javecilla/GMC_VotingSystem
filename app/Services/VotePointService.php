@@ -14,19 +14,20 @@ use Illuminate\Support\Facades\Storage;
 class VotePointService {
 	public function getAllVotePoints(String $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votePoints', 60 * 60 * 24, function () use ($appVersion) {
-			$votePoint = VotePoint::orderBy('created_at', 'desc')
-				->where('app_version_id', $appVersion->avid)->get();
-			return VotePointResource::collection($votePoint);
-		});
+		return Cache::remember('votePoints:' . $appVersion->avid, 60 * 60 * 24,
+			function () use ($appVersion) {
+				$votePoint = VotePoint::orderBy('created_at', 'desc')
+					->where('app_version_id', $appVersion->avid)->get();
+				return VotePointResource::collection($votePoint);
+			});
 	}
 
 	public function getOneVotePoints(int $votePointsId) {
-		$cacheKey = 'votePointsId:' . $votePointsId;
-		return Cache::remember($cacheKey, 60 * 60 * 24, function () use ($votePointsId) {
-			$votePoint = VotePoint::findOrFail($votePointsId);
-			return new VotePointResource($votePoint);
-		});
+		return Cache::remember('votePointsId:' . $votePointsId, 60 * 60 * 24,
+			function () use ($votePointsId) {
+				$votePoint = VotePoint::findOrFail($votePointsId);
+				return new VotePointResource($votePoint);
+			});
 	}
 
 	public function createVotePoints(array $data) {

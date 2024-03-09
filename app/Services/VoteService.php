@@ -14,29 +14,31 @@ class VoteService {
 
 	public function getAllVotes(String $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votes', 60 * 60 * 24, function () use ($appVersion) {
-			$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
-				->where('app_version_id', $appVersion->avid)
-				->orderBy('created_at', 'desc')
-				->get();
-			//\Illuminate\Support\Facades\Log::info($votes);
-			return $votes;
-		});
-	}
-
-	public function loadMoreVotes(String $appVersionName, int $limit, int $offset) {
-		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votesMore', 60 * 60 * 24,
-			function () use ($appVersion, $limit, $offset) {
+		return Cache::remember('votes:' . $appVersion->avid, 60 * 60 * 24,
+			function () use ($appVersion) {
 				$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
 					->where('app_version_id', $appVersion->avid)
 					->orderBy('created_at', 'desc')
-					->skip($offset)
-					->take($limit)
+					->skip(0)
+					->take(10)
 					->get();
 				//\Illuminate\Support\Facades\Log::info($votes);
 				return $votes;
 			});
+	}
+
+	public function loadMoreVotes(String $appVersionName, int $limit, int $offset) {
+		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
+		// return Cache::remember('votesMore', 60 * 60 * 24,
+		// 	function () use ($appVersion, $limit, $offset) {});
+		$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
+			->where('app_version_id', $appVersion->avid)
+			->orderBy('created_at', 'desc')
+			->skip($offset)
+			->take($limit)
+			->get();
+		//\Illuminate\Support\Facades\Log::info($votes);
+		return $votes;
 	}
 
 	public function getOneVotes(int $voteId) {
@@ -53,7 +55,7 @@ class VoteService {
 
 	public function getVotesByStatus(String $appVersionName, int $status) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		$cacheKey = 'votesByStatus:' . $status;
+		$cacheKey = 'votesByStatus:' . $status . ':' . $appVersion->avid;
 		return Cache::remember($cacheKey, 60 * 60 * 24, function () use ($appVersion, $status) {
 			$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
 				->where('app_version_id', $appVersion->avid)
@@ -67,17 +69,18 @@ class VoteService {
 
 	public function getVotesBySearch(String $appVersionName, String $search) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votesBySearch', 60 * 60 * 24, function () use ($appVersion, $search) {
-			$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
-				->where('app_version_id', $appVersion->avid)
-				->where(function ($query) use ($search) {
-					$query->where('referrence_no', 'like', '%' . $search . '%');
-				})
-				->orderBy('created_at', 'desc')
-				->get();
+		return Cache::remember('votesBySearch:' . $appVersion->avid, 60 * 60 * 24,
+			function () use ($appVersion, $search) {
+				$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
+					->where('app_version_id', $appVersion->avid)
+					->where(function ($query) use ($search) {
+						$query->where('referrence_no', 'like', '%' . $search . '%');
+					})
+					->orderBy('created_at', 'desc')
+					->get();
 
-			return $votes;
-		});
+				return $votes;
+			});
 	}
 
 	public function getMostVotesCandidates(String $appVersionName, int $limit) {
@@ -93,7 +96,7 @@ class VoteService {
 		//then return to the client side the 5 candidates with highest vote points and with its
 		//calculated vote points for each 5 candidates
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('mostVotesCandidates', 60 * 60 * 24,
+		return Cache::remember('mostVotesCandidates:' . $appVersion->avid, 60 * 60 * 24,
 			function () use ($appVersion, $limit) {
 				$mostVotesCandidates = Vote::with(['candidate', 'votePoint'])
 					->join('vote_points', 'votes.vote_points_id', '=', 'vote_points.vpid')
@@ -142,7 +145,7 @@ class VoteService {
 
 		//map app version
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('mostVotesCandidatesByCategory', 60 * 60 * 24,
+		return Cache::remember('mostVotesCandidatesByCategory:' . $appVersion->avid, 60 * 60 * 24,
 			function () use ($appVersion, $limit) {
 				$mostVotesCandidatesCategory = [];
 
@@ -192,7 +195,7 @@ class VoteService {
 
 	public function countAllVotesByStatus(String $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votesPendingVerifiedSpamAmount', 60 * 60 * 24,
+		return Cache::remember('votesPendingVerifiedSpamAmount:' . $appVersion->avid, 60 * 60 * 24,
 			function () use ($appVersion) {
 				$verified = Vote::where('app_version_id', $appVersion->avid)
 					->where('status', '0')

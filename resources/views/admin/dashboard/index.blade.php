@@ -67,7 +67,7 @@
 		    		<div class="chart-card card">
 						  <div class="card-header">
 						    <i class="fa-solid fa-eye fs-4"></i>&nbsp;
-						    <label>{{ __("Page's View") }}</label>
+						    <label>{{ __("Page's View by Day") }}</label>
 						  </div>
 						  <div class="card-body">
 						  	<canvas id="pageViewChart">

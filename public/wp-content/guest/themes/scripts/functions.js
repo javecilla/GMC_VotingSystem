@@ -335,16 +335,12 @@ const displayAmountOfPayments = (data) => {
 
 const displayQRCodeOfPayments = (data) => {
 	let dataQRCodePreviewItem = `<div class="card cardAuto">`; 
-	if(Array.isArray(data) && data.length > 0) {
-		Object.keys(data).forEach(key => {
-			dataQRCodePreviewItem += `<div id="dataQRCodePreviewBody">
-					<div class="card cardAuto">
-						<img src="/storage/${data[key].image}" alt="No selected amount of payment." id="qrCodeImage" class="img-card-top" 
-						loading="lazy"/>
-					</div>
-				</div>
-			`;
-		});
+	if(typeof data === 'object' && data !== null) {
+		dataQRCodePreviewItem += `<div id="dataQRCodePreviewBody">
+			<div class="card cardAuto">
+				<img src="/storage/${data.image}" alt="No selected amount of payment." id="qrCodeImage" class="img-card-top" loading="lazy"/>
+			</div>
+		</div>`;
 	} else {
 		dataQRCodePreviewItem += `<div class="card cardAuto">
 			<img src="..." alt="..." id="qrCodeImage" class="img-card-top" />

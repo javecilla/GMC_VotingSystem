@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Exceptions\App\Admin\CreateDataException;
+use App\Exceptions\App\Admin\DeleteDataException;
+use App\Exceptions\App\Admin\UpdateDataException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\App\Admin\VersionCreateRequest;
 use App\Http\Requests\App\Admin\VersionUpdateRequest;
 use App\Services\AppVersionService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -17,23 +21,47 @@ class AppVersionController extends Controller {
 	public function __construct(protected AppVersionService $service) {
 	}
 
-	public function getRecordsAll(): JsonResponse {
-		$result = $this->service->getAllAppVersion();
-		return response()->json($result);
+	public function getRecordsAll() {
+		try {
+			return $this->service->getAllAppVersion();
+		} catch (\Throwable $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured. Code[AVID]']);
+		}
 	}
 
 	public function store(VersionCreateRequest $request): JsonResponse {
-		$result = $this->service->createAppVersion($request->validated());
-		return response()->json($result);
+		try {
+			return $this->service->createAppVersion($request->validated());
+		} catch (CreateDataException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured during creatation. Code[AVID]']);
+		}
 	}
 
 	public function update(VersionUpdateRequest $request): JsonResponse {
-		$result = $this->service->updateAppVersion($request->validated());
-		return response()->json($result);
+		try {
+			return $this->service->updateAppVersion($request->validated());
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (UpdateDataException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured during updation. Code[AVID]']);
+		}
 	}
 
 	public function destroy(String $appVersionName, int $appVersionId): JsonResponse {
-		$result = $this->service->deleteAppVersion($appVersionId);
-		return response()->json($result);
+		try {
+			return $this->service->deleteAppVersion($appVersionId);
+		} catch (ModelNotFoundException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (DeleteDataException $e) {
+			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return response()->json(['success' => false, 'message' => 'An error occured during deletion. Code[AVID]']);
+		}
 	}
 }

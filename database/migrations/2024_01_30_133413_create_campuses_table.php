@@ -20,6 +20,8 @@ return new class extends Migration {
 			// if the version model is update this campus will update too
 				->onUpdate('CASCADE');
 			$table->string('name');
+
+			$table->unique(['app_version_id', 'name']);
 			$table->timestamps();
 		});
 	}

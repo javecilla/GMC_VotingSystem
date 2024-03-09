@@ -31,7 +31,7 @@
 		        		<small class="text-muted">
 		        			{{ __('This field is filled up because. for admin purpose')}}
 		        		</small>
-		        		<input type="text" class="form-control w-100 readonly"  id="votersContact" value="{{ App\Dto\HelperDto::generatePhoneNumber() }}" readonly/>
+		        		<input type="text" class="form-control w-100 readonly"  id="votersContact" value="{{ App\Helpers\Generator::generatePhoneNumber() }}" readonly/>
 		        	</div>
 		        </div>
 
@@ -62,7 +62,7 @@
 		        			{{ __('This field is filled up because. for admin purpose')}}
 		        		</small>
 		        		<input type="text" class="form-control w-100 readonly" id="referrenceNo"
-		        			value="{{ App\Dto\HelperDto::generateReferrenceNumber() }}" readonly
+		        			value="{{ App\Helpers\Generator::generateReferrenceNumber() }}" readonly
 		        		/>
 		        	</div>
 		        </div>

@@ -42,7 +42,7 @@ const loadMoreCandidatesRecord = async (limit, offset) => {
       } else {
         $('#nextPaginateBtn').removeAttr('disabled');
       }
-      window.history.replaceState(null, null, CANDIDATES_INDEX_URI);
+      //window.history.replaceState(null, null, $('#indexUri').data('iurl'));
       displayLimitCandidates(data);
     },
     error: (xhr, status, error) => {
@@ -60,6 +60,7 @@ const getOneCandidates = async (candidate) => {
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
     success: (data) => {
+      console.log(data);
       displayCandidatesInformation(data);
       displayCandidatesVoteRecords(data);
     },

@@ -13,6 +13,8 @@ class Campus extends Model {
 
 	protected $fillable = ['scid', 'app_version_id', 'name', 'created_at', 'updated_at'];
 
+	protected $dates = ['created_at'];
+
 	###[Methods for Database table relationship]
 
 	// Make this 'Campus' model have relationship to 'AppVersion' model

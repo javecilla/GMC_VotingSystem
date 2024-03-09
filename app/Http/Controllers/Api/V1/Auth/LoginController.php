@@ -19,7 +19,7 @@ class LoginController extends Controller {
 
 	// Validate login request
 	public function store(UserLoginRequest $loginRequest): JsonResponse {
-		\Illuminate\Support\Facades\Log::info($loginRequest->all());
+		//\Illuminate\Support\Facades\Log::info($loginRequest->all());
 		try {
 			$this->recaptchaService->verify($loginRequest->validated('g-recaptcha-response'));
 			$validationResult = $this->userService->login($loginRequest);

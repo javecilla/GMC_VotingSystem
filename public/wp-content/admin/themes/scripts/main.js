@@ -46,7 +46,10 @@ const getAllApplicationVersionsSidebar = async () => {
 
 		  if(typeof data === 'object' && data !== null) {
    			Object.keys(data).forEach(key => {
-   				switchVersions += `<a class="dropdown-item" href="/${APP_VERSION}/admin/switching/version?request_version=${data[key].name}">
+          let currentURL = window.location.href;
+          let redirectURL = currentURL.replace(/\/v\d\.\d\//, `/${data[key].name}/`);
+   				switchVersions += `<a class="dropdown-item" 
+            href="/${APP_VERSION}/admin/switching/version?request_version=${data[key].name}&redirect_to=${redirectURL}">
        		 	<li>${data[key].name}</li>
       		</a>
       	`;

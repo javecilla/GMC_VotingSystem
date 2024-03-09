@@ -18,7 +18,7 @@ class CandidateService {
 
 	public function getAllCandidates(String $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('candidates', 60 * 60 * 24, function () use ($appVersion) {
+		return Cache::remember('candidates:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion) {
 			$candidates = Candidate::orderBy('created_at', 'desc')
 				->where('app_version_id', $appVersion->avid)->get();
 			return CandidateResource::collection($candidates);
@@ -26,8 +26,7 @@ class CandidateService {
 	}
 
 	public function getOneCandidate(int $candidateId) {
-		$cacheKey = 'candidatesId:' . $candidateId;
-		return Cache::remember($cacheKey, 60 * 60 * 24,
+		return Cache::remember('candidatesId:' . $candidateId, 60 * 60 * 24,
 			function () use ($candidateId) {
 				// get information for a single candidate
 				$candidate = Candidate::with(['appVersion', 'campus', 'category'])
@@ -85,10 +84,9 @@ class CandidateService {
 	}
 
 	public function getFilterSearchCandidates(String $appVersionName, String $searchQuery) {
-		return Cache::remember('candidateSearch', 60 * 60 * 24,
-			function () use ($appVersionName, $searchQuery) {
-				$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-
+		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
+		return Cache::remember('candidateSearch:' . $appVersion->avid, 60 * 60 * 24,
+			function () use ($appVersion, $searchQuery) {
 				if (!$appVersion) {
 					// Return an empty collection if app version is not found
 					return collect();
@@ -109,29 +107,28 @@ class CandidateService {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		$category = Category::findOrFail($categoryId);
 
-		$cacheKey = 'candidateCategory:' . $categoryId;
-		return Cache::remember($cacheKey, 60 * 60 * 24, function () use ($appVersion, $category) {
-			$candidate = Candidate::where('app_version_id', $appVersion->avid)
-				->where('category_id', $category->ctid)
-				->orderBy('created_at', 'desc')
-				->get();
+		return Cache::remember('candidateCategory:' . $categoryId, 60 * 60 * 24,
+			function () use ($appVersion, $category) {
+				$candidate = Candidate::where('app_version_id', $appVersion->avid)
+					->where('category_id', $category->ctid)
+					->orderBy('created_at', 'desc')
+					->get();
 
-			return CandidateResource::collection($candidate);
-		});
+				return CandidateResource::collection($candidate);
+			});
 	}
 
 	public function loadMoreCandidates(String $appVersionName, int $limit, int $offset) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('candidatesMore', 60 * 60 * 24,
-			function () use ($appVersion, $limit, $offset) {
-				$candidates = Candidate::where('app_version_id', $appVersion->avid)
-					->orderBy('created_at', 'desc')
-					->skip($offset)
-					->take($limit)
-					->get();
+		// return Cache::remember('candidatesMore:' . $appVersion->avid, 60 * 60 * 24,
+		// 	function () use ($appVersion, $limit, $offset) {});
+		$candidates = Candidate::where('app_version_id', $appVersion->avid)
+			->orderBy('created_at', 'desc')
+			->skip($offset)
+			->take($limit)
+			->get();
 
-				return CandidateResource::collection($candidates);
-			});
+		return CandidateResource::collection($candidates);
 	}
 
 	public function createCandidate(array $data) {

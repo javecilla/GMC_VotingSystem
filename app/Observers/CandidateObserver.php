@@ -28,10 +28,10 @@ class CandidateObserver {
 	}
 
 	protected function forgetCandidateCache(Candidate $candidate): void {
-		Cache::forget('candidates');
-		Cache::forget('candidatesMore');
+		Cache::forget('candidates:' . $candidate->app_version_id);
+		Cache::forget('candidatesMore:' . $candidate->app_version_id);
 		Cache::forget('candidatesId:' . $candidate->cdid);
-		Cache::forget('candidateSearch');
+		Cache::forget('candidateSearch: ' . $candidate->app_version_id);
 		Cache::forget('candidateCategory:' . $candidate->category_id);
 	}
 }

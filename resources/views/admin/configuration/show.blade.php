@@ -3,10 +3,10 @@
 	<x-section id="configurationContent" data-component="configuration">
 		<x-container data-iurl="{{ route('configuration.index', request()->route('version')) }}">
 			<center style="margin-top: 19%;">
-				<input type="hidden" id="requestVersion"
-					value="{{ (isset($_GET['request_version']))
-						? $_GET['request_version']
-						: request()->route('version')
+				<input type="hidden" id="redirectTo"
+					value="{{ (isset($_GET['redirect_to']))
+						? $_GET['redirect_to']
+						: ''
 					}}">
 					<div class="spinner-border" role="status"
 						style="width: 4rem!important; height: 4rem!important;">
@@ -20,7 +20,7 @@
 
             setTimeout(function() {
             	$('#label').text('Switching...');
-            	window.location.href=`/${$('#requestVersion').val()}/admin/dashboard`;
+            	window.location.href=`${$('#redirectTo').val()}`;
             }, 2500);
 					</script>
 				</center>

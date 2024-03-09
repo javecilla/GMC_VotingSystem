@@ -28,13 +28,13 @@ class VoteObserver {
 	}
 
 	protected function forgetVoteCache(Vote $vote): void {
-		Cache::forget('votes');
-		Cache::forget('votesMore');
+		Cache::forget('votes:' . $vote->app_version_id);
+		//Cache::forget('votesMore:' . $vote->app_version_id);
 		Cache::forget('votesId:' . $vote->vid);
-		Cache::forget('votesByStatus:' . $vote->status);
-		Cache::forget('votesBySearch');
-		Cache::forget('mostVotesCandidates');
-		Cache::forget('mostVotesCandidatesByCategory');
-		Cache::forget('votesPendingVerifiedSpamAmount');
+		Cache::forget('votesByStatus:' . $vote->status . ':' . $vote->app_version_id);
+		Cache::forget('votesBySearch:' . $vote->app_version_id);
+		Cache::forget('mostVotesCandidates:' . $vote->app_version_id);
+		Cache::forget('mostVotesCandidatesByCategory:' . $vote->app_version_id);
+		Cache::forget('votesPendingVerifiedSpamAmount:' . $vote->app_version_id);
 	}
 }

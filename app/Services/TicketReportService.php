@@ -13,7 +13,7 @@ class TicketReportService {
 
 	public function loadMoreReports(String $appVersionName, int $limit, int $offset) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('ticketReportMore', 60 * 60 * 24,
+		return Cache::remember('ticketReportMore:' . $appVersion->avid, 60 * 60 * 24,
 			function () use ($appVersion, $limit, $offset) {
 				$ticketReport = TicketReport::with(['appVersion'])
 					->where('app_version_id', $appVersion->avid)
@@ -28,7 +28,7 @@ class TicketReportService {
 
 	public function countAllTicketReportsByStatus(String $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('ticketReportCount', 60 * 60 * 24, function () use ($appVersion) {
+		return Cache::remember('ticketReportCount:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion) {
 			$ticketReports = TicketReport::where('app_version_id', $appVersion->avid)
 				->where('status', 1)
 				->count();

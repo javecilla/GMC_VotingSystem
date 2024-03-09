@@ -13,11 +13,12 @@ class CampusService {
 
 	public function getAllCampus(String $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('campuses', 60 * 60 * 24, function () use ($appVersion) {
-			$campus = Campus::orderBy('created_at', 'desc')
-				->where('app_version_id', $appVersion->avid)->get();
-			return CampusResource::collection($campus);
-		});
+		return Cache::remember('campuses:' . $appVersion->avid, 60 * 60 * 24,
+			function () use ($appVersion) {
+				$campus = Campus::orderBy('created_at', 'desc')
+					->where('app_version_id', $appVersion->avid)->get();
+				return CampusResource::collection($campus);
+			});
 	}
 
 	public function createCampus(array $data) {

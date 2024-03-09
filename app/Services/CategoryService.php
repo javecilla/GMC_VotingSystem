@@ -13,12 +13,13 @@ use Illuminate\Support\Facades\DB;
 class CategoryService {
 
 	public function getAllCategory(String $appVersionName) {
-		return Cache::remember('categories', 60 * 60 * 24, function () use ($appVersionName) {
-			$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-			$category = Category::orderBy('created_at', 'desc')
-				->where('app_version_id', $appVersion->avid)->get();
-			return CategoryResource::collection($category);
-		});
+		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
+		return Cache::remember('categories:' . $appVersion->avid, 60 * 60 * 24,
+			function () use ($appVersion) {
+				$category = Category::orderBy('created_at', 'desc')
+					->where('app_version_id', $appVersion->avid)->get();
+				return CategoryResource::collection($category);
+			});
 	}
 
 	public function createCategory(array $data) {

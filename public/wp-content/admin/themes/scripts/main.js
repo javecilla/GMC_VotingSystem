@@ -15,7 +15,7 @@ const CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
   setTimeout(function() {
   	getTotalNotFixedTicketReportsSidebar();
   	getAllApplicationVersionsSidebar();
-  }, 3000);
+  }, 2000);
 
 
 const getTotalNotFixedTicketReportsSidebar = async () => {

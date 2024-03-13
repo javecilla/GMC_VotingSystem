@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\Api\V1\AppVersionController;
-use App\Http\Controllers\Api\V1\Auth\LoginController;
-use App\Http\Controllers\Api\V1\Auth\SessionController;
 use App\Http\Controllers\Api\V1\CampusController;
 use App\Http\Controllers\Api\V1\CandidatesController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\DashboardController;
+use App\Http\Controllers\Api\V1\SessionController;
 use App\Http\Controllers\Api\V1\TicketReportController;
+use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\ViewController;
 use App\Http\Controllers\Api\V1\VotePointController;
 use App\Http\Controllers\Api\V1\VotesController;
@@ -19,7 +19,11 @@ Route::middleware('api')->group(function () {
 		| Test API Routes
 		|--------------------------------------------------------------------------
 	*/
-	Route::get('/{version}/retrieve/candidates/{id}', [CandidatesController::class, 'getRecordsOne']);
+	#Route::get('/{version}/votes/{limit}/{offset}', [VotesController::class, 'getRecordsLimit']);
+	#Route::get('/{version}/votes/{id}', [VotesController::class, 'getRecordsOne']);
+	#Route::get('/{version}/candidates/{id}', [CandidatesController::class, 'getRecordsOne']);
+	#Route::get('/{version}/votes/count', [VotesController::class, 'countPendingVerifiedSpam']);
+
 	Route::get('/link', function () {
 		Artisan::call('storage:link');
 	});
@@ -52,7 +56,7 @@ Route::middleware('api')->group(function () {
 	});
 
 	Route::middleware('throttle:api')->group(function () {
-		Route::post('/validate/user', [LoginController::class, 'store']);
+		Route::post('/validate/user', [UserController::class, 'store']);
 	});
 
 	/*
@@ -68,7 +72,7 @@ Route::middleware('api')->group(function () {
 					->prefix('dashboard')->group(function () {
 					Route::get('/count/pending/verified/amount', 'countPendingVerifiedAmount');
 					Route::get('/get/recently/voters/{limit}/{offset}', 'getRecentlyVoters');
-					Route::get('/most/votes/candidates/{limit}', 'getMostVotesCandidates');
+					Route::get('/most/votes/candidates/{limit}', 'getOverallRanking');
 					Route::get('/count/total/page/views/{limit}/perday', 'countPageViewsPerDay');
 				});
 
@@ -107,8 +111,11 @@ Route::middleware('api')->group(function () {
 					->prefix('/manage/ticket/reports')->group(function () {
 					Route::get('/limit/records/{limit}/{offset}', 'getRecordsLimit');
 					Route::get('/count/not/fix', 'countNotFixReport');
+					Route::get('/status/{status}', 'getRecordsByStatus');
+					Route::get('/search/{search}', 'getRecordsBySearch');
+					Route::get('/id/{ticketReport}', 'getRecordsOne');
+					Route::patch('/send/email', 'update');
 				});
-
 				# Configuration
 				Route::prefix('configuration')->group(function () {
 					// App Versions

@@ -28,8 +28,8 @@ const loadMoreCandidatesRecord = async (limit, offset) => {
     method: 'get',
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
-    success: (data) => {
-
+    success: (response) => {
+      //console.log(response);
       if (offset > 0) { //kapag ang offset is greater than 0, prev button will be undisabled
         $('#prevPaginateBtn').removeAttr('disabled');
       } else {  //otherwise, it will be disabled
@@ -37,13 +37,13 @@ const loadMoreCandidatesRecord = async (limit, offset) => {
       }
 
       // If the number of records fetched is less than the limit, disable the next button
-      if (data.length < limit) {
+      if (response.length < limit) {
         $('#nextPaginateBtn').attr('disabled', true);
       } else {
         $('#nextPaginateBtn').removeAttr('disabled');
       }
-      //window.history.replaceState(null, null, $('#indexUri').data('iurl'));
-      displayLimitCandidates(data);
+
+      displayLimitCandidates(response);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -59,10 +59,9 @@ const getOneCandidates = async (candidate) => {
     method: 'get',
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
-    success: (data) => {
-      console.log(data);
-      displayCandidatesInformation(data);
-      displayCandidatesVoteRecords(data);
+    success: (response) => {
+      displayCandidatesInformation(response);
+      displayCandidatesVoteRecords(response);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -78,8 +77,8 @@ const filterCandidatesBySearch = async (search) => {
     method: 'get',
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
-    success: (data) => {
-      displayLimitCandidates(data);
+    success: (response) => {
+      displayLimitCandidates(response);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -97,8 +96,8 @@ const filterCandidatesByCategory = async (category) => {
     method: 'get',
     dataType: 'json',
     headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
-    success: (data) => {
-      displayLimitCandidates(data);
+    success: (response) => {
+      displayLimitCandidates(response);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -114,9 +113,10 @@ const getOverallCandidatesRanking = async (limit) => {
     method: 'get',
     dataType: 'json',
     headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
-    success: (data) => {
-      displayCandidatesOverallRankingChart(data);
-      displayCandidatesOverallRankingSidebar(data);
+    success: (response) => {
+      
+      displayCandidatesOverallRankingChart(response);
+      displayCandidatesOverallRankingSidebar(response);
     },
     erorr: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -132,8 +132,8 @@ const getCandidatesRankingByCategory = async (limit) => {
     method: 'get',
     dataType: 'json',
     headers: {'X-CSRF-TOKEN': CSRF_TOKEN},
-    success: (data) => {
-      displayCandidatesRankingPerCategory(data);
+    success: (response) => {
+      displayCandidatesRankingPerCategory(response);
     },
     erorr: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
@@ -197,9 +197,16 @@ const updateCandidates = async (cdid, formData) =>  {
         $('#imageLabel').removeClass('d-none'); 
         $('#editCandidateImage').val('');
         getOneCandidates(cdid);
+        loadMoreCandidatesRecord(9, 0);
         toastr.success(response.message);
       } else {
-        toastr.warning(response.message);
+        if(response.type === 'info') {
+          toastr.info(response.message);
+        } else if(response.type === 'warning') {
+          toastr.warning(response.message);
+        } else {
+          toastr.error(response.message);
+        }
       }
       stopSpinner();
     },
@@ -244,7 +251,6 @@ const displayAllCandidates = (data) => {
       candidatesInSelect += `<option data-name="${data[key].name}" class="optionDataCandidate_${data[key].cdid}" value="${data[key].cdid}">${data[key].name}</option>`;
     });
   } else {
-    toastr.error("Something went wrong! Failed to display candidates");
   	candidatesInSelect += `<option value="">No record found</option>`;
   }
 
@@ -255,11 +261,11 @@ const displayAllCandidates = (data) => {
 
 const displayLimitCandidates = (data) => {
   let candidatesDataBody = `<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-1">`;
-  if(typeof data === 'object' && data !== null) { 
+  if(typeof data === 'object' && data !== null && data.length > 0) { 
     Object.keys(data).forEach(key => {
       candidatesDataBody += `
         <div class="col candidatesItem_${data[key].cdid}">
-          <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url('/storage/${data[key].image}'); height: 60vh!important;">
+          <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" style="background-image: url('${data[key].image}'); height: 60vh!important;">
             <div id="cardOverlay" class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
               <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
               <ul class="d-flex list-unstyled mt-auto">
@@ -268,13 +274,13 @@ const displayLimitCandidates = (data) => {
                     <i class="fa-solid fa-ellipsis button-links-icon"></i>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                    <a id="viewCandidateButton" data-id="${data[key].cdid}" class="dropdown-item"  href="/${APP_VERSION}/${CANDIDATES_URI}/${data[key].cdid}/show">
+                    <a data-id="${data[key].cdid}" class="dropdown-item viewCandidateButton"  href="javascript:void(0)">
                       <i class="fa-solid fa-eye"></i>&nbsp; View</li>
                     </a>
-                    <a id="editCandidateButton" data-id="${data[key].cdid}" class="dropdown-item" href="/${APP_VERSION}/${CANDIDATES_URI}/${data[key].cdid}/edit"><li>
+                    <a data-id="${data[key].cdid}" class="editCandidateButton dropdown-item" href="javascript:void(0)"><li>
                       <i class="fa-solid fa-pen-to-square"></i>&nbsp; Edit</li>
                     </a>
-                    <a class="dropdown-item" href="javascript:void(0)" id="deleteCandidateButton" data-id="${data[key].cdid}" ><li>
+                    <a data-id="${data[key].cdid}" class="deleteCandidateButton dropdown-item" href="javascript:void(0)"  ><li>
                       <i class="fa-solid fa-trash"></i>&nbsp; Delete</li>
                     </a>
                   </ul>
@@ -292,102 +298,99 @@ const displayLimitCandidates = (data) => {
       `;
     });
   } else {
-    toastr.error("Something went wrong! Failed to display candidates");
-    candidatesDataBody += `<center class="mt-3">
-      <div class="text-muted mt-3 d-flex align-items-center justify-content-center text-center">
+    candidatesDataBody += `<center class="mt-3 d-flex align-items-center justify-content-center text-center">
+      <div class="text-muted mt-3">
         <i class="fa-solid fa-face-sad-tear  fs-4"></i><span class="fs-4">&nbsp; No record found.</span>
       </div>
     </center>`;
   }
+
   candidatesDataBody += `</div>`;
 
   $('.candidatesDataRecords').html(candidatesDataBody);
 };
 
-const displayCandidatesInformation = (data) => {
-  if(typeof data === 'object' && data !== null) {
-    let candidateVotesRecords = ``;
-    if(data.votes.length > 0) {
-      data.votes.forEach(vote => {
-        candidateVotesRecords += `<tr>
-          <td>${vote.vid}</td>
-          <td>${vote.candidate.name}</td>
-          <td>₱ ${vote.vote_point.amount}</td>
-          <td>${vote.vote_point.point}</td>
-          <td>${boldLastPart(vote.referrence_no)}</td>
-          <td>
-            ${vote.status == '0' ? 
-              `<a href="javascript:void(0)" class="updateStatusBtn badge text-bg-success opacity-4 rounded-5 text-decoration-none text-white status-btn" title="verified">Verified</a>` :
-            vote.status == '1' ? 
-              `<a href="javascript:void(0)" class="updateStatusBtn badge text-bg-secondary opacity-4 rounded-5 text-decoration-none text-white status-btn" title="pending">Pending</a>` :
-            vote.status == '2' ?
-              `<a href="javascript:void(0)" class="updateStatusBtn badge text-bg-danger opacity-4 rounded-5 text-decoration-none text-white status-btn" title="spam">Spam</a>` :
-            ''}
-          </td>
-          <td>${formatDate(vote.created_at)}</td>
-        </tr>`;
-      });
-    } else {
+const displayCandidatesVoteRecords = (candidate) => {
+  let candidateVotesRecords = ``;
+  if(typeof candidate === 'object' && candidate !== null && candidate.votes.length > 0) {
+    candidate.votes.forEach(vote => {
       candidateVotesRecords += `<tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td rowspan="7" class="text-center">
-          <h4 class="text-center text-secondary mt-2">No record found. <i class="fa-solid fa-face-sad-tear"></i></h4>
+        <td>${vote.vid}</td>
+        <td>${vote.candidate.name}</td>
+        <td>₱ ${vote.vote_point.amount}</td>
+        <td>${vote.vote_point.point}</td>
+        <td>${boldLastPart(vote.referrence_no)}</td>
+        <td>
+          ${vote.status == '0' ? 
+            `<a href="javascript:void(0)" class="updateStatusBtn mouse-default badge text-bg-success opacity-4 rounded-5 text-decoration-none text-white status-btn" title="verified">Verified</a>` :
+          vote.status == '1' ? 
+            `<a href="javascript:void(0)" class="updateStatusBtn mouse-default badge text-bg-secondary opacity-4 rounded-5 text-decoration-none text-white status-btn" title="pending">Pending</a>` :
+          vote.status == '2' ?
+            `<a href="javascript:void(0)" class="updateStatusBtn mouse-default badge text-bg-danger opacity-4 rounded-5 text-decoration-none text-white status-btn" title="spam">Spam</a>` :
+          ''}
         </td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>${formatDate(vote.created_at)}</td>
       </tr>`;
-    } 
+    });
+  }  else {
+    candidateVotesRecords += `<tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td rowspan="7" class="text-center">
+        <h4 class="text-center text-secondary mt-2">No record found. <i class="fa-solid fa-face-sad-tear"></i></h4>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>`;
+  } 
 
-    $('#candidatesVotesRecordsBody').html(candidateVotesRecords);
-  } else { 
-    toastr.error("Something went wrong! Failed to display candidates information");
-  }
+  $('#candidatesVotesRecordsBody').html(candidateVotesRecords);
 };
 
-const displayCandidatesVoteRecords = (data) => {
-  if(typeof data === 'object' && data !== null) {
-    $('#totalCurrentVotePoints').text(data.totalVotePoints);
-    $('#totalVoters').text(data.totalVotes);
-    $('#totalAmount').text(data.totalAmount);
-    $('#totalPendingVotes').text(data.totalPendingVotes);
-    $('#totalSpamVotes').text(data.totalSpamVotes);
-    $('#totalOfAllVotes').text(data.totalOfAllVotes);
-    //show
-    $('#showCardCandidateImage').css('background-image', `url(/storage/${data.candidate.image})`);
-    $('#votingVersion').val(data.candidate.app_version.title);
-    $('#campusCandidate').val(data.candidate.campus?.name === null ? '---' : data.candidate.campus?.name);
-    $('#categoryCandidate').val(data.candidate.category.name);
-    $('#nameCandidate').val(data.candidate.name);
-    $('#noCandidate').val(data.candidate.candidate_no);
-    $('#candidateMottoDescription').val(data.candidate.motto_description ?? '---');
-    $('#dateCreated').val(formatDate(data.candidate.created_at));
-    $('#dateUpdated').val(formatDate(data.candidate.updated_at));
+const displayCandidatesInformation = (candidate) => {
+  console.log(candidate);
+  if(typeof candidate === 'object' && candidate !== null) {
+    $('#totalVoters').text(candidate.totalVerified);
+    $('#totalPendingVotes').text(candidate.totalPending);
+    $('#totalSpamVotes').text(candidate.totalSpam);
+    $('#totalAmount').text(candidate.totalAmount);
+    $('#totalCurrentVotePoints').text(candidate.totalPoints);
+    $('#totalOfAllVotes').text(candidate.totalVotes);
+
+    $('#showCardCandidateImage').css('background-image', `url(${candidate.image})`);
+    $('#votingVersion').val(candidate.appVersion.title);
+    $('#campusCandidate').val(candidate.campus?.name);
+    $('#categoryCandidate').val(candidate.category.name);
+    $('#nameCandidate').val(candidate.name);
+    $('#noCandidate').val(candidate.candidate_no);
+    $('#candidateMottoDescription').val(candidate.motto_description);
+    $('#dateCreated').val(candidate.created_at);
+    $('#dateUpdated').val(candidate.updated_at);
+
     //edit
-    $('#editCardCandidateImage').css('background-image', `url(/storage/${data.candidate.image})`);
-    $('#editCandidateNameText').text(data.candidate.name);
-    $('#editCandidateNoText').text(data.candidate.candidate_no);
+    $('#editCardCandidateImage').css('background-image', `url(${candidate.image})`);
+    $('#editCandidateNameText').text(candidate.name);
+    $('#editCandidateNoText').text(candidate.candidate_no);
+    $('#editCandidateVersion').val(candidate.appVersion.name);
+    $('#editCandidateCampus').val(candidate.campus?.name);
+    $('#editCandidateCategory').val(candidate.category.name);
+    $('#editCandidateName').val(candidate.name);
+    $('#editCandidateNo').val(candidate.candidate_no);
+    $('#editCandidateMottoDescription').val(candidate.motto_description);
 
-    $('#editCandidateVersion').val(data.candidate.app_version.name);
-    $('#editCandidateCampus').val(data.candidate.campus?.name === null ? '---' : data.candidate.campus?.name);
-    $('#editCandidateCategory').val(data.candidate.category.name);
-    $('#editCandidateName').val(data.candidate.name);
-    $('#editCandidateNo').val(data.candidate.candidate_no);
-    $('#editCandidateMottoDescription').val(data.candidate.motto_description ?? '');
-
-    $('#editPrevPicture').val(`/storage/${data.candidate.image}`);
-    $('#editActiveCandidate').val(data.candidate.cdid);
+    $('#editPrevPicture').val(candidate.image);
+    $('#editActiveCandidate').val(candidate.cdid);
   }  else {
     toastr.error("Something went wrong! Failed to display candidates vote records.");
   }
 };
 
 const displayCandidatesOverallRankingChart = (data) => {
-  const candidatesNames = data.map(candidate => candidate.candidate.name);
-  const totalVotePoints = data.map(candidate => candidate.total_points);
-  const totalNumberOfVoters = data.map(candidate => candidate.total_voters);
+  const candidatesNames = data.map(candidate => candidate.name);
+  const totalVotePoints = data.map(candidate => candidate.totalPoints);
+  const totalNumberOfVoters = data.map(candidate => candidate.totalVerified);
 
   const ctxOverallRankingChart = $('#overallRankingChart');
   new Chart(ctxOverallRankingChart, {
@@ -429,9 +432,9 @@ const displayCandidatesOverallRankingSidebar = (data) => {
   data.forEach(candidate => {
     candidatesRankingDataBody += `<div style="padding: -5px;" class="d-flex flex-column flex-md-row align-items-center justify-content-center">
       <div class="list-group mt-2">
-        <a style="background: transparent; padding: 15px" href="/${APP_VERSION}/admin/manage/candidates/${candidate.candidate.cdid}/show" class="list-group-item list-group-item-action d-flex gap-3 rounded-4" aria-current="true">
-          <img src="/storage/${candidate.candidate.image}" alt="img" width="32" height="32" class="rounded-circle flex-shrink-0">
-          <h6 class="mt-1">${candidate.candidate.name}</h6>
+        <a style="background: transparent; padding: 15px; pointer-events: none;" href="javascript:void(0)" class="list-group-item list-group-item-action d-flex gap-3 rounded-4" aria-current="true">
+          <img src="${candidate.image}" alt="img" width="32" height="32" class="rounded-circle flex-shrink-0">
+          <h6 class="mt-1">${candidate.name}</h6>
         </a>
       </div>
     </div>`;
@@ -446,7 +449,7 @@ const displayCandidatesRankingPerCategory = (data) => {
         <div class="issue-report-card card mt-3">
           <div class="card-header">
             <i class="fa-solid fa-chart-simple fs-3"></i>&nbsp;
-            <label>Ranking for ${data[category].category_name} Category</label>
+            <label>Ranking for ${category} Category</label>
           </div>
           <div class="card-body">
             <canvas id="chartRankingFor_${index}"></canvas>
@@ -459,10 +462,10 @@ const displayCandidatesRankingPerCategory = (data) => {
         new Chart(ctxRankingCategoryChart, {
           type: 'bar',
           data: {
-            labels: data[category].top_candidates.map(candidate => candidate.candidate_name),
+            labels: Object.keys(data[category]).map(key => data[category][key].name),
             datasets: [{
               label: 'Total Vote Points',
-              data: data[category].top_candidates.map(candidate => candidate.total_points),
+              data: Object.keys(data[category]).map(key => data[category][key].totalPoints),
               fill: false,
               backgroundColor: '#949496',
               borderColor: 'rgb(201, 203, 207)',
@@ -472,7 +475,7 @@ const displayCandidatesRankingPerCategory = (data) => {
           options: {
             title: {
             display: true,
-            text: `Ranking for ${data[category].category_name} Category`
+            text: `Ranking for ${category} Category`
           },
           responsive: true,
           scales: {

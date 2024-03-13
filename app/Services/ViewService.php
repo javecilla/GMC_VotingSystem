@@ -14,12 +14,8 @@ class ViewService {
 			->remember()
 			->unique()
 			->count();
-		//\Illuminate\Support\Facades\Log::info($totalPageViews);
-		return [
-			'success' => true,
-			'message' => 'Tested',
-			'totalPageViews' => $totalPageViews,
-		];
+
+		return $totalPageViews;
 	}
 
 	//count the views page per day
@@ -43,11 +39,7 @@ class ViewService {
 				'total_views' => $viewsCount,
 			];
 		}
-		//\Illuminate\Support\Facades\Log::info($pageViewsPerDay);
-		return [
-			'success' => true,
-			'message' => 'Tested',
-			'totalPageViews' => $pageViewsPerDay,
-		];
+
+		return $pageViewsPerDay;
 	}
 }

@@ -17,6 +17,8 @@ class AppVersion extends Model implements Viewable {
 
 	protected $fillable = ['avid', 'name', 'title', 'created_at', 'updated_at'];
 
+	protected $dates = ['created_at', 'updated_at'];
+
 	###[Methods for Database table relationship]
 
 	// Make this 'AppVersion' model have relationship to 'Campus' model

@@ -13,6 +13,13 @@ class CandidateUpdateRequest extends FormRequest {
 	public function rules(): array {
 		return [
 			'cdid' => 'required',
+			'app_version_id' => '',
+			'school_campus_id' => '',
+			'category_id' => '',
+			'candidate_no' => '',
+			'name' => '',
+			'motto_description' => '',
+			'image' => '',
 		];
 	}
 }

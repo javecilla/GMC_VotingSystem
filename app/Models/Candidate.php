@@ -16,6 +16,8 @@ class Candidate extends Model {
 		'candidate_no', 'name', 'motto_description', 'image', 'created_at', 'updated_at',
 	];
 
+	protected $dates = ['created_at', 'updated_at'];
+
 	###[Methods for Database table relationship]
 
 	// Make this 'Candidate' model have relationship to 'AppVersion' model

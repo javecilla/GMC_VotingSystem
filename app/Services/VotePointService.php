@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Exceptions\App\Admin\ChangesOccuredException;
 use App\Exceptions\App\Admin\CreateDataException;
 use App\Exceptions\App\Admin\DeleteDataException;
-use App\Http\Resources\Api\VotePointResource;
+use App\Exceptions\App\Admin\DuplicateDataException;
+use App\Helpers\Decoder;
 use App\Models\AppVersion;
 use App\Models\VotePoint;
 use Illuminate\Support\Facades\Cache;
@@ -18,61 +20,61 @@ class VotePointService {
 			function () use ($appVersion) {
 				$votePoint = VotePoint::orderBy('created_at', 'desc')
 					->where('app_version_id', $appVersion->avid)->get();
-				return VotePointResource::collection($votePoint);
+
+				return $votePoint;
 			});
 	}
 
-	public function getOneVotePoints(int $votePointsId) {
+	public function getOneVotePoints(String $votePointsId) {
 		return Cache::remember('votePointsId:' . $votePointsId, 60 * 60 * 24,
 			function () use ($votePointsId) {
-				$votePoint = VotePoint::findOrFail($votePointsId);
-				return new VotePointResource($votePoint);
+				$vpid = Decoder::decodeIds($votePointsId);
+				$votePoint = VotePoint::findOrFail($vpid);
+				return $votePoint;
 			});
 	}
 
 	public function createVotePoints(array $data) {
 		return DB::transaction(function () use ($data) {
-			//format the number into decimal [200 => 200.00]
-			$amount = number_format((float) $data['amount'], 2, '.', '');
-			$point = (int) $data['point'];
-
 			$file = $data['image'] ?? null;
 			if ($file instanceof \Illuminate\Http\UploadedFile  && $file->isValid()) {
 				$path = Storage::disk('public')->put('qrcode', $file);
 				$data['image'] = $path;
 			}
-
+			$avid = Decoder::decodeIds($data['app_version_id']);
 			$created = VotePoint::query()->create([
-				'app_version_id' => data_get($data, 'app_version_id', null),
-				'amount' => $amount,
-				'point' => $point,
+				'app_version_id' => $avid,
+				'amount' => data_get($data, 'amount', null),
+				'point' => data_get($data, 'point', null),
 				'image' => $data['image'],
 				'created_at' => data_get($data, 'created_at', now()),
 				'updated_at' => data_get($data, 'updated_at', null),
 			]);
-
 			if (!$created) {
-				throw new CreateDataException('Failed to created new voting points');
+				throw new CreateDataException('Failed to created new voting points.', 422);
 			}
 
-			return response()->json(['success' => true, 'message' => 'Vote points created successfully.']);
+			return;
 		});
 	}
 
 	public function updateVotePoints(array $data) {
+		$vpid = Decoder::decodeIds($data['vpid']);
+
 		if (!$this->hasChangesOccurred($data)) {
-			return response()->json(['success' => false, 'message' => 'No changes occured', 'type' => 'info']);
+			throw new ChangesOccuredException('No changes occured.');
 		}
 
-		if ($this->isDuplicateVotePoint($data)) {
-			return response()->json(['success' => false, 'message' => 'Cannot duplicate vote points or amount.', 'type' => 'warning']);
+		if ($this->amountExists($data['amount'], $data['point'], $vpid)) {
+			throw new DuplicateDataException('Cannot duplicate vote amount for points.');
 		}
 
-		$votePoint = VotePoint::findOrFail($data['vpid']);
+		if ($this->pointExists($data['point'], $data['amount'], $vpid)) {
+			throw new DuplicateDataException('Cannot duplicate vote points for amount.');
+		}
+
+		$votePoint = VotePoint::findOrFail($vpid);
 		return DB::transaction(function () use ($votePoint, $data) {
-			$amount = number_format((float) $data['amount'], 2, '.', '');
-			$point = (int) $data['point'];
-
 			$file = $data['image'] ?? null;
 			if ($file instanceof \Illuminate\Http\UploadedFile  && $file->isValid()) {
 				$path = Storage::disk('public')->put('qrcode', $file);
@@ -82,54 +84,56 @@ class VotePointService {
 			}
 
 			$updated = $votePoint->update([
-				'amount' => $amount,
-				'point' => $point,
+				'amount' => data_get($data, 'amount', $votePoint->amount),
+				'point' => data_get($data, 'point', $votePoint->point),
 				'image' => data_get($data, 'image', $votePoint->image),
 			]);
 
 			if (!$updated) {
-				throw new UpdateDataException('Failed to update vote points');
+				throw new UpdateDataException('Failed to update vote points.', 422);
 			}
 
-			return response()->json(['success' => true, 'message' => 'Vote points updated successfully.']);
+			return;
 		});
 	}
 
-	public function deleteVotePoints(int $votePointId) {
-		$votePoint = VotePoint::findOrFail($votePointId);
+	public function deleteVotePoints(String $votePointId) {
+		$vpid = Decoder::decodeIds($votePointId);
+		$votePoint = VotePoint::findOrFail($vpid);
 		return DB::transaction(function () use ($votePoint) {
 			$deleted = $votePoint->delete();
 			if (!$deleted) {
 				throw new DeleteDataException('Failed to delete vote point');
 			}
 
-			return response()->json(['success' => true, 'message' => 'Vote point deleted successfully']);
+			return;
 		});
 	}
 
-	private function isDuplicateVotePoint(array $data): bool {
-		return $this->amountExists($data['amount'], $data['app_version_id'], $data['vpid'])
-		|| $this->pointExists($data['point'], $data['app_version_id'], $data['vpid']);
-	}
-
 	private function hasChangesOccurred(array $data): bool {
-		$votePoint = VotePoint::findOrFail($data['vpid']);
-		$votePoint->fill($data);
+		$vpid = Decoder::decodeIds($data['vpid']);
+		$votePoint = VotePoint::findOrFail($vpid);
+		$votePoint->fill([
+			'amount' => data_get($data, 'amount', $votePoint->amount),
+			'point' => data_get($data, 'point', $votePoint->point),
+		]);
 
 		return $votePoint->isDirty();
 	}
 
-	private function amountExists(float $amount, int $avid, int $vpid): bool {
+	private function amountExists(float $amount, int $point, int $votePointsId): bool {
 		return VotePoint::where('amount', $amount)
-			->where('app_version_id', $avid)
-			->where('vpid', '<>', $vpid)
+			->where('point', '<>', $point)
+			->where('vpid', '<>', $votePointsId)
 			->exists();
 	}
 
-	private function pointExists(int $point, int $avid, int $vpid): bool {
+	//this check if the update request for points
+	//is already exist on the specific amount
+	private function pointExists(int $point, int $amount, int $votePointsId): bool {
 		return VotePoint::where('point', $point)
-			->where('app_version_id', $avid)
-			->where('vpid', '<>', $vpid)
+			->where('amount', '<>', $amount)
+			->where('vpid', '<>', $votePointsId)
 			->exists();
 	}
 }

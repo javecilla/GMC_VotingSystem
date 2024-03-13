@@ -13,6 +13,8 @@ class VotePoint extends Model {
 
 	protected $fillable = ['vpid', 'app_version_id', 'amount', 'point', 'image', 'created_at', 'updated_at'];
 
+	protected $dates = ['created_at', 'updated_at'];
+
 	###[Methods for Database table relationship]
 
 	// Make this 'Category' model have relationship to 'AppVersion' model

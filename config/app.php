@@ -170,6 +170,7 @@ return [
 		App\Providers\RouteServiceProvider::class,
 		L5Swagger\L5SwaggerServiceProvider::class,
 		CyrildeWit\EloquentViewable\EloquentViewableServiceProvider::class,
+		Vinkla\Hashids\HashidsServiceProvider::class,
 	])->toArray(),
 
 	/*
@@ -186,5 +187,4 @@ return [
 	'aliases' => Facade::defaultAliases()->merge([
 		// 'Example' => App\Facades\Example::class,
 	])->toArray(),
-
 ];

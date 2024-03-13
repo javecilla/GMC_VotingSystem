@@ -22,14 +22,79 @@ const loadMoreReportsRecord = async (limit, offset) => {
       } else {
         $('#nextPaginateBtn').removeAttr('disabled');
       }
-
-      displayLimitTicketReports(data);
+      window.history.replaceState(null, null, REPORTS_INDEX_URI);
+      ticketReportsTable(data);
+			ticketReportsListGroup(data);
     },
     error: (xhr, status, error) => {
       const response = JSON.parse(xhr.responseText);
       toastr.error(response.message);
     }
   });
+};
+
+const getReportInformationById = async (ticketReportId) => { 
+	$.ajax({
+		url: `/api/${APP_VERSION}/${TICKET_REPORTS_URI}/id/${ticketReportId}`,
+		method: 'get',
+		dataType: 'json',
+		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+		success: (response) => {			
+			ticketReportsModal(response);
+		},
+		error: (xhr, status, error) => {
+			const response = JSON.parse(xhr.responseText);
+			toastr.error(response.message);
+		}
+	});
+};
+
+const filterReportsBySearch = async (search) => { 
+	$.ajax({
+		url: `/api/${APP_VERSION}/${TICKET_REPORTS_URI}/search/${search}`,
+		method: 'get',
+		dataType: 'json',
+		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+		success: (response) => {
+			ticketReportsTable(response);
+		},
+		error: (xhr, status, error) => {
+			const response = JSON.parse(xhr.responseText);
+			toastr.error(response.message);
+		}
+	});
+};
+
+const filterReportsByStatus = async (status) => {
+	$.ajax({
+		url: `/api/${APP_VERSION}/${TICKET_REPORTS_URI}/status/${status}`,
+		method: 'get',
+		dataType: 'json',
+		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+		success: (response) => {
+			if(status == 0) {
+				writeURI('status', 'fixed');
+				$('#cardLabelTxt').text('List of All Fixed Tickets Report');
+				$('.all, .pending').removeClass('active');
+				$('.fixed').addClass('active');
+			} else if(status == 1) {
+				writeURI('status', 'pending');
+				$('#cardLabelTxt').text('List of All Pending Tickets Report');
+				$('.all, .fixed').removeClass('active');
+				$('.pending').addClass('active');
+			} else {
+				writeURI('', '');
+				$('#cardLabelTxt').text("List of All Issue's Reports");
+				$('.fixed, .pending').removeClass('active');
+				$('.all').addClass('active');
+			}
+			ticketReportsTable(response);
+		},
+		error: (xhr, status, error) => {
+			const response = JSON.parse(xhr.responseText);
+			toastr.error(response.message);
+		}
+	});
 };
 
 const getTotalNotFixedTicketReports = async () => {
@@ -49,25 +114,82 @@ const getTotalNotFixedTicketReports = async () => {
   });
 };
 
-const displayLimitTicketReports = (data) => {
-	let reportDataBody = `<div class="list-group">`;
-	let dashboardReportDataBody = `<div class="list-group">`;
-	if(typeof data === 'object' && data !== null) {
+const sendEmailReplyMessage = async (dataForm) => {
+	runSpinner();
+	$('#sendEmailButton').attr('disabled', true).addClass('text-white');
+	$.ajax({
+    url: `/api/${APP_VERSION}/${TICKET_REPORTS_URI}/send/email`,
+    method: 'patch',
+    data: dataForm,
+    dataType: 'json',
+    headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+    success: (response) => {
+    	if(response.success) {
+				loadMoreReportsRecord(5, 0); //reload the data again 
+				$('#replyMessageEmail').click().modal('hide'); //hide modal
+				//clear inputs
+				$('#reportTicketId').val('');
+				$('#toEmail').val('');
+				$('#replyMessage').val('');
+				//back the uri to default
+				writeURI('', '');
+    		toastr.success(response.message);
+    	} else {
+    		toastr.warning(response.message);
+    	}
+    	stopSpinner();
+    	$('#sendEmailButton').removeAttr('disabled', 'disabled').addClass('text-white');;
+    },
+    error: (xhr, status, error) => {
+      const response = JSON.parse(xhr.responseText);
+      toastr.error(response.message);
+    }
+  });
+};
+
+// function that render html data
+const ticketReportsTable = (data) => {
+	let reportDataBody = `<table class="table table-hover table-striped">`;
+	if(typeof data === 'object' && data !== null && data.length > 0) { 
 		Object.keys(data).forEach(key => {
 			reportDataBody += `
-				<a href="javascript:void(0)" class="list-group-item list-group-item-action d-flex gap-2 py-2 border-0" aria-current="true" style="background: transparent;">
-					<img src="/wp-content/admin/uploads/profile.jpg" alt="img" width="50" height="50" class="rounded-circle flex-shrink-0">
-						<div class="d-flex gap-2 w-100 justify-content-between">
-							<div>
-							  <h6 class="mb-1 text-muted">From: ${data[key].name} <small>(${data[key].email})</small></h6>
-							  <p class="mb-1 opacity-75">${formatTextEllipsis(data[key].message, 10)} <span style="font-size: 16px;">Read More</span></p>
-							</div>
-						<small class="opacity-50 text-nowrap">${formatDate(data[key].created_at)}</small>
-					</div>
-				</a>
-				<hr class="text-muted"/>
+				<tr class="reportDataBtn mouse-pointer" title="From: ${data[key].email}" data-id="${data[key].trid}">
+				  <td>
+				    <img src="/wp-content/admin/uploads/profile.jpg" alt="img" width="40" height="40" class="rounded-circle flex-shrink-0">
+				  </td>
+				  <td>
+				  	<span class="badge text-bg-${data[key].status == 0 ? 'success' : 'secondary'}">
+				  		${data[key].status_name}
+				  	</span>
+				  </td>
+				  <td>${data[key].name}</td>
+				  <td>${data[key].message_ellipsis}</td>
+				 	<td>${data[key].created_at}</td>
+				</tr>
 			`;
+		});
+	} else {
+		reportDataBody += `
+			<tr>
+				<td></td>
+				<td></td>
+				<td rowspan="5">
+					<h4 class="text-center text-secondary mt-2">No record found. <i class="fa-solid fa-face-sad-tear"></i></h4>
+				</td>
+				<td></td>
+				<td></td>
+			</tr>
+		`;
+	}
+	reportDataBody += `</table>`;
 
+	$('#reportDataBody').html(reportDataBody);
+};
+
+const ticketReportsListGroup = (data) => {
+	let dashboardReportDataBody = `<div class="list-group">`;
+	if(typeof data === 'object' && data !== null && data.length > 0) {
+		Object.keys(data).forEach(key => {
 			dashboardReportDataBody += `
 				<a href="#" class="list-group-item list-group-item-action d-flex gap-2 py-2 border-0" aria-current="true">
 					<img src="/wp-content/admin/uploads/profile.jpg" alt="img" width="32" height="32" class="rounded-circle flex-shrink-0">
@@ -83,22 +205,34 @@ const displayLimitTicketReports = (data) => {
 			`;
 		});
 	} else {
-		reportDataBody += `
-			<a href="#" class="list-group-item list-group-item-action d-flex gap-2 py-2 border-0" aria-current="true" style="background: transparent;">
-				<h4 class="text-center text-secondary mt-2">No record found. <i class="fa-solid fa-face-sad-tear"></i></h4>
-			</a>
-		`;
-
 		dashboardReportDataBody += `
 			<a href="#" class="list-group-item list-group-item-action d-flex gap-2 py-2 border-0" aria-current="true" style="background: transparent;">
 				<h4 class="text-center text-secondary mt-2">No record found. <i class="fa-solid fa-face-sad-tear"></i></h4>
 			</a>
 		`;
 	}
-	reportDataBody += `</div>`;
 	dashboardReportDataBody += `</div>`;
 
-	$('#reportDataBody').html(reportDataBody);
 	$('#dashboardReportDataBody').html(dashboardReportDataBody);
 };
 
+const ticketReportsModal = (data) => {
+	Object.keys(data).forEach(key => {
+		if(data[key].status == 0) { //fixed
+			$('#status').removeClass('text-bg-light').addClass('text-bg-success');
+			$('#openEmailFormModal').attr('disabled', true).text('Nothing to take action');
+		} else if(data[key].status == 1) {
+			$('#status').removeClass('text-bg-light').addClass('text-bg-secondary');
+			$('#openEmailFormModal').removeAttr('disabled', 'disabled').html(`Marked this tickets as fixed and generate email to <b>${data[key].email}</b>`);
+		}
+		
+		$('#status').text(data[key].status_name);
+		$('#dateCreated').val(data[key].created_at);
+		$('#dateUpdated').val(data[key].updated_at);
+		$('#fromEmail').val(data[key].email);
+		$('#name').val(data[key].name);
+		$('#message').val(data[key].message);	
+		$('#reportImage').attr('src', `${data[key].image}`);	
+		$('#reportTicketId').val(data[key].trid);
+	});
+};

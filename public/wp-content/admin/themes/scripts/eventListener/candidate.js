@@ -11,7 +11,7 @@
 		}, 2000);
 
 		setTimeout(function() {
-			getOneCandidates(isEmpty($('#candidateId').val()) ? '3' : $('#candidateId').val());
+			//getOneCandidates(isEmpty($('#candidateId').val()) ? '3' : $('#candidateId').val());
 			getAllCampus();
 		}, 1000);
 
@@ -66,7 +66,7 @@
 	  updateCandidates(cdid, formData);
 	});
 
-	$(document).on('click', '#deleteCandidateButton', function() {
+	$(document).on('click', '.deleteCandidateButton', function() {
 		const cdid = $(this).data('id');
 		const deleteConfirm = Swal.mixin({
 			customClass: {
@@ -170,8 +170,30 @@
 		writeURI('page', page);
 	});
 
+	
+	$(document).on('click', '.viewCandidateButton', function() {
+		const cdid = $(this).data('id');
+		writeURI('show=true&tab=information&cdid', cdid);
+		$('.candidateId').val(cdid);
+		$('#candidateInfoShow').modal('show');
+		getOneCandidates(cdid);
+	});
+
+	$(document).on('click', '.editCandidateButton', function() {
+		const cdid = $(this).data('id');
+		writeURI('edit=true&cdid', cdid);
+		$('#candidateInfoEdit').modal('show');
+		getOneCandidates(cdid);
+	});
+
+	$(document).on('click', '.closeModalBtn', function() {
+		writeURI('', '');
+		$('#candidateInfoShow, #candidateInfoEdit').modal('hide');
+	});
+
 	$(document).on('click', '#tabInformation', function() {
-		writeURI('tab', 'candidate-information');
+		const cdid = $('.candidateId').val();
+		writeURI('show=true&tab=information&cdid', cdid);
 		$(this).removeClass('text-white').addClass('text-dark');
 		$('#tabRecords').addClass('text-white');
     $('#tabPaneInformation').addClass('show active');
@@ -179,7 +201,8 @@
 	});
 
 	$(document).on('click', '#tabRecords', function() {
-		writeURI('tab', 'vote-records');
+		const cdid = $('.candidateId').val();
+		writeURI('show=true&tab=vote-records&cdid', cdid);
 		$(this).removeClass('text-white').addClass('text-dark');
 		$('#tabInformation').addClass('text-white');
 	  $('#tabPaneInformation').removeClass('show active');

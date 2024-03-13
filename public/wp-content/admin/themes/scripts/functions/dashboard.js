@@ -48,8 +48,8 @@ const getMostVotesCandidates = async (limit) => {
 		dataType: 'json',
 		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
 		success: (data) => {
-			const candidatesNames = data.map(candidate => candidate.candidate.name);
-			const totalVotePoints = data.map(candidate => candidate.total_points);
+			const candidatesNames = data.map(candidate => candidate.name);
+			const totalVotePoints = data.map(candidate => candidate.totalPoints);
 
 			const ctxmostVotesCandidatesChart = $('#mostVotesCandidatesChart');
 			new Chart(ctxmostVotesCandidatesChart, {

@@ -7,7 +7,7 @@ use App\Exceptions\Auth\InvalidLoginException;
 class UserService {
 	const MAX_LOGIN_ATTEMPTS = 3; //set the maximum login attempts
 
-	public function login($request): array {
+	public function login($request) {
 		$user = $request->only('email', 'password');
 		//then check if there is a login attemp in sesion counter
 		$loginAttempts = $request->session()->get('loginAttempts', 0);
@@ -20,12 +20,8 @@ class UserService {
 			$request->session()->regenerate();
 			//upon login successfull, track the last activity time
 			$request->session()->put('last_activity', now());
-			//return the response APP_VERSION
-			return ['success' => true,
-				'message' => 'Login successfully',
-				'redirect' => route('dashboard.index', env('APP_VERSION')),
-			];
 
+			return;
 		} else {
 			$loginAttempts++; //increment attemp if login is failed
 			$request->session()->put('loginAttempts', $loginAttempts);
@@ -33,16 +29,15 @@ class UserService {
 			if ($loginAttempts >= self::MAX_LOGIN_ATTEMPTS) {
 				throw new InvalidLoginException('gay');
 			} else {
-				throw new InvalidLoginException('Invalid Credentials');
+				throw new InvalidLoginException('Invalid Credentials.');
 			}
 		}
 	}
 
-	public function logout($request): array {
+	public function logout($request) {
 		auth()->logout(); //logout
 		$request->session()->invalidate();
 		$request->session()->regenerateToken();
-		return ['success' => true, 'redirect' => route('login.create')];
+		return;
 	}
-
 }

@@ -3,60 +3,76 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\CandidateResource;
+use App\Http\Resources\Api\VoteResource;
+use App\Services\CandidateService;
 use App\Services\ViewService;
 use App\Services\VoteService;
 use Illuminate\Support\Facades\ModelNotFoundException;
+use Illuminate\Support\Facades\Response;
 
 class DashboardController extends Controller {
 
-	public function __construct(protected VoteService $voteService,
-		protected ViewService $viewService) {}
+	public function __construct(
+		protected VoteService $voteService,
+		protected ViewService $viewService,
+		protected CandidateService $candidateService) {}
 
 	public function countPendingVerifiedAmount(String $appVersionName) {
 		try {
-			return $this->voteService->countAllVotesByStatus($appVersionName);
+			$vote = $this->voteService->countAllVotesByStatus($appVersionName);
+
+			return Response::json($vote);
 		} catch (ModelNotFoundException $e) {
-			return response()->json(['success' => false, $e->getMessage()]);
+			return Response::json(['success' => false, $e->getMessage()]);
 		} catch (\Throwable $e) {
-			return response()->json(['success' => false, $e->getMessage()]);
+			return Response::json(['success' => false, $e->getMessage()]);
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'message' => 'An error occured. Code[VID-D]']);
+			return Response::json(['success' => false, 'message' => 'An error occured. Code[VID-D]']);
 		}
 	}
 
 	public function getRecentlyVoters(String $appVersionName, int $limit, int $offset) {
 		try {
-			return $this->voteService->loadMoreVotes($appVersionName, $limit, $offset);
+			$votes = $this->voteService->loadMoreVotes($appVersionName, $limit, $offset);
+
+			return VoteResource::collection($votes);
 		} catch (ModelNotFoundException $e) {
-			return response()->json(['success' => false, $e->getMessage()]);
+			return Response::json(['success' => false, $e->getMessage()]);
 		} catch (\Throwable $e) {
-			return response()->json(['success' => false, $e->getMessage()]);
+			return Response::json(['success' => false, $e->getMessage()]);
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'message' => 'An error occured. Code[VID-D]']);
+			return Response::json(['success' => false, 'message' => 'An error occured. Code[VID-D]']);
 		}
 	}
 
-	public function getMostVotesCandidates(String $appVersionName, int $limit) {
+	public function getOverallRanking(String $appVersionName, int $limit) {
 		try {
-			return $this->voteService->getMostVotesCandidates($appVersionName, $limit);
+			$candidates = $this->candidateService->getCandidatesWithMostVotes($appVersionName, $limit);
+
+			return CandidateResource::collection($candidates);
 		} catch (ModelNotFoundException $e) {
-			return response()->json(['success' => false, $e->getMessage()]);
+			return Response::json(['success' => false, 'message' => $e->getMessage()]);
 		} catch (\Throwable $e) {
-			return response()->json(['success' => false, $e->getMessage()]);
+			return Response::json(['success' => false, 'message' => $e->getMessage()]);
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'message' => 'An error occured. Code[VID-D]']);
+			return Response::json(['success' => false, 'message' => 'An error occured. Code[VID-CDID]']);
 		}
 	}
 
 	public function countPageViewsPerDay(String $appVersionName, int $limit) {
 		try {
-			return $this->viewService->getPageViewsPerDay($appVersionName, $limit);
+			$views = $this->viewService->getPageViewsPerDay($appVersionName, $limit);
+
+			return Response::json(['success' => true, 'message' => 'Tested',
+				'totalPageViews' => $views,
+			]);
 		} catch (ModelNotFoundException $e) {
-			return response()->json(['success' => false, $e->getMessage()]);
+			return Response::json(['success' => false, $e->getMessage()]);
 		} catch (\Throwable $e) {
-			return response()->json(['success' => false, $e->getMessage()]);
+			return Response::json(['success' => false, $e->getMessage()]);
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'message' => 'An error occured. Code[VID-D]']);
+			return Response::json(['success' => false, 'message' => 'An error occured. Code[VID-D]']);
 		}
 	}
 }

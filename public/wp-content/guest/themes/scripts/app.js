@@ -58,7 +58,8 @@
 		}
 	});
 
-	$(document).on('click', '#searchBtn', function() {
+	$(document).on('submit', '#searchForm', function(e) {
+		e.preventDefault();
 		const searchQuery = $('.search_input').val().trim();
 		writeURI('search', searchQuery);
 		filterCandidatesBySearch(searchQuery);

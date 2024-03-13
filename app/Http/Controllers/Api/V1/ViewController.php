@@ -4,19 +4,23 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Services\ViewService;
+use Illuminate\Support\Facades\Response;
 
 class ViewController extends Controller {
 	public function __construct(protected ViewService $service) {}
 
 	public function count(String $appVersionName) {
 		try {
-			return $this->service->getPageViews($appVersionName);
+			$views = $this->service->getPageViews($appVersionName);
+
+			return Response::json(['success' => true, 'message' => 'Tested',
+				'totalPageViews' => $views]);
 		} catch (ModelNotFoundException $e) {
-			return response()->json(['success' => false, $e->getMessage()]);
+			return Response::json(['success' => false, $e->getMessage()]);
 		} catch (\Throwable $e) {
-			return response()->json(['success' => false, $e->getMessage()]);
+			return Response::json(['success' => false, $e->getMessage()]);
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'message' => 'An error occured. Code[VID-D]']);
+			return Response::json(['success' => false, 'message' => 'An error occured. Code[VID-D]']);
 		}
 	}
 }

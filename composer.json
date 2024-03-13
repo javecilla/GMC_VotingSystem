@@ -13,6 +13,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "tymon/jwt-auth": "^2.0",
+        "vinkla/hashids": "^11.0",
         "zircote/swagger-php": "^4.8"
     },
     "require-dev": {

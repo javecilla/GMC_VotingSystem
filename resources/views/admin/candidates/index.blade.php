@@ -52,6 +52,8 @@
 			</div>
 		</x-container>
 	</x-section>
+	@include('components.partial.candidate.modal._show')
+	@include('components.partial.candidate.modal._edit')
 </x-layout.admin>
 <script src="{{ asset('/wp-content/admin/themes/scripts/eventListener/candidate.js') }}"></script>
 <script src="{{ asset('/wp-content/admin/themes/scripts/functions/candidate.js') }}"></script>

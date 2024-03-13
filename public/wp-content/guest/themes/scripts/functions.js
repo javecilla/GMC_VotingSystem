@@ -218,12 +218,12 @@ const storeSubmittedReport = async (dataForm) => {
 // Functions displays components
 const displayCandidates = (data) => {
 	let dataListofCandidatesItem = `<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 ">`;
-		if(Array.isArray(data) && data.length > 0) { 
+		if(typeof data === 'object' && data !== null) { 
 			Object.keys(data).forEach(key => {
 				dataListofCandidatesItem += `
 					<div class="col">
 				    <div class="card card-cover h-100 overflow-hidden border-0 text-bg-dark rounded-4 shadow-lg" 
-				      style="background-image: url('/storage/${data[key].image}'); height: 65vh!important;">
+				      style="background-image: url(${data[key].image}); height: 65vh!important;">
 				      <div id="cardOverlay" class="d-flex flex-column h-100 p-4 pb-3 text-white text-shadow-1">
 				        <h4 class="pt-5 mt-5 mb-5 display-6 lh-1"></h4>
 				          <ul class="d-flex list-unstyled mt-auto">
@@ -338,7 +338,7 @@ const displayQRCodeOfPayments = (data) => {
 	if(typeof data === 'object' && data !== null) {
 		dataQRCodePreviewItem += `<div id="dataQRCodePreviewBody">
 			<div class="card cardAuto">
-				<img src="/storage/${data.image}" alt="No selected amount of payment." id="qrCodeImage" class="img-card-top" loading="lazy"/>
+				<img src="${data.image}" alt="No selected amount of payment." id="qrCodeImage" class="img-card-top" loading="lazy"/>
 			</div>
 		</div>`;
 	} else {
@@ -352,13 +352,14 @@ const displayQRCodeOfPayments = (data) => {
 };
 
 const displayCandidatesById = (data) => {
+	
 	if(typeof data === 'object' && data !== null) {
-		$('#showCardCandidateImage').css('background-image', `url(/storage/${data.candidate.image})`);
-		$('#totalCurrentVotePoints').text(data.totalVotePoints);
+		$('#showCardCandidateImage').css('background-image', `url(${data.image})`);
+		$('#totalCurrentVotePoints').text(data.totalPoints);
 		$('#totalVerifiedVoters').text(data.totalVotes);
-		$('#candidateNameShow').val(data.candidate.name);
-		$('#candidateCampusShow').val(data.candidate.campus.name ?? '---');
-		$('#candidateCategoryShow').val(data.candidate.category.name);
+		$('#candidateNameShow').val(data.name);
+		$('#candidateCampusShow').val(data.campus.name);
+		$('#candidateCategoryShow').val(data.category.name);
 	} else {
 		toastr.error("Something went wrong!");
 	}

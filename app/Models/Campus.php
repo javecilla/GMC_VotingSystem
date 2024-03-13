@@ -13,7 +13,7 @@ class Campus extends Model {
 
 	protected $fillable = ['scid', 'app_version_id', 'name', 'created_at', 'updated_at'];
 
-	protected $dates = ['created_at'];
+	protected $dates = ['created_at', 'updated_at'];
 
 	###[Methods for Database table relationship]
 

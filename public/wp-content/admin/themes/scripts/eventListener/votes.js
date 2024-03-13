@@ -65,6 +65,7 @@
 	$(document).on('click', '.viewModalBtn', function() {
 		$('#showInfoVoteModal').modal('show');
 		const votePointsId = $(this).data('id');
+		//alert(votePointsId);
 		getOneVotes(votePointsId);
 	});
 

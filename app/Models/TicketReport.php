@@ -15,6 +15,8 @@ class TicketReport extends Model {
 		'trid', 'app_version_id', 'name', 'email', 'message', 'image', 'status', 'created_at', 'updated_at',
 	];
 
+	protected $dates = ['created_at', 'updated_at'];
+
 	###[Methods for Database table relationship]
 
 	// Make this 'Vote' model have relationship to 'AppVersion' model

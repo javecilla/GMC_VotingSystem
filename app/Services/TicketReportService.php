@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
-use App\Exceptions\App\Admin\CreateDataException;
+use App\Exceptions\Api\CreateDataException;
+use App\Exceptions\App\Admin\UpdateDataException;
+use App\Helpers\Decoder;
 use App\Models\AppVersion;
 use App\Models\TicketReport;
 use Illuminate\Support\Facades\Cache;
@@ -10,7 +12,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class TicketReportService {
-
 	public function loadMoreReports(String $appVersionName, int $limit, int $offset) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		return Cache::remember('ticketReportMore:' . $appVersion->avid, 60 * 60 * 24,
@@ -21,7 +22,50 @@ class TicketReportService {
 					->skip($offset)
 					->take($limit)
 					->get();
-				//\Illuminate\Support\Facades\Log::info($ticketReport);
+
+				return $ticketReport;
+			});
+	}
+
+	public function getTicketReportsById(String $ticketReportId) {
+		$trid = Decoder::decodeIds($ticketReportId);
+		return Cache::remember('ticketReportId:' . $trid, 60 * 60 * 24,
+			function () use ($trid) {
+				$ticketReport = TicketReport::with(['appVersion'])
+					->where('trid', $trid)
+					->get();
+
+				return $ticketReport;
+			});
+	}
+
+	public function getTicketReportsByStatus(String $appVersionName, int $status) {
+		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
+		return Cache::remember('ticketReportStatus:' . $status, 60 * 60 * 24,
+			function () use ($appVersion, $status) {
+				$ticketReport = TicketReport::with(['appVersion'])
+					->where('app_version_id', $appVersion->avid)
+					->where('status', $status)
+					->orderBy('created_at', 'desc')
+					->get();
+
+				return $ticketReport;
+			});
+	}
+
+	public function getTicketReportsBySearch(String $appVersionName, String $searchQuery) {
+		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
+		return Cache::remember('ticketReportSearch:' . $searchQuery, 60 * 60 * 24,
+			function () use ($appVersion, $searchQuery) {
+				$ticketReport = TicketReport::with(['appVersion'])
+					->where('app_version_id', $appVersion->avid)
+					->where(function ($query) use ($searchQuery) {
+						$query->where('name', 'like', '%' . $searchQuery . '%')
+							->orWhere('email', 'like', '%' . $searchQuery . '%')
+							->orWhere('message', 'like', '%' . $searchQuery . '%');
+					})
+					->get();
+
 				return $ticketReport;
 			});
 	}
@@ -29,11 +73,11 @@ class TicketReportService {
 	public function countAllTicketReportsByStatus(String $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		return Cache::remember('ticketReportCount:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion) {
-			$ticketReports = TicketReport::where('app_version_id', $appVersion->avid)
+			$totalReportsNotFixed = TicketReport::where('app_version_id', $appVersion->avid)
 				->where('status', 1)
 				->count();
-			//\Log::info($ticketReports);
-			return response()->json(['success' => true, 'totalReports' => $ticketReports]);
+
+			return $totalReportsNotFixed;
 		});
 	}
 
@@ -63,10 +107,23 @@ class TicketReportService {
 			]);
 
 			if (!$created) {
-				throw new CreateDataException("Failed to submit ticket report");
+				throw new CreateDataException("Failed to submit ticket report", 422);
 			}
 
-			return response()->json(['success' => true, 'message' => 'Report submitted successfully.']);
+			return;
+		});
+	}
+
+	public function updateTicketReport(array $data) {
+		$trid = Decoder::decodeIds($data['trid']);
+		$ticketReport = TicketReport::findOrFail($trid);
+		return DB::transaction(function () use ($ticketReport) {
+			$updated = $ticketReport->update(['status' => 0]); //0 = fixed
+			if (!$updated) {
+				throw new UpdateDataException('Failed to update the status of tickets.', 422);
+			}
+
+			return;
 		});
 	}
 }

@@ -66,7 +66,7 @@
 						  placeholder="Search candidate name and click search button icon"
 						  autocomplete="search"
 						/>
-						<button type="button" id="searchBtn" class="btn btn-light rounded-3">
+						<button type="submit" id="searchBtn" class="btn btn-light rounded-3">
 							<i class="fa-solid fa-magnifying-glass filter_icon"></i>
 		  			</button>&nbsp;
 						<button type="button" class="dropdown-toggle btn btn-light rounded-3"

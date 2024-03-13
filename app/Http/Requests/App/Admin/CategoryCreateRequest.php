@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\App\Admin;
 
+use App\Helpers\Decoder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -19,8 +20,8 @@ class CategoryCreateRequest extends FormRequest {
 				// this check if the category name is already exist in database 'categories'
 				// for particular app version id then it will not be accepted
 				Rule::unique('categories')->where(function ($query) {
-					return $query->where('app_version_id', $this->app_version_id)
-						->where('name', $this->name);
+					$avid = Decoder::decodeIds($this->app_version_id);
+					return $query->where('app_version_id', $avid)->where('name', $this->name);
 				}),
 			],
 		];

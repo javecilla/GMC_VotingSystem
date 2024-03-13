@@ -88,8 +88,6 @@
 						<table class="table table-striped">
 						  <thead>
 						  	<tr>
-						  		<th>{{ __('VID') }}</th>
-						  		<th>{{ __('CID') }}</th>
 						  		<th>{{ __('Payment') }}</th>
 						  		<th>{{ __('Points') }}</th>
 						  		<th>{{ __('Referrence no.') }}</th>
@@ -104,11 +102,9 @@
 						  		<td></td>
 						  		<td></td>
 						  		<td></td>
-						  		<td></td>
-						  		<td rowspan="9">
+						  		<td rowspan="7">
 										<h4 class="text-center text-secondary mt-2">{{ __('Loading') }} <i class="fas fa-spinner fa-spin"></i></h4>
 									</td>
-						  		<td></td>
 						  		<td></td>
 						  		<td></td>
 						  		<td></td>

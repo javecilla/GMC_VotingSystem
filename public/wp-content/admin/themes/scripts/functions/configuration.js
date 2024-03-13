@@ -80,7 +80,7 @@ const updateApplicationVersion = async (avid, name, title) => {
         $(`.edit-icon_${avid}`).removeClass('d-none');
         $(`.delete-icon_${avid}`).removeClass('d-none');
       } else {
-         if(response.type === 'info') {
+        if(response.type === 'info') {
           toastr.info(response.message);
         } else if(response.type === 'warning') {
           toastr.warning(response.message);
@@ -269,7 +269,13 @@ const updateCampus = async (scid, avid, campusName) => {
         getAllCampus();
         toastr.success(response.message);
       } else {
-        toastr.info(response.message);
+        if(response.type === 'info') {
+          toastr.info(response.message);
+        } else if(response.type === 'warning') {
+          toastr.warning(response.message);
+        } else {
+          toastr.error(response.message);
+        }
       }
     },
     error: (xhr, status, error) => {

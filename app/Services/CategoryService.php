@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Exceptions\App\Admin\ChangesOccuredException;
 use App\Exceptions\App\Admin\CreateDataException;
+use App\Exceptions\App\Admin\DuplicateDataException;
 use App\Exceptions\App\Admin\UpdateDataException;
-use App\Http\Resources\Api\CategoryResource;
+use App\Helpers\Decoder;
 use App\Models\AppVersion;
 use App\Models\Category;
 use Illuminate\Support\Facades\Cache;
@@ -18,73 +20,73 @@ class CategoryService {
 			function () use ($appVersion) {
 				$category = Category::orderBy('created_at', 'desc')
 					->where('app_version_id', $appVersion->avid)->get();
-				return CategoryResource::collection($category);
+
+				return $category;
 			});
 	}
 
 	public function createCategory(array $data) {
 		return DB::transaction(function () use ($data) {
+			$avid = Decoder::decodeIds($data['app_version_id']);
 			$created = Category::query()->create([
-				'app_version_id' => data_get($data, 'app_version_id', null),
+				'app_version_id' => $avid,
 				'name' => data_get($data, 'name', null),
 				'created_at' => data_get($data, 'created_at', now()),
 				'updated_at' => data_get($data, 'updated_at', null),
 			]);
-
 			if (!$created) {
-				throw new CreateDataException('Failed to create new category');
+				throw new CreateDataException('Failed to create new category', 422);
 			}
 
-			return response()->json(['success' => true, 'message' => 'New category created successfully']);
+			return;
 		});
 	}
 
 	public function updateCategory(array $data) {
+		$ctid = Decoder::decodeIds($data['ctid']);
+
 		if (!$this->hasChangesOccurred($data)) {
-			return response()->json(['success' => false, 'message' => 'No changes occured', 'type' => 'info']);
+			throw new ChangesOccuredException('No changes occured.');
 		}
 
-		if ($this->isDuplicateCategory($data)) {
-			return response()->json(['success' => false, 'message' => 'Cannot duplicate category.', 'type' => 'warning']);
+		if ($this->nameExists($data['name'], $ctid)) {
+			throw new DuplicateDataException('Cannot duplicate category.');
 		}
 
-		$category = Category::findOrFail($data['ctid']);
+		$category = Category::findOrFail($ctid);
 		return DB::transaction(function () use ($category, $data) {
 			$updated = $category->update(['name' => data_get($data, 'name', $category->name)]);
 			if (!$updated) {
-				throw new UpdateDataException('Failed to update category');
+				throw new UpdateDataException('Failed to update category', 422);
 			}
 
-			return response()->json(['success' => true, 'message' => 'Category updated successfully.']);
+			return;
 		});
 	}
 
-	public function deleteCategory(int $categoryId) {
-		$category = Category::findOrFail($categoryId);
+	public function deleteCategory(String $categoryId) {
+		$ctid = Decoder::decodeIds($categoryId);
+		$category = Category::findOrFail($ctid);
 		return DB::transaction(function () use ($category) {
 			$deleted = $category->delete();
 			if (!$deleted) {
-				throw new DeleteDataException('Failed to delete category');
+				throw new DeleteDataException('Failed to delete category.', 422);
 			}
 
-			return response()->json(['success' => true, 'message' => 'Category deleted successfully']);
+			return;
 		});
 	}
 
-	private function isDuplicateCategory(array $data): bool {
-		return $this->nameExists($data['name'], $data['app_version_id'], $data['ctid']);
-	}
-
 	private function hasChangesOccurred(array $data): bool {
-		$category = Category::findOrFail($data['ctid']);
-		$category->fill($data);
+		$ctid = Decoder::decodeIds($data['ctid']);
+		$category = Category::findOrFail($ctid);
+		$category->fill(['name' => data_get($data, 'name', $category->name)]);
 
 		return $category->isDirty();
 	}
 
-	private function nameExists(string $name, int $avid, int $ctid): bool {
+	private function nameExists(string $name, int $ctid): bool {
 		return Category::where('name', $name)
-			->where('app_version_id', $avid)
 			->where('ctid', '<>', $ctid)
 			->exists();
 	}

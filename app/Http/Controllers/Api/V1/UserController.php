@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1\Auth;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Exceptions\Auth\InvalidLoginException;
 use App\Exceptions\Auth\InvalidRecaptchaException;
@@ -9,8 +9,9 @@ use App\Http\Requests\App\Auth\UserLoginRequest;
 use App\Services\Auth\RecaptchaService;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Response;
 
-class LoginController extends Controller {
+class UserController extends Controller {
 
 	public function __construct(
 		protected RecaptchaService $recaptchaService,
@@ -19,18 +20,19 @@ class LoginController extends Controller {
 
 	// Validate login request
 	public function store(UserLoginRequest $loginRequest): JsonResponse {
-		//\Illuminate\Support\Facades\Log::info($loginRequest->all());
 		try {
 			$this->recaptchaService->verify($loginRequest->validated('g-recaptcha-response'));
 			$validationResult = $this->userService->login($loginRequest);
 
-			return response()->json($validationResult);
+			return Response::json(['success' => true, 'message' => 'Login successfully',
+				'redirect' => route('dashboard.index', env('APP_VERSION')),
+			]);
 		} catch (InvalidRecaptchaException $recaptchaException) {
-			return response()->json(['success' => false, 'message' => $recaptchaException->getMessage()]);
+			return Response::json(['success' => false, 'message' => $recaptchaException->getMessage()]);
 		} catch (InvalidLoginException $loginException) {
-			return response()->json(['success' => false, 'message' => $loginException->getMessage()]);
+			return Response::json(['success' => false, 'message' => $loginException->getMessage()]);
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'message' => 'Something went wrong! Please try again.']);
+			return Response::json(['success' => false, 'message' => 'Something went wrong! Please try again.']);
 		}
 	}
 

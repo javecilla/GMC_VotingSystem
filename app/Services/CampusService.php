@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Exceptions\App\Admin\ChangesOccuredException;
 use App\Exceptions\App\Admin\CreateDataException;
-use App\Http\Resources\Api\CampusResource;
+use App\Exceptions\App\Admin\DuplicateDataException;
+use App\Helpers\Decoder;
 use App\Models\AppVersion;
 use App\Models\Campus;
 use Illuminate\Support\Facades\Cache;
@@ -17,34 +19,40 @@ class CampusService {
 			function () use ($appVersion) {
 				$campus = Campus::orderBy('created_at', 'desc')
 					->where('app_version_id', $appVersion->avid)->get();
-				return CampusResource::collection($campus);
+				return $campus;
 			});
 	}
 
 	public function createCampus(array $data) {
 		return DB::transaction(function () use ($data) {
+			$avid = Decoder::decodeIds($data['app_version_id']);
 			$created = Campus::query()->create([
-				'app_version_id' => data_get($data, 'app_version_id', null),
+				'app_version_id' => $avid,
 				'name' => data_get($data, 'name', null),
 				'created_at' => data_get($data, 'created_at', now()),
 				'updated_at' => data_get($data, 'updated_at', null),
 			]);
 
 			if (!$created) {
-				throw new CreateDataException('Failed to create new campus.');
+				throw new CreateDataException('Failed to create new campus.', 422);
 			}
 
-			return response()->json(['success' => true, 'message' => 'Campus created successfully']);
+			return;
 		});
 	}
 
 	public function updateCampus(array $data) {
+		$scid = Decoder::decodeIds($data['scid']);
+
 		if (!$this->hasChangesOccurred($data)) {
-			return response()->json(['success' => false,
-				'message' => 'No changes occured', 'type' => 'info']);
+			throw new ChangesOccuredException('No changes occured.');
 		}
 
-		$campus = Campus::findOrFail($data['scid']);
+		if ($this->nameExists($data['name'], $scid)) {
+			throw new DuplicateDataException('Cannot duplicate campus.');
+		}
+
+		$campus = Campus::findOrFail($scid);
 		return DB::transaction(function () use ($campus, $data) {
 			$updated = $campus->update([
 				'app_version_id' => data_get($data, 'app_version_id', $campus->app_version_id),
@@ -53,29 +61,37 @@ class CampusService {
 			]);
 
 			if (!$updated) {
-				throw new UpdateDataException('Failed to update campus.');
+				throw new UpdateDataException('Failed to update campus.', 422);
 			}
 
-			return response()->json(['success' => true, 'message' => 'Campus updated successfully']);
+			return;
 		});
 	}
 
-	public function deleteCampus(int $campusId) {
-		$campus = Campus::findOrFail($campusId);
+	public function deleteCampus(String $campusId) {
+		$scid = Decoder::decodeIds($campusId);
+		$campus = Campus::findOrFail($scid);
 		return DB::transaction(function () use ($campus) {
 			$deleted = $campus->delete();
 			if (!$deleted) {
 				throw new DeleteDataException('Failed to delete campus');
 			}
 
-			return response()->json(['success' => true, 'message' => 'Campus deleted successfully']);
+			return;
 		});
 	}
 
 	private function hasChangesOccurred(array $data): bool {
-		$campus = Campus::findOrFail($data['scid']);
-		$campus->fill($data);
+		$scid = Decoder::decodeIds($data['scid']);
+		$campus = Campus::findOrFail($scid);
+		$campus->fill(['name' => data_get($data, 'name', $campus->name)]);
 
 		return $campus->isDirty();
+	}
+
+	private function nameExists(string $name, int $scid): bool {
+		return Campus::where('name', $name)
+			->where('scid', '<>', $scid)
+			->exists();
 	}
 }

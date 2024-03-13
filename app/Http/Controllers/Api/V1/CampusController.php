@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Exceptions\App\Admin\ChangesOccuredException;
 use App\Exceptions\App\Admin\CreateDataException;
 use App\Exceptions\App\Admin\DeleteDataException;
+use App\Exceptions\App\Admin\DuplicateDataException;
 use App\Exceptions\App\Admin\UpdateDataException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\App\Admin\CampusCreateRequest;
 use App\Http\Requests\App\Admin\CampusUpdateRequest;
+use App\Http\Resources\Api\CampusResource;
 use App\Services\CampusService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Response;
 
 class CampusController extends Controller {
 
@@ -18,47 +22,59 @@ class CampusController extends Controller {
 
 	public function getRecordsAll(String $appVersionName) {
 		try {
-			return $this->service->getAllCampus($appVersionName);
+			$campus = $this->service->getAllCampus($appVersionName);
+
+			return CampusResource::collection($campus);
 		} catch (ModelNotFoundException $e) {
-			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+			return Response::json(['success' => false, 'message' => $e->getMessage()]);
 		} catch (\Throwable $e) {
-			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+			return Response::json(['success' => false, 'message' => $e->getMessage()]);
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'message' => 'An error occured. Code[SCID]']);
+			return Response::json(['success' => false, 'message' => 'An error occured. Code[SCID]']);
 		}
 	}
 
 	public function store(CampusCreateRequest $request): JsonResponse {
 		try {
-			return $this->service->createCampus($request->validated());
+			$this->service->createCampus($request->validated());
+
+			return Response::json(['success' => true, 'message' => 'Campus created successfully']);
 		} catch (CreateDataException $e) {
-			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+			return Response::json(['success' => false, 'message' => $e->getMessage()]);
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'message' => 'An error occured during creatation. Code[SCID]']);
+			return Response::json(['success' => false, 'message' => 'An error occured during creatation. Code[SCID]']);
 		}
 	}
 
 	public function update(CampusUpdateRequest $request): JsonResponse {
 		try {
-			return $this->service->updateCampus($request->validated());
+			$this->service->updateCampus($request->validated());
+
+			return Response::json(['success' => true, 'message' => 'Campus updated successfully']);
+		} catch (ChangesOccuredException $e) {
+			return Response::json(['success' => false, 'message' => $e->getMessage(), 'type' => 'info']);
+		} catch (DuplicateDataException $e) {
+			return Response::json(['success' => false, 'message' => $e->getMessage(), 'type' => 'warning']);
 		} catch (ModelNotFoundException $e) {
-			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+			return Response::json(['success' => false, 'message' => $e->getMessage()]);
 		} catch (UpdateDataException $e) {
-			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+			return Response::json(['success' => false, 'message' => $e->getMessage()]);
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'message' => 'An error occured during updation. Code[SCID]']);
+			return Response::json(['success' => false, 'message' => 'An error occured during updation. Code[SCID]']);
 		}
 	}
 
-	public function destroy(String $appVersion, int $campusId): JsonResponse {
+	public function destroy(String $appVersion, String $campusId): JsonResponse {
 		try {
-			return $this->service->deleteCampus($campusId);
+			$this->service->deleteCampus($campusId);
+
+			return Response::json(['success' => true, 'message' => 'Campus deleted successfully']);
 		} catch (ModelNotFoundException $e) {
-			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+			return Response::json(['success' => false, 'message' => $e->getMessage()]);
 		} catch (DeleteDataException $e) {
-			return response()->json(['success' => false, 'message' => $e->getMessage()]);
+			return Response::json(['success' => false, 'message' => $e->getMessage()]);
 		} catch (\Exception $e) {
-			return response()->json(['success' => false, 'message' => 'An error occured during deletion. Code[SCID]']);
+			return Response::json(['success' => false, 'message' => 'An error occured during deletion. Code[SCID]']);
 		}
 	}
 }

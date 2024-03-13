@@ -262,16 +262,16 @@ header .header-content {
   transform: translateY(-50%);
 }
 
-#searchBtn, #createBtn, #addNewVoteBtn {
+#searchBtn, #createBtn, #addNewVoteBtn, #refreshButton {
   cursor: pointer;
   background: transparent!important;
   border: none!important;
-} #searchBtn:hover, #createBtn:hover, #addNewVoteBtn:hover {
+} #searchBtn:hover, #createBtn:hover, #addNewVoteBtn:hover, #refreshButton:hover {
   transform: scale(1.03)!important;;
   background: rgba(255, 255, 255, 0.2)!important;
   border-radius: 4px;
 }
-.search-icon, .create-icon {
+.search-icon, .create-icon, .refresh-icon {
   color: #040b14;
   font-size: 25px!important;
   opacity: .8;
@@ -473,4 +473,16 @@ input.readonly {
   background: #f3f3f3!important;
 } input.readonly:hover {
   cursor: no-drop!important;
+}
+
+.mouse-pointer {
+  cursor: pointer!important;
+} .mouse-default {
+  cursor: default!important;
+} .themeButton {
+  background-color: #1d232b!important;
+  color: #f3f3f3;
+} .themeButton:hover {
+  color: #fff;
+  transform: scale(1.01)!important;;
 }

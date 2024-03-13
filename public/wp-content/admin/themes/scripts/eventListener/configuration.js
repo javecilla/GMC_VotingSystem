@@ -44,6 +44,14 @@
 		createNewApplicationVersion(versionName, versionTitle);
 	});
 
+	$(document).on('input', '#newVotingVersion', function() {
+		$(this).removeClass('is-invalid');
+	});
+
+	$(document).on('input', '#newVotingTitle', function() {
+		$(this).removeClass('is-invalid');
+	});
+
 	$(document).on('click', '.appVersionButtonEdit', function() {
 		const avid = $(this).data('id');
 		$(`.editNameVersion_${avid}`).attr('contenteditable', 'true').addClass('form-control');
@@ -347,7 +355,7 @@
       return;
     }
 
-		updateVotePoints(vpid, avid, voteAmount, votePoint, imageFile);
+		updateVotePoints(vpid, avid, parseInt(voteAmount), parseInt(votePoint), imageFile);
 	});
 
 	$(document).on('click', '.votePointButtonDelete', function() {

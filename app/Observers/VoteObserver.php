@@ -31,7 +31,7 @@ class VoteObserver {
 		Cache::forget('votes:' . $vote->app_version_id);
 		//Cache::forget('votesMore:' . $vote->app_version_id);
 		Cache::forget('votesId:' . $vote->vid);
-		Cache::forget('votesByStatus:' . $vote->status . ':' . $vote->app_version_id);
+		Cache::forget('votesByStatus:' . $vote->status);
 		Cache::forget('votesBySearch:' . $vote->app_version_id);
 		Cache::forget('mostVotesCandidates:' . $vote->app_version_id);
 		Cache::forget('mostVotesCandidatesByCategory:' . $vote->app_version_id);

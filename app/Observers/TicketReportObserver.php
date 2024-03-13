@@ -30,5 +30,7 @@ class TicketReportObserver {
 	protected function forgetTicketReportCache(TicketReport $ticketReport): void {
 		Cache::forget('ticketReportMore:' . $ticketReport->app_version_id);
 		Cache::forget('ticketReportCount:' . $ticketReport->app_version_id);
+		Cache::forget('ticketReportStatus:' . $ticketReport->status);
+		Cache::forget('ticketReportSearch:');
 	}
 }

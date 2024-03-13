@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Exceptions\App\Admin\ChangesOccuredException;
 use App\Exceptions\App\Admin\CreateDataException;
 use App\Exceptions\App\Admin\DeleteDataException;
-use App\Http\Resources\Api\AppVersionResource;
+use App\Exceptions\App\Admin\DuplicateDataException;
+use App\Helpers\Decoder;
 use App\Models\AppVersion;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +21,7 @@ class AppVersionService {
 	public function getAllAppVersion() {
 		return Cache::remember('appVersions', 60 * 60 * 24, function () {
 			$appVersion = AppVersion::orderBy('created_at', 'desc')->get();
-			return AppVersionResource::collection($appVersion);
+			return $appVersion;
 		});
 	}
 
@@ -34,25 +36,30 @@ class AppVersionService {
 			]);
 
 			if (!$created) {
-				throw new CreateDataException('Failed to create version');
+				throw new CreateDataException('Failed to create version', 422);
 			}
 
-			return response()->json(['success' => true,
-				'message' => 'New application version created successfully']);
+			return;
 		});
 	}
 
 	// Update version by its id
 	public function updateAppVersion(array $data) {
+		$avid = Decoder::decodeIds($data['avid']);
+
 		if (!$this->hasChangesOccurred($data)) {
-			return response()->json(['success' => false, 'message' => 'No changes occured', 'type' => 'info']);
+			throw new ChangesOccuredException('No changes occured.');
 		}
 
-		if (!$this->isValidToUpdate($data)) {
-			return response()->json(['success' => false, 'message' => 'Cannot duplicate version name or title.', 'type' => 'warning']);
+		if ($this->nameExists($data['name'], $data['title'], $avid)) {
+			throw new DuplicateDataException('Cannot duplicate version name for title.');
 		}
 
-		$appVersion = AppVersion::findOrFail($data['avid']);
+		if ($this->titleExists($data['title'], $data['name'], $avid)) {
+			throw new DuplicateDataException('Cannot duplicate title for version name.');
+		}
+
+		$appVersion = AppVersion::findOrFail($avid);
 		return DB::transaction(function () use ($appVersion, $data) {
 			$updated = $appVersion->update([
 				'name' => data_get($data, 'name', $appVersion->name),
@@ -61,48 +68,50 @@ class AppVersionService {
 			]);
 
 			if (!$updated) {
-				throw new UpdateDataException('Failed to update app version');
+				throw new UpdateDataException('Failed to update app version', 422);
 			}
 
-			return response()->json(['success' => true, 'message' => 'Application version updated successfully.']);
+			return;
 		});
 	}
 
 	// Delete existing record of application version
-	public function deleteAppVersion(int $appVersionId) {
-		$appVersion = AppVersion::findOrFail($appVersionId);
+	public function deleteAppVersion(String $appVersionId) {
+		$avid = Decoder::decodeIds($appVersionId);
+		$appVersion = AppVersion::findOrFail($avid);
 		return DB::transaction(function () use ($appVersion) {
 			$deleted = $appVersion->delete();
 			if (!$deleted) {
-				throw new DeleteDataException('Failed to delete version');
+				throw new DeleteDataException('Failed to delete version.', 422);
 			}
 
-			return response()->json(['success' => true, 'message' => 'Application version deleted successfully']);
+			return;
 		});
 	}
 
 	// This check if there is any changes occured or not
 	private function hasChangesOccurred(array $data): bool {
-		$appVersion = AppVersion::findOrFail($data['avid']);
-		$appVersion->fill($data);
+		$avid = Decoder::decodeIds($data['avid']);
+		$appVersion = AppVersion::findOrFail($avid);
+		$appVersion->fill([
+			'name' => data_get($data, 'name', $appVersion->name),
+			'title' => data_get($data, 'title', $appVersion->title),
+		]);
 		return $appVersion->isDirty();
 	}
 
-	// Title and Name must be unique, but only if it's changing
-	private function isValidToUpdate(array $data): bool {
-		return ($this->titleExists($data['title'], $data['avid'])
-			|| $this->nameExists($data['name'], $data['avid']))
-		? false
-		: true;
+	// this check if title exist for specific version name
+	private function titleExists(string $title, string $name, int $appVersionId): bool {
+		return AppVersion::where('title', $title)
+			->where('name', '<>', $name)
+			->where('avid', '<>', $appVersionId)
+			->exists();
 	}
 
-	// Check if any other version has the same title
-	private function titleExists(string $title, int $appVersionId): bool {
-		return AppVersion::where('title', $title)->where('avid', '<>', $appVersionId)->exists();
-	}
-
-	// Check if any other version has the same name
-	private function nameExists(string $name, int $appVersionId): bool {
-		return AppVersion::where('name', $name)->where('avid', '<>', $appVersionId)->exists();
+	private function nameExists(string $name, string $title, int $appVersionId): bool {
+		return AppVersion::where('name', $name)
+			->where('title', '<>', $title)
+			->where('avid', '<>', $appVersionId)
+			->exists();
 	}
 }

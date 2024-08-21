@@ -1,0 +1,42 @@
+.auth-body {
+  background-image: url('/wp-content/guest/uploads/bg3.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+#authForm {
+  margin-top: 1%!important;
+}
+.form-signin {
+  
+  max-width: 450px;
+   height: 5%!important;
+   background-color: #fff!important;
+   padding: 30px!important;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.login-header {
+background: -webkit-gradient(linear,left top,right top,from(var(--app-dark-blue)),to(var(--app-light-blue)));
+	background-image: linear-gradient(90deg,var(--app-dark-blue) 0,var(--app-light-blue) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 25px;
+  font-family: var(--app-font-poppins);
+}

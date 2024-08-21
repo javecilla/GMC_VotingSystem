@@ -1,0 +1,75 @@
+name: Deploy Voting System on push
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  web-deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get the latest code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-dev --no-progress
+
+      - name: Create .env file for production
+        run: |
+          touch .env
+          printf '%s' "${{ secrets.ENV_VOTING_PRODUCTION }}" > .env
+
+      - name: Encrypt env file
+        run: php artisan env:encrypt
+
+      - name: Clear Cache and Optimize Laravel
+        run: php artisan optimize:clear
+
+      - name: Generate Laravel Key
+        run: php artisan key:generate
+
+      - name: Set appropriate permissions
+        run: |
+          chmod -R 755 storage
+          chmod -R 755 bootstrap/cache
+
+      - name: Generate storage link
+        run: php artisan storage:link
+
+      - name: Sync files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_VOTING_SERVER }}
+          username: ${{ secrets.FTP_VOTING_USERNAME }}
+          password: ${{ secrets.FTP_VOTING_PASSWORD }}
+          protocol: ${{ secrets.FTP_VOTING_PROTOCOL }}
+          port: ${{ secrets.FTP_VOTING_PORT }}
+          server-dir: /
+          exclude: |
+            .git**
+            .git/**
+            .git*/**
+            **/.git*
+            **/.git**
+            **/.git*/**
+            .github
+            LICENSE
+            README.md

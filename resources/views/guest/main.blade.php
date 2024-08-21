@@ -76,8 +76,8 @@
 						<li><b>Choose Payment Amount</b>: Begin by selecting the desired payment amount.</li>
 						<li><b>Scan QR Code</b>: Scan the provided QR code with your device's camera.</li>
 						<li><b>Enter Refference Number</b>: Enter the reference number from GCash.</li>
-						<li><b>Enter Email & Phone Number</b>: Enter your active email address and phone number (This use by admin contact you incase of emergency)</li>
-						<li><b>Submit Vote</b>: Click the "Submit Vote" button to confirm.</li>
+{{-- 						<li><b>Enter Email & Phone Number</b>: Enter your active email address and phone number (This use by admin contact you incase of emergency)</li>
+ --}}						<li><b>Submit Vote</b>: Click the "Submit Vote" button to confirm.</li>
 					</ol>
 					Your cooperation in following these steps ensures a seamless voting process.
 				</small>

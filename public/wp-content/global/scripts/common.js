@@ -34,7 +34,4 @@
 
   wow.init();
 
-
-
-  
 })(jQuery)

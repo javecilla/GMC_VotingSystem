@@ -12,7 +12,7 @@
 	        loading="lazy"/>
 	        <div class="container p-0">
 	          <div class="carousel-caption text-start">
-	            <h4>{{ __('Lakan, Lakambini at Lakamdyosa 2023 Coronation') }}</h4>
+	            <h4>{{ __('Lakan, Lakambini at Lakandyosa 2023 Coronation') }}</h4>
 	            <p class="opacity-60">
 								{{ __('Experience the pinnacle of elegance and distinction as Golden Minds proudly presents the 2023 coronation, transcending beauty and grace with outstanding candidates showcasing poise and charisma.') }}
 	            </p>
@@ -35,7 +35,7 @@
 	        <img class="bd-placeholder-img carousel-image" src="{{ asset('/wp-content/guest/uploads/dati3.jpg') }}" alt="img" loading="lazy"/>
 	        <div class="container p-0">
 	          <div class="carousel-caption text-start">
-	            <h4>{{ __('Lakan, Lakambini at Lakamdyosa 2022 Coronation') }}</h4>
+	            <h4>{{ __('Lakan, Lakambini at Lakandyosa 2022 Coronation') }}</h4>
 	            <p class="opacity-60">
 							  {{ __("Evening of talent, grace, and intellect as students vie for esteemed titles that honor their individual accomplishments and embodiment of the school's values.") }}
 	            </p>
@@ -88,8 +88,8 @@
 						<li><b>Choose Payment Amount</b>: Begin by selecting the desired payment amount.</li>
 						<li><b>Scan QR Code</b>: Scan the provided QR code with your device's camera.</li>
 						<li><b>Enter Refference Number</b>: Enter the reference number from GCash.</li>
-{{-- 						<li><b>Enter Email & Phone Number</b>: Enter your active email address and phone number (This use by admin contact you incase of emergency)</li>
- --}}						<li><b>Submit Vote</b>: Click the "Submit Vote" button to confirm.</li>
+						<li><b>Phone Number</b>: Enter your active phone number (This use by admin contact you incase of emergency)</li>
+						<li><b>Submit Vote</b>: Click the "Submit Vote" button to confirm.</li>
 					</ol>
 					Your cooperation in following these steps ensures a seamless voting process.
 				</small>
@@ -121,16 +121,16 @@
 					      <li id="finish"><strong>{{ __('Finish') }}</strong></li>
 					   	</ul>
 					    <div class="form-step" id="stepOne" data-step="1" data-mode="fill-up" >
-								<div class="row mb-2 visually-hidden">
-									<label for="email" class="col-sm-3 col-form-label fw-bold">Voters Information</label>
+								<div class="row mb-2">
+									<label for="email" class="col-sm-3 col-form-label fw-bold">Contact Number</label>
 									<div class="col-sm-9">
 									  <div class="row">
-											<div class="col">
+											<div class="col-12 visually-hidden">
 												<input type="text" id="email" class="form-control email" value="automated@gmail.com" placeholder="your@gmail.com" aria-label="email">
 												<div class="invalid-feedback emailError"></div>
 											</div>
-											<div class="col">
-												<input type="number" id="contactno" class="contactno form-control" value="09772460000" placeholder="09*******00" aria-label="contactno">
+											<div class="col-12">
+												<input type="number" id="contactno" class="contactno form-control" placeholder="09*******00" aria-label="contactno">
 												<div class="invalid-feedback contactnoError"></div>
 											</div>
 										</div>

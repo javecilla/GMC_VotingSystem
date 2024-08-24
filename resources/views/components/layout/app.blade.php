@@ -57,7 +57,6 @@
   <link rel="stylesheet" href="{{ asset('/wp-plugins/wow/wow.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('/wp-plugins/toastr/toastr.min.css') }}"/>
 	<link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/app.css?v=1.4') }}" defer/>
-	<script src="{{ asset('/wp-plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
 
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
@@ -163,13 +162,14 @@
     </a>
   </div>
 
+  <script src="{{ asset('/wp-plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
  	<script src="{{ asset('/wp-plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script>
  	<script src="{{ asset('/wp-plugins/fontawesome/js/all.min.js') }}"></script>
   <script src="{{ asset('/wp-plugins/toastr/toastr.min.js') }}"></script>
   <script src="{{ asset('/wp-plugins/wow/wow.min.js') }}"></script>
-  <script src="{{ asset('/wp-content/guest/themes/scripts/functions.js?v=1.4') }}" defer></script>
-  <script src="{{ asset('/wp-content/guest/themes/scripts/helper.js?v=1.4') }}" defer></script>
- 	<script src="{{ asset('/wp-content/guest/themes/scripts/app.js?v=1.4') }}" defer></script>
-  <script src="{{ asset('/wp-content/guest/themes/scripts/general.js?v=1.4') }}" defer></script>
+ 	<script src="{{ asset('/wp-content/guest/themes/scripts/app.js?v=1.4.1') }}" defer></script>
+  <script src="{{ asset('/wp-content/global/scripts/common.js?v=1.4.1') }}"></script>
+  <script src="{{ asset('/wp-content/global/scripts/helpers.js?v=1.4.1') }}"></script>
+  <script src="{{ asset('/wp-content/guest/themes/scripts/functions.js?v=1.4.1') }}" defer></script>
  </body>
 </html>

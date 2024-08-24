@@ -96,3 +96,6 @@
   <script src="{{ asset('/wp-plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script><script src="{{ asset('/wp-plugins/fontawesome/js/all.min.js') }}"></script><script src="{{ asset('/wp-plugins/wow/wow.min.js') }}"></script><script src="{{ asset('/wp-plugins/toastr/toastr.min.js') }}"></script><script src="{{ asset('/wp-content/guest//themes/scripts/general.js?v=1.4.1') }}"></script>
 </body>
 </html>
+<!-- GMCVS v1.4.1 -->
+<!-- Last Updated at: August 18, 2024 -->
+<!-- https://github.com/javecilla/readme -->

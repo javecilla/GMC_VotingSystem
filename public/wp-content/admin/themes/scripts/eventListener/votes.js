@@ -16,6 +16,7 @@
 	$(document).on('click', '.updateStatusBtn', function() {
 		const voteId = $(this).data('id');
 		const status = $(this).data('status');
+		$(this).text('Updating...').css('pointer-events', 'none').addClass('text-bg-secondary text-dark');
 		updateVotesByStatus(voteId, status);
 	});
 

@@ -1,6 +1,88 @@
 (function($) {
 	"use-strict";
 
+	const validateReportForm = (name, email, message) => {
+		let isValid = true;
+
+		if(isEmpty(name)) {
+			$('.fullName').addClass('is-invalid');
+			$('.nameError').text('This field is required! Please enter your full name.');
+			isValid = false;
+		}
+
+		if(isEmpty(email)) {
+			$('.email').addClass('is-invalid');
+			$('.emailError').text('This field is required! Please enter your email.');
+			isValid = false;
+		}
+
+		if(isEmpty(message)) {
+			$('.message').addClass('is-invalid');
+			$('.messageError').text('This field is required! Please enter your message.');
+			isValid = false;
+		}
+
+		if(!email.includes('@')) {
+			$('.email').addClass('is-invalid');
+			$('.emailError').text('Invalid email address! Please a valid email.');
+			isValid = false;
+		}
+
+		return isValid;
+	};
+
+	const validateFirstStepVoteForm = (dataFirstStep) => {
+		let isValid = true;
+
+		if(isEmpty(dataFirstStep.email)) {
+			$('.email').addClass('is-invalid');
+			$('.emailError').text('This field is required! Please enter your email.');
+			isValid = false;
+		}
+		//!dataFirstStep.email.includes('@')
+		if(!isValidEmail(dataFirstStep.email)) {
+			$('.email').addClass('is-invalid');
+			$('.emailError').text('Invalid email address! Please enter a valid email address.');
+			isValid = false;
+		}
+
+		if(isEmpty(dataFirstStep.contact_no)) {
+			$('.contactno').addClass('is-invalid');
+			$('.contactnoError').text('This field is required! Please enter your contact no.');
+			isValid = false;
+		} if(!isValidContactNo(dataFirstStep.contact_no)) {
+			$('.contactno').addClass('is-invalid');
+			$('.contactnoError').text('Invalid contact/phone number! Please enter a valid contact/phone number.');
+			isValid = false;
+		}
+
+		if(isEmpty(dataFirstStep.vote_points_id)) {
+			$('#amtOfPayment').addClass('is-invalid');
+			$('.amtOfPaymentError').text('This field is required! Select amount of payment.');
+			isValid = false;
+		}
+
+		return isValid;
+	};
+
+	const validateSecondStepVoteForm = (dataSecondStep) => {
+		let isValid = true;
+
+		if(isEmpty(dataSecondStep.referrence_no)) {
+			$('.referenceNo').addClass('is-invalid');
+			$('.referenceNoError').text("This field is required! Please enter the referrence no.");
+			isValid = false;
+		}
+
+		if(!isValidReferrenceNo(dataSecondStep.referrence_no.toString())) {
+			$('.referenceNo').addClass('is-invalid');
+			$('.referenceNoError').text("Invalid referrence no! Please enter a valid referrence no.");
+			isValid = false;
+		}
+
+		return isValid;
+	};
+
 	$(window).on('load', function() {
 		setTimeout(function() {
 			getAllCandidates();
@@ -92,7 +174,7 @@
 			'app_version_name': $('#appVersionName').val(),
 			'candidate_id': $('#candidateSelected').val(),
 			'email': $('#email').val(),
-			'contact_no': $('#contactno').val(),
+			'contact_no': $('#contactno').val().toString(),
 			'vote_points_id': $('#amountPaymentSelected').val(),
 		};
 
@@ -122,7 +204,7 @@
 		const oldData = localStorage.getItem('step1Data');
 		const data = JSON.parse(oldData);
 		// $('#email').val(data.email);
-		// $('#contactno').val(data.contact_no);
+		$('#contactno').val(data.contact_no);
 		$('#referenceNo').val('');
 		showStep(1, data.candidate_id);
 		updateProgressBar(1);
@@ -132,7 +214,7 @@
 		window.history.replaceState(null, null, INDEX_URI);
 		$('#castVoteModal').modal('hide');
 		// $('#email').val('');
-		// $('#contactno').val('');
+		$('#contactno').val('');
 		$('#referenceNo').val('');
 		$('#amountPaymentSelected').val('');
 		getAllAmountOfPayment();

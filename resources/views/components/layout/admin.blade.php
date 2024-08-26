@@ -91,7 +91,7 @@
 
 	        <a href="{{ route('reports.index', request()->route('version')) }}"
 	         class="nav-link {{ Str::contains(request()->getRequestUri(), '/manage/ticket/reports') ? 'active' : ''}}"><li>
-	        	<i class="fa-solid fa-bug"></i>&nbsp; <span>{{ __('Ticket Report') }}</span>
+	        	<i class="fa-solid fa-bug"></i>&nbsp; <span>{{ __("Ticket Report's") }}</span>
 	        	<span class="report-badge {{ Str::contains(request()->getRequestUri(), '/manage/ticket/reports') ? 'active' : ''}}">
 	        		<i class="fas fa-spinner fa-spin" style="font-size: 10px;"></i>
 	        	</span>

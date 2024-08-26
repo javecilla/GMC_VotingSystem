@@ -28,7 +28,7 @@
   <meta property="og:image:secure_url" content="{{ asset('/wp-content/uploads/favicon.png') }}"/>
   <meta property="og:locale" content="en_US">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="{{ env('APP_NAME') }}" />
+  <meta property="og:title" content="{{ env('APP_NAME') }} {{ env('APP_VERSION') }}" />
   <meta property="og:description" content="Golden Minds Colleges Online Voting System! Our journey began in 2023 when we launched our first online voting system for Santa Maria Teen Model 2023, followed by Lakan, Lakambini, and Lakandyosa 2023. Since then, we have been committed to providing a seamless and reliable platform for democratic participation." />
   <meta property="og:url" content="{{ url()->current() }}" />
   <meta property="og:site_name" content="@isset($title) {{ $title }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }} - Golden Minds Colleges"/>
@@ -142,7 +142,7 @@
         target="_blank"
         data-bs-toggle="tooltip"
         data-bs-placement="right"
-        data-bs-title="GMCVS Portal v1.4"><i class="fas fa-globe"></i><span></span></a></li>
+        data-bs-title="GMCOVS Portal v1.4"><i class="fas fa-globe"></i><span></span></a></li>
       <li><a href="https://www.facebook.com/gmcstamaria2015"
         target="_blank"
         data-bs-toggle="tooltip"

@@ -40,7 +40,7 @@
 		      <div class="col-md-6 col-xl-3">
 		        <div class="dashboard-card-black card">
 		          <div class="card-content">
-		            <h4><b>Ticket's Report</b></h4>
+		            <h4><b>Ticket Report's</b></h4>
 		            <h2 class="text-left"><i class="fa-solid fa-bug fs-2"></i>
 		              <span id="totalIssueReport"><i class="fas fa-spinner fa-spin"></i></span>
 		            </h2>
@@ -67,7 +67,7 @@
 		    		<div class="chart-card card">
 						  <div class="card-header">
 						    <i class="fa-solid fa-eye fs-4"></i>&nbsp;
-						    <label>Page's View by Day</label>
+						    <label>Page View's by Day</label>
 						  </div>
 						  <div class="card-body">
 						  	<canvas id="pageViewChart">
@@ -113,7 +113,7 @@
 		    		<div class="issue-report-card card">
 						  <div class="card-header">
 						  	<i class="fa-solid fa-bug fs-4"></i>&nbsp;
-						    <label>Tickets's Reports</label>
+						    <label>Ticket Report's</label>
 						  </div>
 						  <div class="card-body">
 						  	<div id="dashboardReportDataBody">

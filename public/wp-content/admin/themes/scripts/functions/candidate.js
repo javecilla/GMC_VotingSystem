@@ -449,7 +449,7 @@ const displayCandidatesRankingPerCategory = (data) => {
         <div class="issue-report-card card mt-3">
           <div class="card-header">
             <i class="fa-solid fa-chart-simple fs-3"></i>&nbsp;
-            <label>Ranking for ${category} Category</label>
+            <label>Ranking for ${category} </label>
           </div>
           <div class="card-body">
             <canvas id="chartRankingFor_${index}"></canvas>
@@ -475,7 +475,7 @@ const displayCandidatesRankingPerCategory = (data) => {
           options: {
             title: {
             display: true,
-            text: `Ranking for ${category} Category`
+            text: `Ranking for ${category}`
           },
           responsive: true,
           scales: {

@@ -27,7 +27,7 @@ class UserService {
 			$request->session()->put('loginAttempts', $loginAttempts);
 			//then check if login attempt is reach the maximum login attempt
 			if ($loginAttempts >= self::MAX_LOGIN_ATTEMPTS) {
-				throw new InvalidLoginException('gay');
+				throw new InvalidLoginException('i');
 			} else {
 				throw new InvalidLoginException('Invalid Credentials.');
 			}

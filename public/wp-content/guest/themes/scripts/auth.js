@@ -44,22 +44,24 @@
 
   const deleteSession = (sessionName) => {
     $.ajax({
-      url: `${$('meta[name="identifier-URL"]').attr('content')}/api/session/${sessionName}/delete`,
-      method: 'DELETE',
-      dataType: 'JSON',
-      headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-      success: function(response) {
+      async: true,
+      method: 'delete',
+      dataType: 'json',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: `${$('meta[name="identifier-URL"]').attr('content')}/api/${$('meta[name="app-version"]').attr('content')}/session/${sessionName}/delete`,
+      success: (response) => {
         console.info(response.message);
       },
-      error: function(xhr, status, error) {
-        console.error(xhr.responseText);
+      error: (xhr, status, error) => {
+        const response = JSON.parse(xhr.responseText);
+        toastr.error(response.message);
       }
     });
   };
 
-  const startCountDown = () => {
-    let remainingTime = 60;
-    disabledButton('#loginButton'); //disabled the login button initially
+  const lockLoginForm = (remainingTime) => {
     $('#uid').val('').removeClass('is-invalid').attr('readonly', true);
     $('#password').val('').attr('readonly', true);
     $('#notice').text("Due to the repeated many login attempts and other suspicious activties, login for your account is temporily disabled.").removeClass('text-muted').addClass('text-danger');
@@ -67,9 +69,28 @@
     $('#g-recaptcha-response').val('');
     $('.arrow-icon').addClass('d-none');
     $('.loading-spinner').addClass('d-none');
-    $('#loginButton').attr('disabled', true);
-    $('#loginButtonContent').html('<span>Please wait 60 seconds to login again.</span>');
+    disabledButton('#loginButton');
+    $('#loginButtonContent').html(`<span>Please wait ${remainingTime} seconds to login again.</span>`);
+  };
 
+  const enabledLoginForm = () => {
+    $('#uid').focus().removeClass('is-invalid').removeAttr('readonly');
+    $('#password').removeAttr('readonly');
+    $('#notice').text("Note: This system is for authorized user only, if you do not have an account please contact the system administrator to request access.").removeClass('text-danger').addClass('text-muted');
+    $('.g-recaptcha-widgets').removeClass('d-none');
+    $('.arrow-icon').removeClass('d-none');
+    $('.loading-spinner').removeClass('d-none');
+    enableButton('#loginButton');
+    $('#loginButtonContent').html(`
+      Login <i class="fa-solid fa-right-to-bracket arrow-icon"></i>
+      <i class="fas fa-spinner fa-spin loading-spinner" style="display: none;"></i>
+    `);
+    resetCaptcha();
+  };
+
+  const startCountDown = () => {
+    let remainingTime = 60;
+    lockLoginForm(remainingTime);
 
     countdownTimer = setInterval(() => {
       remainingTime--; //decrement remaining time
@@ -77,12 +98,10 @@
       if(remainingTime <= 0) {
         clearInterval(countdownTimer);
         deleteSession('loginAttempts'); //delete the session
-        enableButton('#loginButton');
-
+        enabledLoginForm();
       } else {
         //set real time count timer to front end
-        disabledButton('#loginButton');
-        $('#loginButtonContent').html(`<span>Please wait ${remainingTime} seconds to login again.</span>`);
+        lockLoginForm(remainingTime);
       }
     }, 1000); //1s
   };
@@ -102,16 +121,12 @@
       stopSpinner();
       enableButton('#loginButton');
       return;
-    }
-
-    if(!isValidEmail(email)) {
+    } if(!isValidEmail(email)) {
       toastr.warning("Invalid UID!");
       stopSpinner();
       enableButton('#loginButton');
       return;
-    }
-
-    if(isEmpty(grecaptchaValue)) {
+    } if(isEmpty(grecaptchaValue)) {
       toastr.warning("Please complete the reCAPTCHA!");
       stopSpinner();
       enableButton('#loginButton');
@@ -119,20 +134,23 @@
     }
 
     $.ajax({
-      url: `${$('meta[name="identifier-URL"]').attr('content')}/api/validate/user`,
-      method: 'POST',
+      async: true,
       data: {
         'email': email,
         'password': password,
         'g-recaptcha-response': grecaptchaValue
       },
-      dataType: 'JSON',
-      headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-      success: function(response) {
+      method: 'post',
+      dataType: 'json',
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: `${$('meta[name="identifier-URL"]').attr('content')}/api/validate/user`,
+      success: (response) => {
         if(response.success) {
           window.location.href=response.redirect;
         } else {
-          if(response.message === "gay") {
+          if(response.message === "i") {
             disabledButton('#loginButton');
             startCountDown(); // Start the countdown timer
             toastr.error("You have reached the maximum login attempts");
@@ -147,7 +165,7 @@
         enableButton('#loginButton');
         resetCaptcha();
       },
-      error: function(xhr, status, error) {
+      error: (xhr, status, error) => {
         if(xhr.status === 429) {
           window.location.href='/e4292024';
         } else {

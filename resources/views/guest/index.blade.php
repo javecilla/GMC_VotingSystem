@@ -88,7 +88,7 @@
 						<li><b>Choose Payment Amount</b>: Begin by selecting the desired payment amount.</li>
 						<li><b>Scan QR Code</b>: Scan the provided QR code with your device's camera.</li>
 						<li><b>Enter Refference Number</b>: Enter the reference number from GCash.</li>
-						<li><b>Phone Number</b>: Enter your active phone number (This use by admin contact you incase of emergency)</li>
+						<li><b>Phone Number</b>: Enter your active phone number (This use by admin contact you incase of emergency regarding of your vote.)</li>
 						<li><b>Submit Vote</b>: Click the "Submit Vote" button to confirm.</li>
 					</ol>
 					Your cooperation in following these steps ensures a seamless voting process.
@@ -209,7 +209,7 @@
 		    	</div>
 			   	<div class="modal-footer d-flex text-center align-items-center justify-content-center">
 			   		<center>
-			   			<small class="text-muted">&copy; {{ now()->year }} Golden Minds Colleges <br/>Maintain and Manage by Information System</small>
+			   			<small class="text-muted">&copy; {{ now()->year }} Golden Minds Colleges <br/>Maintain and Manage by IT Department</small>
 			   		</center>
 			    </div>
 		  	</div>

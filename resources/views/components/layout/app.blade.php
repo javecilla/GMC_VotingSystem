@@ -1,11 +1,14 @@
 <!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-.js'); ?>"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-.js'); ?>"> <![endif]-->
+<!--[if !IE]><!-->
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!--<![endif]-->
 <head>
 	<meta charset="UTF-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	<meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="csrf-token" content="{{ csrf_token() }}"/>
   <meta name="robots" content="index, follow"/>
   <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
   <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
@@ -13,10 +16,11 @@
   <meta name="abstract" content="Official Voting System of Golden Minds Bulacan"  />
   <meta name="copyright" content="Golden Minds Bulacan"  />
   <meta name='Classification' content='Website'/>
-  <meta name='identifier-URL' content='{{ url()->current() }}'/>
+  <meta name='identifier-URL' content='{{ env('APP_URL') }}'/>
+  <meta name="app-version" content="{{ env('APP_VERSION') }}"/>
+  <meta name="csrf-token" content="{{ csrf_token() }}"/>
   <meta name="msapplication-TileImage" content="{{ asset('/wp-content/uploads/favicon.png') }}" />
-  <!--<meta name='developer' content='https://javecilla.vercel.app'/>-->
-  <!--The SEO Framework by Jerome Avecilla -->
+  <meta name='author' content='Jerome Avecilla'/>
   <meta property="og:image" content="{{ asset('/wp-content/uploads/app_ogimage.png') }}" />
   <meta property="og:image:width" content="608">
   <meta property="og:image:height" content="260">
@@ -39,8 +43,10 @@
   <meta name="twitter:description" content="Golden Minds Colleges Online Voting System! Our journey began in 2023 when we launched our first online voting system for Santa Maria Teen Model 2023, followed by Lakan, Lakambini, and Lakandyosa 2023. Since then, we have been committed to providing a seamless and reliable platform for democratic participation."/>
 	<title>@isset($title) {{ $title }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}</title>
 
-	<link rel="shortcut icon" type="image/png" sizes="16x16" href="{{ asset('/wp-content/uploads/favicon.png') }}" />
-  <link rel="apple-touch-icon" type="image/png" sizes="16x16" href="{{ asset('/wp-content/uploads/favicon.png') }}" />
+  <link rel="shortcut icon" type="image/png" sizes="16x16" href="{{ asset('/wp-content/uploads/favicon.png') }}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/wp-content/uploads/favicon.png') }}" />
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/wp-content/uploads/favicon.png') }}" />
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/wp-content/uploads/favicon.png') }}" />
   <link rel="canonical" href="https://admission.goldenmindsbulacan.com/" />
   <link rel='shortlink' href="https://www.goldenmindsbulacan.com/" />
   <link rel="alternate" type="text/xml+oembed" href="https://www.goldenmindsbulacan.com/sitemap.xml?url=https://www.goldenmindsbulacan.com/&format=xml" />
@@ -120,11 +126,11 @@
 
   <footer id="footer">
     <div class="d-flex flex-wrap container f-container">
-      <p class="col-md-6 mb-0"><a href="#" target="_blank" class="nav-link px-2 text-body-secondary">
-        &copy; {{ now()->year }} {{ __('Golden Minds Colleges - OVS') }} {{ env('APP_VERSION') }}</a></p>
+      <p class="col-md-6 mb-0"><a href="javascript:void(0)" class="nav-link px-2 text-body-secondary">
+        &copy; {{ now()->year }} {{ __('GMCOVS') }} {{ env('APP_VERSION') }}</a></p>
       <ul class="nav col-md-6 justify-content-end">
         <li class="nav-item"><span class="nav-link text-body-secondary">
-          {{ __('Maintain and Manage by Information System') }}</span>
+          {{ __('Maintain and Manage by IT Department') }}</span>
         </li>
       </ul>
     </div>
@@ -167,9 +173,12 @@
  	<script src="{{ asset('/wp-plugins/fontawesome/js/all.min.js') }}"></script>
   <script src="{{ asset('/wp-plugins/toastr/toastr.min.js') }}"></script>
   <script src="{{ asset('/wp-plugins/wow/wow.min.js') }}"></script>
- 	<script src="{{ asset('/wp-content/guest/themes/scripts/app.js?v=1.4.1') }}" defer></script>
-  <script src="{{ asset('/wp-content/global/scripts/common.js?v=1.4.1') }}"></script>
-  <script src="{{ asset('/wp-content/global/scripts/helpers.js?v=1.4.1') }}"></script>
-  <script src="{{ asset('/wp-content/guest/themes/scripts/functions.js?v=1.4.1') }}" defer></script>
+ 	<script src="{{ asset('/wp-content/guest/themes/scripts/app.js?v=1.4.5') }}" defer></script>
+  <script src="{{ asset('/wp-content/global/scripts/common.js?v=1.4.5') }}"></script>
+  <script src="{{ asset('/wp-content/global/scripts/helpers.js?v=1.4.5') }}"></script>
+  <script src="{{ asset('/wp-content/guest/themes/scripts/functions.js?v=1.4.5') }}" defer></script>
  </body>
 </html>
+<!-- GMCOVS v1.4.5 -->
+<!-- Last Updated at: August 18, 2024 -->
+<!-- (Github)[https://github.com/javecilla/readme] -->

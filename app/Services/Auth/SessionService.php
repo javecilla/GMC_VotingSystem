@@ -6,7 +6,8 @@ use App\Exceptions\App\Admin\InvalidSessionException;
 
 class SessionService {
 	public function remove($sessionName, $request) {
-		return $request->session()->forget($sessionName);
+		$request->session()->forget($sessionName);
+		return;
 	}
 
 	public function forget($request) {

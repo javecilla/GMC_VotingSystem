@@ -1,11 +1,14 @@
 <!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-.js'); ?>"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-.js'); ?>"> <![endif]-->
+<!--[if !IE]><!-->
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!--<![endif]-->
 <head>
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="csrf-token" content="{{ csrf_token() }}"/>
   <meta name="robots" content="noindex, nofollow"/>
   <meta name="googlebot" content="noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
   <meta name="bingbot" content="noindex, nofollow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
@@ -14,8 +17,10 @@
   <meta name="copyright" content="Golden Minds Bulacan"  />
   <meta name='Classification' content='Website'/>
   <meta name='identifier-URL' content='{{ env('APP_URL') }}'/>
+  <meta name="app-version" content="{{ env('APP_VERSION') }}"/>
+  <meta name="csrf-token" content="{{ csrf_token() }}"/>
   <meta name="msapplication-TileImage" content="{{ asset('/wp-content/uploads/favicon.png') }}" />
-  <meta name='author' content='https://javecilla.vercel.app'/>
+  <meta name='author' content='Jerome Avecilla'/>
   <meta property="og:image" content="{{ asset('/wp-content/uploads/app_ogimage.png') }}" />
   <meta property="og:image:width" content="608">
   <meta property="og:image:height" content="260">
@@ -39,7 +44,9 @@
   <title>@isset($title) {{ $title }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}</title>
 
   <link rel="shortcut icon" type="image/png" sizes="16x16" href="{{ asset('/wp-content/uploads/favicon.png') }}" />
-  <link rel="apple-touch-icon" type="image/png" sizes="16x16" href="{{ asset('/wp-content/uploads/favicon.png') }}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/wp-content/uploads/favicon.png') }}" />
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('/wp-content/uploads/favicon.png') }}" />
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('/wp-content/uploads/favicon.png') }}" />
 
   <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
   <link rel='dns-prefetch' href='https://fonts.gstatic.com' />
@@ -51,10 +58,9 @@
   <link rel="stylesheet" href="{{ asset('/wp-plugins/fontawesome/css/all.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('/wp-plugins/wow/wow.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('/wp-plugins/toastr/toastr.min.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/app.css?v=1.4.1') }}" defer/>
-  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/auth.css?v=1.4.1') }}" defer/>
-  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/auth.css?v=1.4.1') }}" defer/>
-
+  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/app.css?v=1.4.5') }}" defer/>
+  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/auth.css?v=1.4.5') }}" defer/>
+  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/auth.css?v=1.4.5') }}" defer/>
 
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   @production
@@ -69,7 +75,7 @@
     </script>
   @endproduction
 </head>
-<body class="auth-body" oncontextmenu="return false">
+<body class="auth-body" >
   <main class="p-2">
     {{ $slot }}
   </main> <!-- /main -->
@@ -105,11 +111,11 @@
   <script src="{{ asset('/wp-plugins/fontawesome/js/all.min.js') }}"></script>
   <script src="{{ asset('/wp-plugins/wow/wow.min.js') }}"></script>
   <script src="{{ asset('/wp-plugins/toastr/toastr.min.js') }}"></script>
-  <script src="{{ asset('/wp-content/global/scripts/common.js?v=1.4.1') }}"></script>
-  <script src="{{ asset('/wp-content/global/scripts/helpers.js?v=1.4.1') }}"></script>
-  <script src="{{ asset('/wp-content/guest/themes/scripts/auth.js?v=1.4.2') }}"></script>
+  <script src="{{ asset('/wp-content/global/scripts/common.js?v=1.4.5') }}"></script>
+  <script src="{{ asset('/wp-content/global/scripts/helpers.js?v=1.4.5') }}"></script>
+  <script src="{{ asset('/wp-content/guest/themes/scripts/auth.js?v=1.4.4') }}"></script>
 </body>
 </html>
-<!-- GMCVS v1.4.1 -->
+<!-- GMCOVS v1.4.5 -->
 <!-- Last Updated at: August 18, 2024 -->
-<!-- https://github.com/javecilla/readme -->
+<!-- (Github)[https://github.com/javecilla/readme] -->

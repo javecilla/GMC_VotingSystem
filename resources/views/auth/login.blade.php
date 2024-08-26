@@ -54,9 +54,9 @@
 						&copy; {{ now()->year }}
 						<a href="https://goldenmindsbulacan.com" target="_blank"
 							class="text-muted text-decoration-none">
-							{{ __('Golden Minds Bulacan') }}
+							<i>{{ __('Golden Minds Bulacan') }}</i>
 						</a><br/>
-						{{ __('Maintain and Manage by Information System') }}
+						{{ __('Maintain and Manage by IT Department') }}
 					</small>
 				</div>
 			</div>

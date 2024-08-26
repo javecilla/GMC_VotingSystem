@@ -10,8 +10,8 @@
 			</div>
 	  </div>
 	  <div class="col-lg-6 mx-auto" >
-	    <div class="h-button-content d-grid gap-2 d-sm-flex justify-content-sm-center" style="">
-	      <a href="javascript:void(0)" class="h-button btn btn-light gap-3 text-muted border-0">
+	    <div class="h-button-content d-grid gap-2 d-sm-flex justify-content-sm-center" >
+	      <a href="javascript:void(0)" class="h-button btn btn-light gap-3 text-muted border-0" style="cursor: no-drop!important;">
 	        {{ __('Read More About This Event') }}
 	      </a>
 	      <a href="{{ route('index.page', Str::slug(env('APP_VOTING_NAME'))) }}" class="h-button btn btn-primary text-white">
@@ -76,8 +76,8 @@
 						<li><b>Choose Payment Amount</b>: Begin by selecting the desired payment amount.</li>
 						<li><b>Scan QR Code</b>: Scan the provided QR code with your device's camera.</li>
 						<li><b>Enter Refference Number</b>: Enter the reference number from GCash.</li>
-{{-- 						<li><b>Enter Email & Phone Number</b>: Enter your active email address and phone number (This use by admin contact you incase of emergency)</li>
- --}}						<li><b>Submit Vote</b>: Click the "Submit Vote" button to confirm.</li>
+						<li><b>Phone Number</b>: Enter your active phone number (This use by admin contact you incase of emergency regarding of your vote.)</li>
+						<li><b>Submit Vote</b>: Click the "Submit Vote" button to confirm.</li>
 					</ol>
 					Your cooperation in following these steps ensures a seamless voting process.
 				</small>
@@ -107,7 +107,7 @@
 	      	<div class="card h-100 p-5 border-0 shadow rounded-4 card-faq wow fadeInUp">
 		        <h3 class="fs-2 sub-text-faq">{{ __('When is the Deadline for Online Voting?') }}</h3>
 		        <p class="description-text-faq">
-		        	 {{ __('Online voting for Lakan, Lakambini at Lakandyosa 2024 will conclude on August 25, 2024, at 12:59 PM. Please note that the system will no longer accept any further votes after this specified deadline.') }}
+		        	 {{ __('Online voting for Lakan, Lakambini at Lakandyosa 2024 will conclude on September 01, 2024, at 12:59 PM. Please note that the system will no longer accept any further votes after this specified deadline.') }}
 		      	</p>
 	      	</div>
 	      </div>
@@ -147,10 +147,10 @@
   	<div class="container">
   	 	<div class="contact-admins">
   			<div class="row">
-      		<div class="col-lg-4 mt-4">
+      		<div class="col-lg-6 mt-4">
 	      		<div class="card p-4 border-0 shadow rounded-4 wow fadeInUp">
 	      			<center>
-	      				<svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>
+	      				<img src="{{ asset('/wp-content/uploads/derek.jpg') }}" class="bd-placeholder-img rounded-circle" width="140" height="140" alt="img" loading="lazy"/>
 			      		<h2 class="contact-admin-name">{{ __('Derek Malibiran') }}</h2>
 			      		<p class="contact-admin-description">
 			      			 {{ __('Meet our esteemed School President at Golden Minds Colleges.') }}
@@ -158,21 +158,11 @@
 			      	</center>
 	      		</div>
       		</div>
-      		<div class="col-lg-4 mt-4">
+
+      		<div class="col-lg-6 mt-4">
 	      		<div class="card p-4 border-0 shadow rounded-4 wow fadeInUp">
 	      			<center>
-	      				<svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>
-			      		<h2 class="contact-admin-name">{{ __('Dedicated Team') }}</h2>
-			      		<p class="contact-admin-description">
-			      			 {{ __('Get to know the passionate individuals who form the backbone of our voting system.') }}
-			      		</p>
-			      	</center>
-	      		</div>
-      		</div>
-      		<div class="col-lg-4 mt-4">
-	      		<div class="card p-4 border-0 shadow rounded-4 wow fadeInUp">
-	      			<center>
-	      				<svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>
+	      				<img src="{{ asset('/wp-content/uploads/gian.jpg') }}" class="bd-placeholder-img rounded-circle" width="140" height="140" alt="img" loading="lazy"/>
 			      		<h2 class="contact-admin-name">{{ __('Gian Carlos Castillo') }}</h2>
 			      		<p class="contact-admin-description">
 			      			{{ __('Meet organizer behind Golden Minds Colleges\' voting initiatives.') }}
@@ -213,12 +203,12 @@
 			            <label for="message">{{ __('Message') }}</label>
 			            <div class="invalid-feedback messageError"></div>
 			          </div>
-			          <div class="input-group mb-2">
+			          <div class="mb-2">
 			          	<small class="text-muted">
 			          		{{ __('Please insert the screenshoot of the error/issue as following format e.g., png, jpeg, jpg (Optional)')}}
 			          	</small>
 								  <input type="file" class="form-control" id="concernImage">
-								  <label class="input-group-text" for="concernImage">{{ __('Upload') }}</label>
+
 								</div>
 								<div class="d-flex justify-content-center align-items-center mt-3 mb-2">
 				          {{-- reCAPTCHA Widgets --}}

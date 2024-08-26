@@ -71,12 +71,18 @@
 		if(isEmpty(dataSecondStep.referrence_no)) {
 			$('.referenceNo').addClass('is-invalid');
 			$('.referenceNoError').text("This field is required! Please enter the referrence no.");
+			$('.loading-spinner').addClass('d-none');
+		  $('.arrow-icon').removeClass('d-none');
+		  $('#submitMyVote').css('cursor', 'pointer').prop('disabled', false);
 			isValid = false;
 		}
 
 		if(!isValidReferrenceNo(dataSecondStep.referrence_no.toString())) {
 			$('.referenceNo').addClass('is-invalid');
 			$('.referenceNoError').text("Invalid referrence no! Please enter a valid referrence no.");
+			$('.loading-spinner').addClass('d-none');
+		  $('.arrow-icon').removeClass('d-none');
+		  $('#submitMyVote').css('cursor', 'pointer').prop('disabled', false);
 			isValid = false;
 		}
 
@@ -188,6 +194,10 @@
 
 	$(document).on('click', '#submitMyVote', function() {
 		$('#g-recaptcha-response').val(grecaptcha.getResponse());
+		$('.loading-spinner').removeClass('d-none');
+	  $('.arrow-icon').addClass('d-none');
+	  $('#submitMyVote').css('cursor', 'no-drop').prop('disabled', true);
+
 		const dataSecondStep = {
 			'g_recaptcha_response': $('#g-recaptcha-response').val(),
 			'referrence_no': $('#referenceNo').val()
@@ -203,7 +213,7 @@
 	$(document).on('click', '#voteAgainButton', function() {
 		const oldData = localStorage.getItem('step1Data');
 		const data = JSON.parse(oldData);
-		// $('#email').val(data.email);
+		// $('#email').val(data.email); //
 		$('#contactno').val(data.contact_no);
 		$('#referenceNo').val('');
 		showStep(1, data.candidate_id);

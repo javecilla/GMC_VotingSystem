@@ -98,8 +98,11 @@
 
 			<div id="dataListOfCandidatesBody">
 				<div class="text-muted mt-3 d-flex align-items-center justify-content-center text-center">
-					<i class="fas fa-spinner fa-spin loading-spinner fs-4"></i>
-					<span class="fs-4">&nbsp;{{ __('Loading...') }}</span>
+					<div class="spinner-border" role="status"
+						style="width: 2rem!important; height: 2rem!important;">
+		  			<span class="visually-hidden">Loading...</span>
+					</div>&nbsp;
+					<h3 style="margin-top: 10px;">Loading...</h3>
 				</div>
 				{{-- data fetch via ajax --}}
     	</div>

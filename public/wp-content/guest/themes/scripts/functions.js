@@ -154,7 +154,10 @@ const filterCandidatesByCategory = (categoryQuery) => {
 };
 
 const storeSubmittedVotes = (dataForm) => {
-	runSpinner();
+	$('.loading-spinner').removeClass('d-none');
+  $('.arrow-icon').addClass('d-none');
+  $('#submitMyVote').css('cursor', 'no-drop').prop('disabled', true);
+
 	$.ajax({
 		url: `/api/${appVersion}/vote/client/store`,
 		method: 'post',
@@ -170,14 +173,20 @@ const storeSubmittedVotes = (dataForm) => {
 				toastr.error(response.message);
 			}
 
-			stopSpinner();
+			$('.loading-spinner').addClass('d-none');
+		  $('.arrow-icon').removeClass('d-none');
+		  $('#submitMyVote').css('cursor', 'pointer').prop('disabled', false);
 			grecaptcha.reset();
 		},
 		error: (xhr, status, error) => {
 			const response = JSON.parse(xhr.responseText);
 			toastr.error(response.message);
-			stopSpinner();
-			grecaptcha.reset();
+			$('#referenceNo').val('').addClass('is-invalid');
+
+			$('.loading-spinner').addClass('d-none');
+		  $('.arrow-icon').removeClass('d-none');
+		  $('#submitMyVote').css('cursor', 'pointer').prop('disabled', false);
+		  grecaptcha.reset();
 		}
 	});
 };

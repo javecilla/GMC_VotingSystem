@@ -22,7 +22,7 @@ class CandidatesController extends Controller {
 		protected CandidateService $service,
 		protected VoteService $voteService) {}
 
-	public function getRecordsAll(String $appVersionName) {
+	public function getRecordsAll(string $appVersionName) {
 		try {
 			$candidate = $this->service->getAllCandidates($appVersionName);
 
@@ -36,7 +36,7 @@ class CandidatesController extends Controller {
 		}
 	}
 
-	public function getRecordsOne(String $appVersionName, String $candidateId) {
+	public function getRecordsOne(string $appVersionName, string $candidateId) {
 		try {
 			$candidate = $this->service->getOneCandidate($candidateId);
 
@@ -50,7 +50,7 @@ class CandidatesController extends Controller {
 		}
 	}
 
-	public function getBySearch(String $appVersionName, String $search) {
+	public function getBySearch(string $appVersionName, string $search) {
 		try {
 			$candidate = $this->service->getFilterSearchCandidates($appVersionName, $search);
 
@@ -64,7 +64,7 @@ class CandidatesController extends Controller {
 		}
 	}
 
-	public function getByCategory(String $appVersionName, String $categoryId) {
+	public function getByCategory(string $appVersionName, string $categoryId) {
 		try {
 			$candidate = $this->service->getCandidatesByCategory($appVersionName, $categoryId);
 
@@ -78,7 +78,7 @@ class CandidatesController extends Controller {
 		}
 	}
 
-	public function getRecordsLimit(String $appVersionName, int $limit, int $offset) {
+	public function getRecordsLimit(string $appVersionName, int $limit, int $offset) {
 		try {
 			$candidate = $this->service->loadMoreCandidates($appVersionName, $limit, $offset);
 
@@ -124,7 +124,7 @@ class CandidatesController extends Controller {
 		}
 	}
 
-	public function destroy(String $appVersionName, String $candidateId): JsonResponse {
+	public function destroy(string $appVersionName, string $candidateId): JsonResponse {
 		try {
 			$this->service->deleteCandidate($candidateId);
 
@@ -138,7 +138,7 @@ class CandidatesController extends Controller {
 		}
 	}
 
-	public function getOverallRanking(String $appVersionName, int $limit) {
+	public function getOverallRanking(string $appVersionName, int $limit) {
 		try {
 			$candidates = $this->service->getCandidatesWithMostVotes($appVersionName, $limit);
 
@@ -152,7 +152,7 @@ class CandidatesController extends Controller {
 		}
 	}
 
-	public function getCategoryRanking(String $appVersionName, int $limit) {
+	public function getCategoryRanking(string $appVersionName, int $limit) {
 		try {
 			$candidates = $this->service->getCandidatesWithMostVotesByCategory($appVersionName, $limit);
 

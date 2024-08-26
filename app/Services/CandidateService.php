@@ -39,19 +39,17 @@ class CandidateService {
 
 	public function getOneCandidate(string $candidateId) {
 		$ctid = Decoder::decodeIds($candidateId);
-		return Cache::remember('candidatesId:' . $ctid, 60 * 60 * 24, function () use ($ctid) {
-			$candidate = Candidate::with(['appVersion', 'campus', 'category'])->findOrFail($ctid);
+		$candidate = Candidate::with(['appVersion', 'campus', 'category'])->findOrFail($ctid);
 
-			$candidate->votes = $this->voteService->getAllVotesRecordsByCandidates($candidate->cdid);
-			$candidate->totalVerified = $this->voteService->countTotalVerifiedVotesByCandidate($candidate->cdid);
-			$candidate->totalPending = $this->voteService->countTotalPendingVotesByCandidate($candidate->cdid);
-			$candidate->totalSpam = $this->voteService->countTotalSpamVotesByCandidate($candidate->cdid);
-			$candidate->totalVotes = $this->voteService->countTotalVotesByCandidate($candidate->cdid);
-			$candidate->totalAmount = $this->voteService->calculateAmountVerifiedByCandidate($candidate->cdid);
-			$candidate->totalPoints = $this->voteService->calculatePointsVerifiedByCandidate($candidate->cdid);
+		$candidate->votes = $this->voteService->getAllVotesRecordsByCandidates($candidate->cdid);
+		$candidate->totalVerified = $this->voteService->countTotalVerifiedVotesByCandidate($candidate->cdid);
+		$candidate->totalPending = $this->voteService->countTotalPendingVotesByCandidate($candidate->cdid);
+		$candidate->totalSpam = $this->voteService->countTotalSpamVotesByCandidate($candidate->cdid);
+		$candidate->totalVotes = $this->voteService->countTotalVotesByCandidate($candidate->cdid);
+		$candidate->totalAmount = $this->voteService->calculateAmountVerifiedByCandidate($candidate->cdid);
+		$candidate->totalPoints = $this->voteService->calculatePointsVerifiedByCandidate($candidate->cdid);
 
-			return $candidate;
-		});
+		return $candidate;
 	}
 
 	public function getFilterSearchCandidates(string $appVersionName, string $searchQuery) {

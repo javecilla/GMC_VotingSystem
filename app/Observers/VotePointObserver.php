@@ -29,6 +29,6 @@ class VotePointObserver {
 
 	protected function forgetVotePointCache(VotePoint $votePoint): void {
 		Cache::forget('votePoints:' . $votePoint->app_version_id);
-		Cache::forget('votePointsId:' . $votePoint->vid);
+		Cache::forget('votePointsId:' . $votePoint->vpid);
 	}
 }

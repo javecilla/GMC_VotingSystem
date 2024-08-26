@@ -14,24 +14,20 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class VotePointService {
-	public function getAllVotePoints(String $appVersionName) {
+	public function getAllVotePoints(string $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votePoints:' . $appVersion->avid, 60 * 60 * 24,
-			function () use ($appVersion) {
-				$votePoint = VotePoint::orderBy('created_at', 'desc')
-					->where('app_version_id', $appVersion->avid)->get();
-
-				return $votePoint;
-			});
+		return Cache::remember('votePoints:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion) {
+			$votePoint = VotePoint::orderBy('created_at', 'desc')->where('app_version_id', $appVersion->avid)->get();
+			return $votePoint;
+		});
 	}
 
-	public function getOneVotePoints(String $votePointsId) {
-		return Cache::remember('votePointsId:' . $votePointsId, 60 * 60 * 24,
-			function () use ($votePointsId) {
-				$vpid = Decoder::decodeIds($votePointsId);
-				$votePoint = VotePoint::findOrFail($vpid);
-				return $votePoint;
-			});
+	public function getOneVotePoints(string $votePointsId) {
+		$vpid = Decoder::decodeIds($votePointsId);
+		return Cache::remember('votePointsId:' . $vpid, 60 * 60 * 24, function () use ($vpid) {
+			$votePoint = VotePoint::findOrFail($vpid);
+			return $votePoint;
+		});
 	}
 
 	public function createVotePoints(array $data) {
@@ -50,6 +46,7 @@ class VotePointService {
 				'created_at' => data_get($data, 'created_at', now()),
 				'updated_at' => data_get($data, 'updated_at', null),
 			]);
+
 			if (!$created) {
 				throw new CreateDataException('Failed to created new voting points.', 422);
 			}
@@ -97,7 +94,7 @@ class VotePointService {
 		});
 	}
 
-	public function deleteVotePoints(String $votePointId) {
+	public function deleteVotePoints(string $votePointId) {
 		$vpid = Decoder::decodeIds($votePointId);
 		$votePoint = VotePoint::findOrFail($vpid);
 		return DB::transaction(function () use ($votePoint) {

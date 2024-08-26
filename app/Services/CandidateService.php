@@ -40,33 +40,32 @@ class CandidateService {
 	public function getOneCandidate(string $candidateId) {
 		$ctid = Decoder::decodeIds($candidateId);
 		return Cache::remember('candidatesId:' . $ctid, 60 * 60 * 24, function () use ($ctid) {
-				$candidate = Candidate::with(['appVersion', 'campus', 'category'])->findOrFail($ctid);
+			$candidate = Candidate::with(['appVersion', 'campus', 'category'])->findOrFail($ctid);
 
-				$candidate->votes = $this->voteService->getAllVotesRecordsByCandidates($candidate->cdid);
-				$candidate->totalVerified = $this->voteService->countTotalVerifiedVotesByCandidate($candidate->cdid);
-				$candidate->totalPending = $this->voteService->countTotalPendingVotesByCandidate($candidate->cdid);
-				$candidate->totalSpam = $this->voteService->countTotalSpamVotesByCandidate($candidate->cdid);
-				$candidate->totalVotes = $this->voteService->countTotalVotesByCandidate($candidate->cdid);
-				$candidate->totalAmount = $this->voteService->calculateAmountVerifiedByCandidate($candidate->cdid);
-				$candidate->totalPoints = $this->voteService->calculatePointsVerifiedByCandidate($candidate->cdid);
+			$candidate->votes = $this->voteService->getAllVotesRecordsByCandidates($candidate->cdid);
+			$candidate->totalVerified = $this->voteService->countTotalVerifiedVotesByCandidate($candidate->cdid);
+			$candidate->totalPending = $this->voteService->countTotalPendingVotesByCandidate($candidate->cdid);
+			$candidate->totalSpam = $this->voteService->countTotalSpamVotesByCandidate($candidate->cdid);
+			$candidate->totalVotes = $this->voteService->countTotalVotesByCandidate($candidate->cdid);
+			$candidate->totalAmount = $this->voteService->calculateAmountVerifiedByCandidate($candidate->cdid);
+			$candidate->totalPoints = $this->voteService->calculatePointsVerifiedByCandidate($candidate->cdid);
 
-				return $candidate;
-			});
+			return $candidate;
+		});
 	}
 
 	public function getFilterSearchCandidates(string $appVersionName, string $searchQuery) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('candidateSearch:' . $searchQuery, 60 * 60 * 24,
-			function () use ($appVersion, $searchQuery) {
-				$candidate = Candidate::where('app_version_id', $appVersion->avid)
-					->where(function ($query) use ($searchQuery) {
-						$query->where('name', 'like', '%' . $searchQuery . '%')
-							->orWhere('candidate_no', 'like', '%' . $searchQuery . '%');
-					})
-					->get();
+		return Cache::remember('candidateSearch:' . $searchQuery, 60 * 60 * 24, function () use ($appVersion, $searchQuery) {
+			$candidate = Candidate::where('app_version_id', $appVersion->avid)
+				->where(function ($query) use ($searchQuery) {
+					$query->where('name', 'like', '%' . $searchQuery . '%')
+						->orWhere('candidate_no', 'like', '%' . $searchQuery . '%');
+				})
+				->get();
 
-				return $candidate;
-			});
+			return $candidate;
+		});
 	}
 
 	public function getCandidatesByCategory(string $appVersionName, string $categoryId) {
@@ -74,26 +73,24 @@ class CandidateService {
 		$ctid = Decoder::decodeIds($categoryId);
 		$category = Category::findOrFail($ctid);
 
-		return Cache::remember('candidateCategory:' . $categoryId, 60 * 60 * 24,
-			function () use ($appVersion, $category) {
-				$candidate = Candidate::where('app_version_id', $appVersion->avid)
-					->where('category_id', $category->ctid)
-					->orderBy('created_at', 'desc')
-					->get();
+		return Cache::remember('candidateCategory:' . $categoryId, 60 * 60 * 24, function () use ($appVersion, $category) {
+			$candidate = Candidate::where('app_version_id', $appVersion->avid)
+				->where('category_id', $category->ctid)
+				->orderBy('created_at', 'desc')
+				->get();
 
-				return $candidate;
-			});
+			return $candidate;
+		});
 	}
 
 	public function createCandidate(array $data) {
 		return DB::transaction(function () use ($data) {
 			$avid = Decoder::decodeIds($data['app_version_id']);
-			$scid = !empty($data['school_campus_id']) || $data['school_campus_id'] != null ?
-			Decoder::decodeIds($data['school_campus_id']) : null;
+			$scid = !empty($data['school_campus_id']) || $data['school_campus_id'] != null ? Decoder::decodeIds($data['school_campus_id']) : null;
 			$ctid = Decoder::decodeIds($data['category_id']);
 			$file = $data['image'] ?? null;
 
-			if ($file instanceof \Illuminate\Http\UploadedFile  && $file->isValid()) {
+			if($file instanceof \Illuminate\Http\UploadedFile  && $file->isValid()) {
 				//store the uploaded file in the 'storage/candidates/filename' folder
 				$path = Storage::disk('public')->put('candidates', $file);
 				// Assign the stored path to the 'image' key in the data array
@@ -111,6 +108,7 @@ class CandidateService {
 				'created_at' => data_get($data, 'created_at', now()),
 				'updated_at' => data_get($data, 'updated_at', null),
 			]);
+
 			if (!$created) {
 				throw new CreateDataException('Failed to create new candidate.', 422);
 			}
@@ -223,49 +221,48 @@ class CandidateService {
 
 	public function getCandidatesWithMostVotesByCategory(string $appVersionName, int $limit) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('mostVotesCandidatesByCategory:' . $appVersion->avid, 60 * 60 * 24,
-			function () use ($appVersion, $limit) {
-				$topCandidatesByCategory = [];
+		return Cache::remember('mostVotesCandidatesByCategory:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion, $limit) {
+			$topCandidatesByCategory = [];
 
-				//(Step 1): get all categories for specific app version
-				$categories = Category::where('app_version_id', $appVersion->avid)->get();
+			//(Step 1): get all categories for specific app version
+			$categories = Category::where('app_version_id', $appVersion->avid)->get();
 
-				//(Step 2): get all candidates with (votes) for each category
-				foreach ($categories as $category) {
-					$candidates = Candidate::where('category_id', $category->ctid)
-						->with(['votes' => function ($query) use ($appVersion) {
-							$query->where('app_version_id', $appVersion->avid)
-								->where('status', 0)
-								->with('votePoint');
-						}])
-						->get();
+			//(Step 2): get all candidates with (votes) for each category
+			foreach ($categories as $category) {
+				$candidates = Candidate::where('category_id', $category->ctid)
+					->with(['votes' => function ($query) use ($appVersion) {
+						$query->where('app_version_id', $appVersion->avid)
+							->where('status', 0)
+							->with('votePoint');
+					}])
+					->get();
 
-					//calculate the sum of all votes points for each candidates
-					foreach ($candidates as $candidate) {
-						//(step 3): count total verified votes for each candidates
-						$candidate->totalVerified = $this->voteService->countTotalVerifiedVotesByCandidate($candidate->cdid);
-						//(step 4): count total pending votes for each candidates
-						$candidate->totalPending = $this->voteService->countTotalPendingVotesByCandidate($candidate->cdid);
-						//(step 5): count total spam votes for each candidates
-						$candidate->totalSpam = $this->voteService->countTotalSpamVotesByCandidate($candidate->cdid);
-						//(step 6): count all votes for each candidates regardles of this status
-						$candidate->totalVotes = $this->voteService->countTotalVotesByCandidate($candidate->cdid);
-						//(step 7): calculate total amount for each candidates
-						$candidate->totalAmount = $this->voteService->calculateAmountVerifiedByCandidate($candidate->cdid);
-						//(step 8): calculate total vote points for each candidates
-						$candidate->totalPoints = $this->voteService->calculatePointsVerifiedByCandidate($candidate->cdid);
-					}
-
-					//(step 9): sort candidates by total vote points in descending order (highest to lowest points)
-					$candidates = $candidates->sortByDesc('totalPoints');
-
-					//(step 10): take only the specified number of top candidates
-					$topCandidatesByCategory[$category->name] = $candidates->take($limit);
+				//calculate the sum of all votes points for each candidates
+				foreach ($candidates as $candidate) {
+					//(step 3): count total verified votes for each candidates
+					$candidate->totalVerified = $this->voteService->countTotalVerifiedVotesByCandidate($candidate->cdid);
+					//(step 4): count total pending votes for each candidates
+					$candidate->totalPending = $this->voteService->countTotalPendingVotesByCandidate($candidate->cdid);
+					//(step 5): count total spam votes for each candidates
+					$candidate->totalSpam = $this->voteService->countTotalSpamVotesByCandidate($candidate->cdid);
+					//(step 6): count all votes for each candidates regardles of this status
+					$candidate->totalVotes = $this->voteService->countTotalVotesByCandidate($candidate->cdid);
+					//(step 7): calculate total amount for each candidates
+					$candidate->totalAmount = $this->voteService->calculateAmountVerifiedByCandidate($candidate->cdid);
+					//(step 8): calculate total vote points for each candidates
+					$candidate->totalPoints = $this->voteService->calculatePointsVerifiedByCandidate($candidate->cdid);
 				}
 
-				//(step 10): return the data
-				return $topCandidatesByCategory;
-			});
+				//(step 9): sort candidates by total vote points in descending order (highest to lowest points)
+				$candidates = $candidates->sortByDesc('totalPoints');
+
+				//(step 10): take only the specified number of top candidates
+				$topCandidatesByCategory[$category->name] = $candidates->take($limit);
+			}
+
+			//(step 10): return the data
+			return $topCandidatesByCategory;
+		});
 	}
 
 	private function hasChangesOccurred(array $data): bool {

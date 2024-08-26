@@ -13,22 +13,21 @@ use Illuminate\Support\Facades\DB;
 
 class VoteService {
 
-	public function getAllVotes(String $appVersionName) {
+	public function getAllVotes(string $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votes:' . $appVersion->avid, 60 * 60 * 24,
-			function () use ($appVersion) {
-				$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
-					->where('app_version_id', $appVersion->avid)
-					->orderBy('created_at', 'desc')
-					->skip(0)
-					->take(10)
-					->get();
+		return Cache::remember('votes:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion) {
+			$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
+				->where('app_version_id', $appVersion->avid)
+				->orderBy('created_at', 'desc')
+				->skip(0)
+				->take(10)
+				->get();
 
-				return $votes;
-			});
+			return $votes;
+		});
 	}
 
-	public function loadMoreVotes(String $appVersionName, int $limit, int $offset) {
+	public function loadMoreVotes(string $appVersionName, int $limit, int $offset) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
 			->where('app_version_id', $appVersion->avid)
@@ -40,7 +39,7 @@ class VoteService {
 		return $votes;
 	}
 
-	public function getOneVotes(String $voteId) {
+	public function getOneVotes(string $voteId) {
 		$vid = Decoder::decodeIds($voteId);
 		return Cache::remember('votesId:' . $vid, 60 * 60 * 24, function () use ($vid) {
 			$vote = Vote::with(['appVersion', 'candidate', 'votePoint'])->findOrFail($vid);
@@ -48,53 +47,50 @@ class VoteService {
 		});
 	}
 
-	public function getVotesByStatus(String $appVersionName, int $status) {
+	public function getVotesByStatus(string $appVersionName, int $status) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votesByStatus:' . $status, 60 * 60 * 24,
-			function () use ($appVersion, $status) {
-				$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
-					->where('app_version_id', $appVersion->avid)
-					->where('status', $status)
-					->orderBy('created_at', 'desc')
-					->get();
+		return Cache::remember('votesByStatus:' . $status, 60 * 60 * 24, function () use ($appVersion, $status) {
+			$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
+				->where('app_version_id', $appVersion->avid)
+				->where('status', $status)
+				->orderBy('created_at', 'desc')
+				->get();
 
-				return $votes;
-			});
+			return $votes;
+		});
 	}
 
-	public function getVotesBySearch(String $appVersionName, String $search) {
+	public function getVotesBySearch(string $appVersionName, string $search) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votesBySearch:' . $appVersion->avid, 60 * 60 * 24,
-			function () use ($appVersion, $search) {
-				$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
-					->where('app_version_id', $appVersion->avid)
-					->where(function ($query) use ($search) {
-						$query->where('referrence_no', 'like', '%' . $search . '%');
-					})
-					->orderBy('created_at', 'desc')
-					->get();
+		return Cache::remember('votesBySearch:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion, $search) {
+			$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
+				->where('app_version_id', $appVersion->avid)
+				->where(function ($query) use ($search) {
+					$query->where('referrence_no', 'like', '%' . $search . '%');
+				})
+				->orderBy('created_at', 'desc')
+				->get();
 
-				return $votes;
-			});
+			return $votes;
+		});
 	}
 
-	public function countAllVotesByStatus(String $appVersionName) {
+	public function countAllVotesByStatus(string $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votesPendingVerifiedSpamAmount:' . $appVersion->avid, 60 * 60 * 24,
-			function () use ($appVersion) {
-				$votes = Vote::with(['votePoint'])->where('app_version_id', $appVersion->avid)->get();
-				$counts = [
-					'success' => true,
-					'message' => 'success',
-					'verified' => 0,
-					'pending' => 0,
-					'totalAmount' => 0,
-					'totalVotes' => $votes->count(),
-					'spam' => 0,
-				];
+		return Cache::remember('votesPendingVerifiedSpamAmount:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion) {
+			$votes = Vote::with(['votePoint'])->where('app_version_id', $appVersion->avid)->get();
+			$counts = [
+				'success' => true,
+				'message' => 'success',
+				'verified' => 0,
+				'pending' => 0,
+				'totalAmount' => 0,
+				'totalVotes' => $votes->count(),
+				'spam' => 0,
+			];
 
-				foreach ($votes as $vote) {
-					switch ($vote->status) {
+			foreach($votes as $vote) {
+				switch ($vote->status) {
 					case 0: //verified
 						$counts['verified']++;
 						$counts['totalAmount'] += $vote->votePoint->amount;
@@ -110,11 +106,11 @@ class VoteService {
 
 					default:
 						break;
-					}
 				}
+			}
 
-				return $counts;
-			});
+			return $counts;
+		});
 	}
 
 	#TODO:////
@@ -178,7 +174,7 @@ class VoteService {
 				'updated_at' => data_get($data, 'updated_at', null),
 			]);
 
-			if (!$created) {
+			if(!$created) {
 				throw new CreateDataException('Failed to submit votes.', 422);
 			}
 
@@ -239,7 +235,7 @@ class VoteService {
 		});
 	}
 
-	public function deleteVote(String $voteId) {
+	public function deleteVote(string $voteId) {
 		$vid = Decoder::decodeIds($voteId);
 		$vote = Vote::findOrFail($vid);
 		return DB::transaction(function () use ($vote) {

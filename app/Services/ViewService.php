@@ -8,7 +8,7 @@ use CyrildeWit\EloquentViewable\Support\Period;
 
 class ViewService {
 	//count the views page unique base on its coockie stored in database
-	public function getPageViews(String $appVersionName) {
+	public function getPageViews(string $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		$totalPageViews = views($appVersion)
 			->remember()
@@ -19,7 +19,7 @@ class ViewService {
 	}
 
 	//count the views page per day
-	public function getPageViewsPerDay(String $appVersionName, int $limit) {
+	public function getPageViewsPerDay(string $appVersionName, int $limit) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		$endDate = Carbon::now();
 		$pageViewsPerDay = [];
@@ -29,7 +29,7 @@ class ViewService {
 			$formattedDate = $date->isoFormat('MMMM DD');
 
 			$viewsCount = views($appVersion)
-				->period(Period::create($date->toDateString(), $date->copy()->endOfDay()))
+				->period(Period::create($date->toDatestring(), $date->copy()->endOfDay()))
 				->remember()
 				->unique()
 				->count();

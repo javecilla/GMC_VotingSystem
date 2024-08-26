@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class TicketReportService {
-	public function loadMoreReports(String $appVersionName, int $limit, int $offset) {
+	public function loadMoreReports(string $appVersionName, int $limit, int $offset) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		return Cache::remember('ticketReportMore:' . $appVersion->avid, 60 * 60 * 24,
 			function () use ($appVersion, $limit, $offset) {
@@ -27,7 +27,7 @@ class TicketReportService {
 			});
 	}
 
-	public function getTicketReportsById(String $ticketReportId) {
+	public function getTicketReportsById(string $ticketReportId) {
 		$trid = Decoder::decodeIds($ticketReportId);
 		return Cache::remember('ticketReportId:' . $trid, 60 * 60 * 24,
 			function () use ($trid) {
@@ -39,7 +39,7 @@ class TicketReportService {
 			});
 	}
 
-	public function getTicketReportsByStatus(String $appVersionName, int $status) {
+	public function getTicketReportsByStatus(string $appVersionName, int $status) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		return Cache::remember('ticketReportStatus:' . $status, 60 * 60 * 24,
 			function () use ($appVersion, $status) {
@@ -53,7 +53,7 @@ class TicketReportService {
 			});
 	}
 
-	public function getTicketReportsBySearch(String $appVersionName, String $searchQuery) {
+	public function getTicketReportsBySearch(string $appVersionName, string $searchQuery) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		return Cache::remember('ticketReportSearch:' . $searchQuery, 60 * 60 * 24,
 			function () use ($appVersion, $searchQuery) {
@@ -70,7 +70,7 @@ class TicketReportService {
 			});
 	}
 
-	public function countAllTicketReportsByStatus(String $appVersionName) {
+	public function countAllTicketReportsByStatus(string $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		return Cache::remember('ticketReportCount:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion) {
 			$totalReportsNotFixed = TicketReport::where('app_version_id', $appVersion->avid)

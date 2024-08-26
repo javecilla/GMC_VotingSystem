@@ -71,7 +71,7 @@ class CandidateService {
 		$ctid = Decoder::decodeIds($categoryId);
 		$category = Category::findOrFail($ctid);
 
-		return Cache::remember('candidateCategory:' . $categoryId, 60 * 60 * 24, function () use ($appVersion, $category) {
+		return Cache::remember('candidateCategory:' . $category->ctid, 60 * 60 * 24, function () use ($appVersion, $category) {
 			$candidate = Candidate::where('app_version_id', $appVersion->avid)
 				->where('category_id', $category->ctid)
 				->orderBy('created_at', 'desc')

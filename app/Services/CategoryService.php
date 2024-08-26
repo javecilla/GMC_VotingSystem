@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class CategoryService {
 
-	public function getAllCategory(String $appVersionName) {
+	public function getAllCategory(string $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		return Cache::remember('categories:' . $appVersion->avid, 60 * 60 * 24,
 			function () use ($appVersion) {
@@ -64,7 +64,7 @@ class CategoryService {
 		});
 	}
 
-	public function deleteCategory(String $categoryId) {
+	public function deleteCategory(string $categoryId) {
 		$ctid = Decoder::decodeIds($categoryId);
 		$category = Category::findOrFail($ctid);
 		return DB::transaction(function () use ($category) {

@@ -74,8 +74,10 @@ class CandidateService {
 		return Cache::remember('candidateCategory:' . $category->ctid, 60 * 60 * 24, function () use ($appVersion, $category) {
 			$candidate = Candidate::where('app_version_id', $appVersion->avid)
 				->where('category_id', $category->ctid)
-				->orderBy('created_at', 'desc')
+				->orderBy('candidate_no', 'asc')
 				->get();
+
+			\Log::info(print_r($candidate, true));
 
 			return $candidate;
 		});

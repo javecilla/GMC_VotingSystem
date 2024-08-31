@@ -35,30 +35,30 @@ Route::middleware(['web'])->group(function () {
 				# Dashboard
 				Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
+				# Candidates Ranking
+				Route::get('/candidates/ranking', [CandidatesController::class, 'ranking'])->name('candidates.ranking');
+
+				# Votes Summary
+				Route::get('/votes/summary', [VotesController::class, 'summary'])->name('votes.summary');
+
 				# Votes Management
-				Route::get('/manage/votes', [VotesController::class, 'index'])
-					->name('votes.index');
+				Route::get('/manage/votes', [VotesController::class, 'index'])->name('votes.index');
 
 				# Candidates Management
-				Route::controller(CandidatesController::class)
-					->prefix('manage/candidates')->group(function () {
+				Route::controller(CandidatesController::class)->prefix('manage/candidates')->group(function () {
 					Route::get('/', 'index')->name('candidates.index');
 					Route::get('/{candidate}/show', 'show')->name('candidates.show');
 					Route::get('/create', 'create')->name('candidates.create');
 					Route::get('/{candidate}/edit', 'edit')->name('candidates.edit');
 				});
-				Route::get('/candidates/ranking', [CandidatesController::class, 'ranking'])
-					->name('candidates.ranking');
 
 				#TODO: (CRUD) Ticket Report
-				Route::controller(TicketReportController::class)
-					->prefix('/manage/ticket/reports')->group(function () {
+				Route::controller(TicketReportController::class)->prefix('/manage/ticket/reports')->group(function () {
 					Route::get('/', 'index')->name('reports.index');
 				});
 
 				# Configuration
-				Route::get('/configuration',
-					[ConfigurationController::class, 'index'])->name('configuration.index');
+				Route::get('/configuration', [ConfigurationController::class, 'index'])->name('configuration.index');
 
 				# Switching App Version
 				Route::get('/switching/version', [AppVersionController::class, 'show']);

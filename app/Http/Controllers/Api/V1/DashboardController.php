@@ -18,7 +18,7 @@ class DashboardController extends Controller {
 		protected ViewService $viewService,
 		protected CandidateService $candidateService) {}
 
-	public function countPendingVerifiedAmount(String $appVersionName) {
+	public function countPendingVerifiedAmount(string $appVersionName) {
 		try {
 			$vote = $this->voteService->countAllVotesByStatus($appVersionName);
 
@@ -32,7 +32,7 @@ class DashboardController extends Controller {
 		}
 	}
 
-	public function getRecentlyVoters(String $appVersionName, int $limit, int $offset) {
+	public function getRecentlyVoters(string $appVersionName, int $limit, int $offset) {
 		try {
 			$votes = $this->voteService->loadMoreVotes($appVersionName, $limit, $offset);
 
@@ -48,7 +48,7 @@ class DashboardController extends Controller {
 		}
 	}
 
-	public function getOverallRanking(String $appVersionName, int $limit) {
+	public function getOverallRanking(string $appVersionName, int $limit) {
 		try {
 			$candidates = $this->candidateService->getCandidatesWithMostVotes($appVersionName, $limit);
 
@@ -62,7 +62,7 @@ class DashboardController extends Controller {
 		}
 	}
 
-	public function countPageViewsPerDay(String $appVersionName, int $limit) {
+	public function countPageViewsPerDay(string $appVersionName, int $limit) {
 		try {
 			$views = $this->viewService->getPageViewsPerDay($appVersionName, $limit);
 

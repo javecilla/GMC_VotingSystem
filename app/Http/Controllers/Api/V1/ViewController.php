@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Response;
 class ViewController extends Controller {
 	public function __construct(protected ViewService $service) {}
 
-	public function count(String $appVersionName) {
+	public function count(string $appVersionName) {
 		try {
 			$views = $this->service->getPageViews($appVersionName);
 

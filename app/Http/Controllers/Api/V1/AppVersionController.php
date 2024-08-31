@@ -66,7 +66,7 @@ class AppVersionController extends Controller {
 		}
 	}
 
-	public function destroy(String $appVersionName, String $appVersionId): JsonResponse {
+	public function destroy(string $appVersionName, string $appVersionId): JsonResponse {
 		try {
 			$this->service->deleteAppVersion($appVersionId);
 

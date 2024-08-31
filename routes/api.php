@@ -55,8 +55,7 @@ Route::middleware('api')->group(function () {
 		Route::prefix('{version}')->group(function () {
 			Route::prefix('admin')->group(function () {
 				# Dashboard
-				Route::controller(DashboardController::class)
-					->prefix('dashboard')->group(function () {
+				Route::controller(DashboardController::class)->prefix('dashboard')->group(function () {
 					Route::get('/count/pending/verified/amount', 'countPendingVerifiedAmount');
 					Route::get('/get/recently/voters/{limit}/{offset}', 'getRecentlyVoters');
 					Route::get('/most/votes/candidates/{limit}', 'getOverallRanking');
@@ -64,14 +63,14 @@ Route::middleware('api')->group(function () {
 				});
 
 				# Votes Management
-				Route::controller(VotesController::class)
-					->prefix('/manage/votes')->group(function () {
+				Route::controller(VotesController::class)->prefix('/manage/votes')->group(function () {
 					Route::get('/all/records', 'getRecordsAll');
 					Route::get('/limit/records/{limit}/{offset}', 'getRecordsLimit');
 					Route::get('/id/{votes}', 'getRecordsOne');
 					Route::get('/status/{status}', 'getRecordsByStatus');
 					Route::get('/search/{search}', 'getRecordsBySearch');
 					Route::get('/count/pending/verified/spam', 'countPendingVerifiedSpam');
+					Route::get('/summary', 'getTotalOfSummaryVotes');
 					Route::post('/store', 'storeAdmin');
 					Route::patch('/id/{votes}/update', 'update');
 					Route::patch('/id/{votes}/status/{status}/update', 'updateByStatus');
@@ -79,8 +78,7 @@ Route::middleware('api')->group(function () {
 				});
 
 				# Candidates Management
-				Route::controller(CandidatesController::class)
-					->prefix('manage/candidates')->group(function () {
+				Route::controller(CandidatesController::class)->prefix('manage/candidates')->group(function () {
 					Route::get('/all/records', 'getRecordsAll');
 					Route::get('/limit/records/{limit}/{offset}', 'getRecordsLimit');
 					Route::get('/id/{candidate}', 'getRecordsOne');
@@ -94,8 +92,7 @@ Route::middleware('api')->group(function () {
 				});
 
 				#Ticket Report
-				Route::controller(TicketReportController::class)
-					->prefix('/manage/ticket/reports')->group(function () {
+				Route::controller(TicketReportController::class)->prefix('/manage/ticket/reports')->group(function () {
 					Route::get('/limit/records/{limit}/{offset}', 'getRecordsLimit');
 					Route::get('/count/not/fix', 'countNotFixReport');
 					Route::get('/status/{status}', 'getRecordsByStatus');
@@ -106,8 +103,7 @@ Route::middleware('api')->group(function () {
 				# Configuration
 				Route::prefix('configuration')->group(function () {
 					// App Versions
-					Route::controller(AppVersionController::class)
-						->prefix('app-versions')->group(function () {
+					Route::controller(AppVersionController::class)->prefix('app-versions')->group(function () {
 						Route::get('/all/records', 'getRecordsAll');
 						Route::post('/store', 'store');
 						Route::patch('/id/{appVersion}/update', 'update');
@@ -115,8 +111,7 @@ Route::middleware('api')->group(function () {
 					});
 
 					// School/Campus
-					Route::controller(CampusController::class)
-						->prefix('campus')->group(function () {
+					Route::controller(CampusController::class)->prefix('campus')->group(function () {
 						Route::get('/all/records', 'getRecordsAll');
 						Route::post('/store', 'store');
 						Route::patch('/id/{campus}/update', 'update');
@@ -124,8 +119,7 @@ Route::middleware('api')->group(function () {
 					});
 
 					// Categories
-					Route::controller(CategoryController::class)
-						->prefix('category')->group(function () {
+					Route::controller(CategoryController::class)->prefix('category')->group(function () {
 						Route::get('/all/records', 'getRecordsAll');
 						Route::post('/store', 'store');
 						Route::patch('/id/{category}/update', 'update');
@@ -133,8 +127,7 @@ Route::middleware('api')->group(function () {
 					});
 
 					// Vote Points
-					Route::controller(VotePointController::class)
-						->prefix('vote-points')->group(function () {
+					Route::controller(VotePointController::class)->prefix('vote-points')->group(function () {
 						Route::get('/all/records', 'getRecordsAll');
 						Route::post('/store', 'store');
 						Route::patch('/id/{votePoint}/update', 'update');

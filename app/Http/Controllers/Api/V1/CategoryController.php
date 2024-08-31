@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Response;
 class CategoryController extends Controller {
 	public function __construct(protected CategoryService $service) {}
 
-	public function getRecordsAll(String $appVersionName) {
+	public function getRecordsAll(string $appVersionName) {
 		try {
 			$category = $this->service->getAllCategory($appVersionName);
 
@@ -64,7 +64,7 @@ class CategoryController extends Controller {
 		}
 	}
 
-	public function destroy(String $appVersionName, String $categoryId): JsonResponse {
+	public function destroy(string $appVersionName, string $categoryId): JsonResponse {
 		try {
 			$this->service->deleteCategory($categoryId);
 

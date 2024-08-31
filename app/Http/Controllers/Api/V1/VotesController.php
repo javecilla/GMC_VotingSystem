@@ -25,7 +25,7 @@ class VotesController extends Controller {
 		protected VoteService $service,
 		protected RecaptchaService $recaptchaService) {}
 
-	public function getRecordsAll(String $appVersionName) {
+	public function getRecordsAll(string $appVersionName) {
 		try {
 			$vote = $this->service->getAllVotes($appVersionName);
 
@@ -39,7 +39,7 @@ class VotesController extends Controller {
 		}
 	}
 
-	public function getRecordsLimit(String $appVersionName, int $limit, int $offset) {
+	public function getRecordsLimit(string $appVersionName, int $limit, int $offset) {
 		try {
 			$vote = $this->service->loadMoreVotes($appVersionName, $limit, $offset);
 
@@ -53,7 +53,7 @@ class VotesController extends Controller {
 		}
 	}
 
-	public function getRecordsOne(String $appVersionName, String $voteId) {
+	public function getRecordsOne(string $appVersionName, string $voteId) {
 		try {
 			$vote = $this->service->getOneVotes($voteId);
 
@@ -67,7 +67,7 @@ class VotesController extends Controller {
 		}
 	}
 
-	public function getRecordsByStatus(String $appVersionName, int $status) {
+	public function getRecordsByStatus(string $appVersionName, int $status) {
 		try {
 			$vote = $this->service->getVotesByStatus($appVersionName, $status);
 
@@ -81,7 +81,7 @@ class VotesController extends Controller {
 		}
 	}
 
-	public function getRecordsBySearch(String $appVersionName, String $search) {
+	public function getRecordsBySearch(string $appVersionName, string $search) {
 		try {
 			$vote = $this->service->getVotesBySearch($appVersionName, $search);
 
@@ -95,10 +95,23 @@ class VotesController extends Controller {
 		}
 	}
 
-	public function countPendingVerifiedSpam(String $appVersionName) {
+	public function countPendingVerifiedSpam(string $appVersionName) {
 		try {
 			$vote = $this->service->countAllVotesByStatus($appVersionName);
 			return Response::json($vote);
+		} catch (ModelNotFoundException $e) {
+			return Response::json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Throwable $e) {
+			return Response::json(['success' => false, 'message' => $e->getMessage()]);
+		} catch (\Exception $e) {
+			return Response::json(['success' => false, 'message' => 'An error occured. Code[VID]']);
+		}
+	}
+
+	public function getTotalOfSummaryVotes(string $appVersionName) {
+		try {
+			$votes = $this->service->getTotalOfSummaryVotesCandidates($appVersionName);
+			return Response::json($votes);
 		} catch (ModelNotFoundException $e) {
 			return Response::json(['success' => false, 'message' => $e->getMessage()]);
 		} catch (\Throwable $e) {
@@ -166,7 +179,7 @@ class VotesController extends Controller {
 		}
 	}
 
-	public function destroy(String $appVersionName, String $voteId): JsonResponse {
+	public function destroy(string $appVersionName, string $voteId): JsonResponse {
 		try {
 			$this->service->deleteVote($voteId);
 

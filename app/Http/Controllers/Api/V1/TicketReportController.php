@@ -22,7 +22,7 @@ class TicketReportController extends Controller {
 		protected RecaptchaService $recaptchaService,
 		protected EmailService $emailService) {}
 
-	public function getRecordsLimit(String $appVersionName, int $limit, int $offset) {
+	public function getRecordsLimit(string $appVersionName, int $limit, int $offset) {
 		try {
 			$ticketReport = $this->ticketReportService->loadMoreReports($appVersionName, $limit, $offset);
 
@@ -36,7 +36,7 @@ class TicketReportController extends Controller {
 		}
 	}
 
-	public function getRecordsOne(String $appVersionName, String $ticketReportId) {
+	public function getRecordsOne(string $appVersionName, string $ticketReportId) {
 		try {
 			$ticketReport = $this->ticketReportService->getTicketReportsById($ticketReportId);
 
@@ -50,7 +50,7 @@ class TicketReportController extends Controller {
 		}
 	}
 
-	public function getRecordsByStatus(String $appVersionName, int $status) {
+	public function getRecordsByStatus(string $appVersionName, int $status) {
 		try {
 			$ticketReport = $this->ticketReportService->getTicketReportsByStatus($appVersionName, $status);
 
@@ -64,7 +64,7 @@ class TicketReportController extends Controller {
 		}
 	}
 
-	public function getRecordsBySearch(String $appVersionName, String $search) {
+	public function getRecordsBySearch(string $appVersionName, string $search) {
 		try {
 			$ticketReport = $this->ticketReportService->getTicketReportsBySearch($appVersionName, $search);
 
@@ -78,7 +78,7 @@ class TicketReportController extends Controller {
 		}
 	}
 
-	public function countNotFixReport(String $appVersionName): JsonResponse {
+	public function countNotFixReport(string $appVersionName): JsonResponse {
 		try {
 			$totalReports = $this->ticketReportService->countAllTicketReportsByStatus($appVersionName);
 

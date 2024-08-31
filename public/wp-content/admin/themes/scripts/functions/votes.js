@@ -4,7 +4,7 @@ const VOTES_URI = 'admin/manage/votes';
 const VOTES_INDEX_URI = $('#indexUri').data('iurl');
 // APP_VERSION & CSRF_TOKEN (variable)-> wp-content/admin/themes/scripts/main.js
 
-const getAllVotes = async () => {
+const getAllVotes = () => {
 	$.ajax({
 		url: `/api/${APP_VERSION}/${VOTES_URI}/all/records`,
 		method: 'get',
@@ -24,7 +24,7 @@ const getAllVotes = async () => {
 	});
 };
 
-const loadMoreVotesRecord = async (limit, offset) => {
+const loadMoreVotesRecord = (limit, offset) => {
 	$.ajax({
 		url: `/api/${APP_VERSION}/${VOTES_URI}/limit/records/${limit}/${offset}`,
 		method: 'get',
@@ -55,7 +55,7 @@ const loadMoreVotesRecord = async (limit, offset) => {
 	});
 };
 
-const getOneVotes = async (votes) => {
+const getOneVotes = (votes) => {
 	$.ajax({
 		url: `/api/${APP_VERSION}/${VOTES_URI}/id/${votes}`,
 		method: 'get',
@@ -72,7 +72,7 @@ const getOneVotes = async (votes) => {
 	});
 };
 
-const countAllVotes = async () => {
+const countAllVotes = () => {
 	$.ajax({
 		url: `/api/${APP_VERSION}/${VOTES_URI}/count/pending/verified/spam`,
 		method: 'get',
@@ -90,7 +90,7 @@ const countAllVotes = async () => {
 	});
 };
 
-const filterVotesByStatus = async (status) => {
+const filterVotesByStatus = (status) => {
 	$.ajax({
 		url: `/api/${APP_VERSION}/${VOTES_URI}/status/${status}`,
 		method: 'get',
@@ -128,7 +128,7 @@ const filterVotesByStatus = async (status) => {
 	});
 };
 
-const filterVotesBySearch = async (search) => {
+const filterVotesBySearch = (search) => {
 	$.ajax({
 		url: `/api/${APP_VERSION}/${VOTES_URI}/search/${search}`,
 		method: 'get',
@@ -144,7 +144,45 @@ const filterVotesBySearch = async (search) => {
 	});
 };
 
-const createNewVote = async (dataForm) => {
+const getTotalOfSummaryVotes = () => {
+	$.ajax({
+		url: `/api/${APP_VERSION}/${VOTES_URI}/summary`,
+		method: 'get',
+		dataType: 'json',
+		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+		success: (data) => {
+			let summaryOfVotesData = ``;
+			if(typeof data === 'object' && data !== null && data.length  > 0) {
+				Object.keys(data).forEach(key => {
+					summaryOfVotesData += `
+						<tr>
+							<td>${data[key].candidate_no}</td>
+							<td>${data[key].category}</td>
+							<td>${data[key].candidate_name}</td>
+							<td>${data[key].total_current_points}</td>
+						</tr>
+					`;
+				});
+			} else {
+				summaryOfVotesData += `
+					<tr>
+			  		<td colspan="4">
+							<h4 class="text-center text-secondary mt-2">{{ __('No Record Found.') }} <i class="fa-solid fa-face-sad-tear"></i></h4>
+						</td>
+					</tr>
+				`;
+			}
+
+			$('#summaryOfVotesData').html(summaryOfVotesData);
+		},
+		error: (xhr, status, error) => {
+			const response = JSON.parse(xhr.responseText);
+			toastr.error(response.message);
+		}
+	});
+};
+
+const createNewVote = (dataForm) => {
 	runSpinner();
 	$.ajax({
 		url: `/api/${APP_VERSION}/${VOTES_URI}/store`,
@@ -174,7 +212,7 @@ const createNewVote = async (dataForm) => {
 	});
 };
 
-const updateVotes = async (votes, dataForm) => {
+const updateVotes = (votes, dataForm) => {
 	runSpinner();
 	$.ajax({
 		url: `/api/${APP_VERSION}/${VOTES_URI}/id/${votes}/update`,
@@ -206,7 +244,7 @@ const updateVotes = async (votes, dataForm) => {
 	});
 };
 
-const updateVotesByStatus = async (votes, status) => {
+const updateVotesByStatus = (votes, status) => {
 	$.ajax({
 		url: `/api/${APP_VERSION}/${VOTES_URI}/id/${votes}/status/${status}/update`,
 		method: 'patch',
@@ -233,7 +271,7 @@ const updateVotesByStatus = async (votes, status) => {
 	});
 };
 
-const deleteVotes = async (votes) => {
+const deleteVotes = (votes) => {
 	$.ajax({
 		url: `/api/${APP_VERSION}/${VOTES_URI}/id/${votes}/destroy`,
 		method: 'delete',

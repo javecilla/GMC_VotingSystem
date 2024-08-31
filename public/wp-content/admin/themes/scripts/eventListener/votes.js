@@ -2,10 +2,12 @@
 	"use-strict";
 
 	$(window).on('load', function() {
-
-
 		setTimeout(function() {
 			countAllVotes();
+		}, 500);
+
+		setTimeout(function() {
+			getTotalOfSummaryVotes();
 		}, 1000);
 
 		setTimeout(function() {

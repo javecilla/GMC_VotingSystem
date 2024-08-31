@@ -20,7 +20,7 @@ class VotePointController extends Controller {
 
 	public function __construct(protected VotePointService $service) {}
 
-	public function getRecordsAll(String $appVersionName) {
+	public function getRecordsAll(string $appVersionName) {
 		try {
 			$votePoint = $this->service->getAllVotePoints($appVersionName);
 
@@ -34,7 +34,7 @@ class VotePointController extends Controller {
 		}
 	}
 
-	public function getRecordsOne(String $appVersionName, String $votePointsId) {
+	public function getRecordsOne(string $appVersionName, string $votePointsId) {
 		try {
 			$votePoint = $this->service->getOneVotePoints($votePointsId);
 
@@ -78,7 +78,7 @@ class VotePointController extends Controller {
 		}
 	}
 
-	public function destroy(String $appVersionName, String $votePointsId): JsonResponse {
+	public function destroy(string $appVersionName, string $votePointsId): JsonResponse {
 		try {
 			$this->service->deleteVotePoints($votePointsId);
 

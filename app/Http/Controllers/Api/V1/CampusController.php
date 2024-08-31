@@ -20,7 +20,7 @@ class CampusController extends Controller {
 
 	public function __construct(protected CampusService $service) {}
 
-	public function getRecordsAll(String $appVersionName) {
+	public function getRecordsAll(string $appVersionName) {
 		try {
 			$campus = $this->service->getAllCampus($appVersionName);
 
@@ -64,7 +64,7 @@ class CampusController extends Controller {
 		}
 	}
 
-	public function destroy(String $appVersion, String $campusId): JsonResponse {
+	public function destroy(string $appVersion, string $campusId): JsonResponse {
 		try {
 			$this->service->deleteCampus($campusId);
 

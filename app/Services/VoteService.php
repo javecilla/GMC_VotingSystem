@@ -156,6 +156,43 @@ class VoteService {
 		return $totalVotePoints;
 	}
 
+	public function getTotalOfSummaryVotesCandidates(string $appVersionName) {
+    // Retrieve the specific app version by name
+    $appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
+
+    // Fetch the summarized vote points for each candidate
+    $summaryCandidatesVotes = Vote::where('votes.app_version_id', $appVersion->avid) // Specify 'votes' table explicitly
+        ->where('votes.status', 0) // Filter only verified votes
+        ->join('candidates', 'votes.candidate_id', '=', 'candidates.cdid')
+        ->join('categories', 'candidates.category_id', '=', 'categories.ctid')
+        ->join('vote_points', 'votes.vote_points_id', '=', 'vote_points.vpid')
+        ->groupBy([
+            'votes.candidate_id',        // Group by candidate ID
+            'candidates.candidate_no',   // Group by candidate number
+            'categories.name',           // Group by category name
+            'candidates.name'            // Group by candidate name
+        ])
+        ->selectRaw('
+            candidates.candidate_no as candidate_no,
+            categories.name as category,
+            candidates.name as candidate_name,
+            SUM(vote_points.point) as total_current_points
+        ')
+        ->get()
+        ->map(function($item) {
+            return [
+                'candidate_no' => $item->candidate_no,
+                'category' => $item->category,
+                'candidate_name' => $item->candidate_name,
+                'total_current_points' => $item->total_current_points,
+            ];
+        });
+
+    return $summaryCandidatesVotes;
+	}
+
+
+
 	public function createNewVote(array $data) {
 		$appVersion = AppVersion::where('name', $data['app_version_name'])->firstOrFail();
 		return DB::transaction(function () use ($appVersion, $data) {

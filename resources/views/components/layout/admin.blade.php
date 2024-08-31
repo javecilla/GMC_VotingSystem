@@ -77,6 +77,11 @@
 	        	<i class="fas fa-sort-amount-up"></i>&nbsp; <span>{{ __('Candidates Ranking') }}</span>
 	        </li></a>
 
+	        <a href="{{ route('votes.summary', ['version' => request()->route('version')]) }}"
+	        	class="nav-link {{ Str::contains(request()->getRequestUri(), '/votes/summary') ? 'active' : ''}}">
+	        	<li><i class="fa-solid fa-file"></i>&nbsp; <span>{{ __('Summary') }}</span></li>
+	        </a>
+
 	        <a href="{{ route('votes.index', ['version' => request()->route('version')]) }}"
 	        	class="nav-link {{ Str::contains(request()->getRequestUri(), '/manage/votes') ? 'active' : ''}}">
 	        	<li><i class="fas fa-database"></i>&nbsp; <span>{{ __('Votes Management') }}</span></li>

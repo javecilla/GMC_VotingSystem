@@ -12,18 +12,6 @@ use App\Http\Controllers\App\Auth\SessionController;
 use App\Http\Controllers\App\Guest\ViewController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/dev', function (){
-	Artisan::call('optimize:clear');
-  // Artisan::call('route:clear');
-  // Artisan::call('cache:clear');
-  // Artisan::call('config:clear');
-  // Artisan::call('config:cache');
-
-	Artisan::call('env:encrypt');
-	Artisan::call('key:generate');
-  Artisan::call('storage:link');
-});
-
 Route::middleware(['web'])->group(function () {
 	/*
 		|--------------------------------------------------------------------------
@@ -32,9 +20,7 @@ Route::middleware(['web'])->group(function () {
 	*/
 	Route::middleware(['guest'])->group(function () {
 		Route::get('/', [ViewController::class, 'main'])->name('main.page');
-		Route::prefix('{title}')->group(function () {
-			Route::get('/candidates', [ViewController::class, 'index'])->name('index.page');
-		});
+		Route::get('/candidates/{title}', [ViewController::class, 'index'])->name('index.page');
 		Route::get('/auth/login', [LoginController::class, 'create'])->name('login.create');
 	});
 

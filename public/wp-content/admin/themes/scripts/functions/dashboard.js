@@ -158,7 +158,7 @@ const displayRecentlyVotes = (data) => {
 				</td>
 				<td>${boldLastPart(data[key].referrence_no)}</td>
 				<td>₱ ${data[key].votePoint.amount}</td>
-				<td>${data[key].email}</td>
+				<td>${data[key].contact_no}</td>
 				<td>${data[key].created_at}</td>
 			</tr>`;
 		});

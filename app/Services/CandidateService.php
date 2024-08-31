@@ -77,8 +77,6 @@ class CandidateService {
 				->orderBy('candidate_no', 'asc')
 				->get();
 
-			\Log::info(print_r($candidate, true));
-
 			return $candidate;
 		});
 	}

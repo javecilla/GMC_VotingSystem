@@ -91,9 +91,9 @@
 						  			<thead>
 						  				<tr>
 						  					<th>Status</th>
-						  					<th>References no.</th>
+						  					<th>References No.</th>
 						  					<th>Payment</th>
-						  					<th>Email</th>
+						  					<th>Contact No.</th>
 						  					<th>Date and Time</th>
 						  				</tr>
 						  			</thead>

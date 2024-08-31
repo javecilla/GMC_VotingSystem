@@ -1,19 +1,17 @@
 (function($) {
 	"use-strict";
 
-	$(window).on('load', function() {
-		setTimeout(function() {
-			countAllVotes();
-		}, 500);
+	setTimeout(function() {
+		countAllVotes();
+	}, 500);
 
-		setTimeout(function() {
-			getTotalOfSummaryVotes();
-		}, 1000);
+	setTimeout(function() {
+		getTotalOfSummaryVotes();
+	}, 1000);
 
-		setTimeout(function() {
-			getAllVotes();
-		}, 2000);
-	});
+	setTimeout(function() {
+		getAllVotes();
+	}, 2000);
 
 	$(document).on('click', '.updateStatusBtn', function() {
 		const voteId = $(this).data('id');

@@ -31,6 +31,7 @@ class VoteObserver {
 		Cache::forget('votes:' . $vote->app_version_id);
 		//Cache::forget('votesMore:' . $vote->app_version_id);
 		Cache::forget('votesId:' . $vote->vid);
+		\Log::info('Observer FORGET: votesByStatus:' . $vote->status);
 		Cache::forget('votesByStatus:' . $vote->status);
 		Cache::forget('votesBySearch:' . $vote->app_version_id);
 		Cache::forget('votesPendingVerifiedSpamAmount:' . $vote->app_version_id);

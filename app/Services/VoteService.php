@@ -49,15 +49,13 @@ class VoteService {
 
 	public function getVotesByStatus(string $appVersionName, int $status) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votesByStatus:' . $status, 60 * 60 * 24, function () use ($appVersion, $status) {
-			$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
-				->where('app_version_id', $appVersion->avid)
-				->where('status', $status)
-				->orderBy('created_at', 'desc')
-				->get();
+		$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
+			->where('app_version_id', $appVersion->avid)
+			->where('status', $status)
+			->orderBy('created_at', 'desc')
+			->get();
 
-			return $votes;
-		});
+		return $votes;
 	}
 
 	public function getVotesBySearch(string $appVersionName, string $search) {

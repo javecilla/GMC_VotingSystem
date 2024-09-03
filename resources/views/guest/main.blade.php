@@ -3,7 +3,7 @@
 		<div class="text-center container">
 			<div class="h-text-content">
 				<div class="inner-text-content">
-					<label class="h-label-text text-muted"><span id="countdown">--</span></label>
+					<label class="h-label-text gradient-blue-text"><span id="countdown">GMCOVS v1.4</span></label>
 			    <h1 class="main-header-title gradient-blue-text" id="title-vote">Buwan ng Wikang Pambansa: Lakan, Lakambini at Lakandyosa 2024</h1>
 					<label class="h-sub-text" id="subtitle-vote">Your vote counts, your vote matters, make it heard!</label>
 				</div>
@@ -14,17 +14,15 @@
 	      <a href="javascript:void(0)" class="h-button btn btn-light gap-3 text-muted border-0" style="cursor: no-drop!important;">
 	        {{ __('Read More About This Event') }}
 	      </a>
-
-			    <a id="button-vote" @if(Route::has('index.page'))
-						href="{{ route('index.page', Str::slug(env('APP_VOTING_NAME'))) }}"
-
+			  <a id="button-vote"
+			  		@if(Route::has('index.page'))
+			  			href="{{ route('index.page', Str::slug(env('APP_VOTING_NAME'))) }}"
 						@else
-						href="javascript:void(0)"
-			    @endif   class="h-button btn btn-primary text-white">
-			        {{ __('Cast Your Vote') }} <i class="fa-solid fa-arrow-right"></i>
-			    </a>
-
-
+							href="javascript:void(0)"
+			   		@endif
+			   		class="h-button btn btn-primary text-white">
+			      {{ __('Cast Your Vote') }} <i class="fa-solid fa-arrow-right"></i>
+			   </a>
 	    </div>
 	 	</div>
   </section>

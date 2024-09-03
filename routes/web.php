@@ -20,7 +20,7 @@ Route::middleware(['web'])->group(function () {
 	*/
 	Route::middleware(['guest'])->group(function () {
 		Route::get('/', [ViewController::class, 'main'])->name('main.page');
-		// Route::get('/candidates/{title}', [ViewController::class, 'index'])->name('index.page');
+		Route::get('/candidates/{title}', [ViewController::class, 'index'])->name('index.page');
 		Route::get('/auth/login', [LoginController::class, 'create'])->name('login.create');
 	});
 

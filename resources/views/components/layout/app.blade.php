@@ -12,7 +12,7 @@
   <meta name="robots" content="index, follow"/>
   <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
   <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"/>
-  <meta name="description" content="@isset($description) {{ $description }} | @endisset {{ env('APP_NAME') }} {{ env('APP_VERSION') }}" />
+  <meta name="description" content="Golden Minds Colleges Online Voting System! Our journey began in 2023 when we launched our first online voting system for Santa Maria Teen Model 2023, followed by Lakan, Lakambini, and Lakandyosa 2023. Since then, we have been committed to providing a seamless and reliable platform for democratic participation." />
   <meta name="abstract" content="Official Voting System of Golden Minds Bulacan"  />
   <meta name="copyright" content="Golden Minds Bulacan"  />
   <meta name='Classification' content='Website'/>
@@ -65,6 +65,17 @@
 	<link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/app.css?v=1.4') }}" defer/>
 
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+  @production
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WTRD8NDQ');</script>
+<!-- End Google Tag Manager -->
+  @endproduction
 </head>
 <body>
 	<header id="header" class="header-content">
@@ -167,6 +178,13 @@
       <i class="fa-solid fa-arrow-up btt-icon"></i>
     </a>
   </div>
+
+      @production
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTRD8NDQ"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+    @endproduction
 
   <script src="{{ asset('/wp-plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
  	<script src="{{ asset('/wp-plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script>

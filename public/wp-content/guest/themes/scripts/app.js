@@ -1,6 +1,83 @@
 (function($) {
 	"use-strict";
+// Set the countdown duration in seconds (e.g., 30 minutes = 1800 seconds)
+    const countdownDuration = 1800; // 30 minutes
 
+    // Function to get or set the countdown end time
+    function getEndTime() {
+        const now = Math.floor(Date.now() / 1000); // Current time in seconds
+        let endTime = localStorage.getItem('countdownEndTime');
+
+        // If end time is not set, calculate and store it
+        if (!endTime) {
+            endTime = now + countdownDuration;
+            localStorage.setItem('countdownEndTime', endTime);
+        }
+
+        return parseInt(endTime, 10);
+    }
+
+    // Function to start the countdown
+    function startCountdown() {
+        const endTime = getEndTime();
+        let remainingTime = endTime - Math.floor(Date.now() / 1000);
+
+        // Update countdown every second
+        const timer = setInterval(function () {
+            remainingTime = endTime - Math.floor(Date.now() / 1000);
+
+            if (remainingTime <= 0) {
+                clearInterval(timer);
+                disableVoting(); // Disable voting when the timer ends
+                return;
+            }
+
+            // Calculate hours, minutes, and seconds
+            const hours = Math.floor(remainingTime / 3600);
+            const minutes = Math.floor((remainingTime % 3600) / 60);
+            const seconds = remainingTime % 60;
+
+            // Format the time as HH:MM:SS
+            $('#countdown').text(
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+            ).removeClass('text-muted').addClass('text-danger');
+        }, 1000);
+    }
+
+    // Function to handle disabling of voting buttons and updating UI elements when the countdown ends
+function disableVoting() {
+
+
+    // Update the countdown timer to show that the voting period has ended
+    $('#countdown').removeClass('text-muted').addClass('text-danger').text('00:00:00');
+
+    // Update the main title to indicate that voting is now closed
+    $('#title-vote').removeClass('gradient-blue-text').addClass('gradient-dark-text').text('The system will no longer accept any further votes.');
+
+    // Update the subtitle to notify users that no further votes will be accepted
+    $('#subtitle-vote').html('Thank you for participating! The voting period concluded on <b>September 02, 2024, at 12:59 PM</b>. No additional votes can be submitted at this time.');
+
+    // Optional: Hide the "Cast Your Vote" button if needed
+    // $('.h-button.btn-primary').hide();
+
+    // Update the voting button appearance and disable it to prevent further clicks
+    $('.h-button.btn-primary')
+        .removeClass('btn-primary') // Remove the active voting button styles
+        .addClass('btn-danger')     // Add styles to indicate the button is disabled
+        .attr('disabled', true)                // Disable the button
+        .css('pointer-events', 'none')          // Change the cursor to indicate the button is not clickable
+        .off('click')                          // Remove any click event handlers
+        .text('Voting is Now Closed');                // Update the button text to reflect that voting is closed
+}
+
+
+    // Start the countdown
+    startCountdown();
+
+    // Check if voting should be disabled on page load
+    if (getEndTime() <= Math.floor(Date.now() / 1000)) {
+        disableVoting();
+    }
 	const validateReportForm = (name, email, message) => {
 		let isValid = true;
 

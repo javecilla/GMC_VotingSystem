@@ -3,7 +3,7 @@
 		<div class="text-center container">
 			<div class="h-text-content">
 				<div class="inner-text-content">
-					<label class="h-label-text text-muted"><span id="countdown"><i class="fas fa-spinner fa-spin fs-4"></i></span></label>
+					<label class="h-label-text text-muted"><span id="countdown">--</span></label>
 			    <h1 class="main-header-title gradient-blue-text" id="title-vote">Buwan ng Wikang Pambansa: Lakan, Lakambini at Lakandyosa 2024</h1>
 					<label class="h-sub-text" id="subtitle-vote">Your vote counts, your vote matters, make it heard!</label>
 				</div>
@@ -15,12 +15,12 @@
 	        {{ __('Read More About This Event') }}
 	      </a>
 
-			    <a @if(Route::has('index.page'))
+			    <a id="button-vote" @if(Route::has('index.page'))
 						href="{{ route('index.page', Str::slug(env('APP_VOTING_NAME'))) }}"
 
 						@else
 						href="javascript:void(0)"
-			    @endif  class="h-button btn btn-primary text-white">
+			    @endif   class="h-button btn btn-primary text-white">
 			        {{ __('Cast Your Vote') }} <i class="fa-solid fa-arrow-right"></i>
 			    </a>
 

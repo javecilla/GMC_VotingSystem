@@ -1,7 +1,7 @@
 (function($) {
 	"use-strict";
 // Set the countdown duration in seconds (e.g., 30 minutes = 1800 seconds)
-    const countdownDuration = 1800; // 30 minutes
+    const countdownDuration = 10;
 
     // Function to get or set the countdown end time
     function getEndTime() {
@@ -55,13 +55,13 @@ function disableVoting() {
     $('#title-vote').removeClass('gradient-blue-text').addClass('gradient-dark-text').text('The system will no longer accept any further votes.');
 
     // Update the subtitle to notify users that no further votes will be accepted
-    $('#subtitle-vote').html('Thank you for participating! The voting period concluded on <b>September 02, 2024, at 12:59 PM</b>. No additional votes can be submitted at this time.');
+    $('#subtitle-vote').html('Thank you for participating! The voting period concluded on <b>September 02, 2024, at 12:59 PM</b>. No additional votes can be submitted at this time.<br/><br/>Please stay tuned for the announcement of the winners of the online voting system.');
 
     // Optional: Hide the "Cast Your Vote" button if needed
     // $('.h-button.btn-primary').hide();
 
     // Update the voting button appearance and disable it to prevent further clicks
-    $('.h-button.btn-primary')
+    $('#button-vote')
         .removeClass('btn-primary') // Remove the active voting button styles
         .addClass('btn-danger')     // Add styles to indicate the button is disabled
         .attr('disabled', true)                // Disable the button

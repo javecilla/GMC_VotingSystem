@@ -109,12 +109,12 @@
 		    clearBrowserData();
 		}
 
-    // Start the countdown
-    startCountdown();
+    // // Start the countdown
+    // startCountdown();
 
-    if (getEndTime() <= Math.floor(Date.now() / 1000)) {
-        disableVoting();
-    }
+    // if (getEndTime() <= Math.floor(Date.now() / 1000)) {
+    //     disableVoting();
+    // }
 
 	const validateReportForm = (name, email, message) => {
 		let isValid = true;

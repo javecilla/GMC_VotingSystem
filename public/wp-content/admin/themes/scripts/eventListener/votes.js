@@ -50,7 +50,8 @@
 
 	$(document).on('click', '.allVotesBtn', function() {
 		$('#activeFilterVotes').val('');
-		getAllVotes();
+		loadMoreVotesRecord(limit, offset);
+		writeURI('page', page);
 		countAllVotes();
 	});
 

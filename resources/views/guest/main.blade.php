@@ -113,7 +113,7 @@
 	      	<div class="card h-100 p-5 border-0 shadow rounded-4 card-faq wow fadeInUp">
 		        <h3 class="fs-2 sub-text-faq">{{ __('When is the Deadline for Online Voting?') }}</h3>
 		        <p class="description-text-faq">
-		        	 {{ __('Online voting for Lakan, Lakambini at Lakandyosa 2024 will conclude on September 03, 2024, at 12:59 PM. Please note that the system will no longer accept any further votes after this specified deadline.') }}
+		        	 {{ __('Online voting for Lakan, Lakambini at Lakandyosa 2024 will conclude on September 03, 2024, at 12:59 AM. Please note that the system will no longer accept any further votes after this specified deadline.') }}
 		      	</p>
 	      	</div>
 	      </div>

@@ -125,21 +125,6 @@
 					   	</ul>
 					    <div class="form-step" id="stepOne" data-step="1" data-mode="fill-up" >
 								<div class="row mb-2">
-									<label for="email" class="col-sm-3 col-form-label fw-bold">Contact Number</label>
-									<div class="col-sm-9">
-									  <div class="row">
-											<div class="col-12 visually-hidden">
-												<input type="text" id="email" class="form-control email" value="automated@gmail.com" placeholder="your@gmail.com" aria-label="email">
-												<div class="invalid-feedback emailError"></div>
-											</div>
-											<div class="col-12">
-												<input type="number" id="contactno" class="contactno form-control" placeholder="09*******00" aria-label="contactno">
-												<div class="invalid-feedback contactnoError"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row mb-2">
 									<label for="amountOfPayment" class="col-sm-3 col-form-label fw-bold">Amount of Payment</label>
 									<div class="col-sm-9">
 									  <div class="row">
@@ -160,6 +145,21 @@
 											</div>
 										</div>
 									</div>
+									</div>
+								</div>
+								<div class="row mb-2">
+									<label for="email" class="col-sm-3 col-form-label fw-bold">Contact Number</label>
+									<div class="col-sm-9">
+									  <div class="row">
+											<div class="col-12 visually-hidden">
+												<input type="text" id="email" class="form-control email" value="automated@gmail.com" placeholder="your@gmail.com" aria-label="email">
+												<div class="invalid-feedback emailError"></div>
+											</div>
+											<div class="col-12">
+												<input type="number" id="contactno" class="contactno form-control" placeholder="09*******00" aria-label="contactno">
+												<div class="invalid-feedback contactnoError"></div>
+											</div>
+										</div>
 									</div>
 								</div>
 								<center>

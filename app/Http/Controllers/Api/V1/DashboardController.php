@@ -34,7 +34,7 @@ class DashboardController extends Controller {
 
 	public function getRecentlyVoters(string $appVersionName, int $limit, int $offset) {
 		try {
-			$votes = $this->voteService->loadMoreVotes($appVersionName, $limit, $offset);
+			$votes = $this->voteService->getAllVotes($appVersionName, $limit, $offset);
 
 			#\Log::info(json_encode(VoteResource::collection($votes), JSON_PRETTY_PRINT));
 

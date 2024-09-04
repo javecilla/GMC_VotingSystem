@@ -196,7 +196,8 @@ const createNewVote = (dataForm) => {
 		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
 		success: (response) => {
 			if(response.success) {
-				getAllVotes();
+				loadMoreVotesRecord(30, 0);
+				writeURI('page', 1);
 				$('#candidateSelected').val('');
 				$('#amountSelected').val('');
 				$('#votersContact').val(generatePhoneNumber());
@@ -226,7 +227,8 @@ const updateVotes = (votes, dataForm) => {
 		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
 		success: (response) => {
 			if(response.success) {
-				getAllVotes();
+				loadMoreVotesRecord(30, 0);
+			writeURI('page', 1);
 				toastr.success(response.message);
 			} else {
 				if(response.type === 'info') {
@@ -264,7 +266,8 @@ const updateVotesByStatus = (votes, status) => {
 			} else {
 				toastr.error(response.message);
 			}
-			getAllVotes();
+			loadMoreVotesRecord(30, 0);
+			writeURI('page', 1);
 			countAllVotes();
 		},
 		error: (xhr, status, error) => {
@@ -284,7 +287,8 @@ const deleteVotes = (votes) => {
 		success: (response) => {
 			if(response.success) {
 				$(`.votesItem_${votes}`).remove();
-				getAllVotes();
+				loadMoreVotesRecord(limit, offset);
+			writeURI('page', page);
 				countAllVotes();
 				toastr.success(response.message);
 			} else {

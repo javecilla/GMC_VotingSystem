@@ -58,18 +58,38 @@ class VoteService {
 		return $votes;
 	}
 
-	public function getVotesBySearch(string $appVersionName, string $search) {
-		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
-			->where('app_version_id', $appVersion->avid)
-			->where(function ($query) use ($search) {
-				$query->where('referrence_no', 'like', '%' . $search . '%');
-			})
-			->orderBy('created_at', 'desc')
-			->get();
+	// public function getVotesBySearch(string $appVersionName, string $search) {
+	// 	$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
+	// 	$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
+	// 		->where('app_version_id', $appVersion->avid)
+	// 		->where(function ($query) use ($search) {
+	// 			$query->where('referrence_no', 'like', '%' . $search . '%');
+	// 		})
+	// 		->orderBy('created_at', 'desc')
+	// 		->get();
 
-		return $votes;
-	}
+	// 	return $votes;
+	// }
+
+	public function getVotesBySearch(string $appVersionName, string $search) {
+    $appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
+
+    // Ensure search is exactly 4 digits
+    if (strlen($search) !== 4 || !is_numeric($search)) {
+      return collect(); //return empty collection
+    }
+
+    $votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
+      ->where('app_version_id', $appVersion->avid)
+      ->where(function ($query) use ($search) {
+          // get the last 4 digits of the reference number
+          $query->whereRaw('RIGHT(referrence_no, 4) = ?', [$search]);
+      })
+      ->orderBy('created_at', 'desc')
+      ->get();
+
+    return $votes;
+  }
 
 	public function countAllVotesByStatus(string $appVersionName) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();

@@ -64,7 +64,10 @@
 
 	$(document).on('input', '.search-input', function() {
 		const searchInput = $(this).val();
-		isEmpty(searchInput) ? getAllVotes() : '';
+		if(isEmpty(searchInput)) {
+			loadMoreVotesRecord(limit, offset);
+			writeURI('page', page);
+		}
 	});
 
 	$(document).on('click', '#addNewVoteBtn', function() {

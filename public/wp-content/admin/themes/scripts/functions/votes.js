@@ -305,7 +305,7 @@ const deleteVotes = (votes) => {
 // @Function that display data
 const displayAllVotes = (data) => {
 	let votesRecordsItem = ``;
-	if(typeof data === 'object' && data !== null) {
+	if(typeof data === 'object' && data !== null && data.length > 0) {
 		Object.keys(data).forEach(key => {
 			votesRecordsItem += `<tr class="votesItem_${data[key].vid}">
 				<td>₱ ${data[key].votePoint?.amount}.00</td>
@@ -328,7 +328,7 @@ const displayAllVotes = (data) => {
 		});
 	} else {
 		votesRecordsItem += `<tr>
-			<td rowspan="6">
+			<td colspan="6">
 				<h4 class="text-center text-secondary mt-2">No record found. <i class="fa-solid fa-face-sad-tear"></i></h4>
 			</td>
 		</tr>`;

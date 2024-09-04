@@ -94,6 +94,9 @@
 	$(document).on('submit', '#searchForm', function(e) {
 		e.preventDefault();
 		const searchQuery = $('#searchCandidate').val().trim().toLowerCase();
+
+		if(isEmpty(searchQuery)) return;
+
 		writeURI('search', searchQuery);
 		filterCandidatesBySearch(searchQuery);
 	});

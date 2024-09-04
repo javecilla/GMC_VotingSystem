@@ -58,6 +58,8 @@
 	$(document).on('submit', '#searchForm', function(e) {
 		e.preventDefault();
 		const searchQuery = $('#search').val().trim();
+		if(isEmpty(searchQuery)) return;
+
 		writeURI('search', searchQuery);
 		filterVotesBySearch(searchQuery);
 	});

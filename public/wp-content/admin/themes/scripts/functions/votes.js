@@ -4,25 +4,25 @@ const VOTES_URI = 'admin/manage/votes';
 const VOTES_INDEX_URI = $('#indexUri').data('iurl');
 // APP_VERSION & CSRF_TOKEN (variable)-> wp-content/admin/themes/scripts/main.js
 
-const getAllVotes = () => {
-	$.ajax({
-		url: `/api/${APP_VERSION}/${VOTES_URI}/all/records`,
-		method: 'get',
-		dataType: 'json',
-		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
-		success: (data) => {
-			window.history.replaceState(null, null, VOTES_INDEX_URI);
-			$('#cardLabelTxt').text('List of All Votes');
-			$('.spam, .verified, .pending').removeClass('active');
-			$('.all').addClass('active');
-			displayAllVotes(data);
-		},
-		error: (xhr, status, error) => {
-			const response = JSON.parse(xhr.responseText);
-			toastr.error(response.message);
-		}
-	});
-};
+// const getAllVotes = () => {
+// 	$.ajax({
+// 		url: `/api/${APP_VERSION}/${VOTES_URI}/all/records`,
+// 		method: 'get',
+// 		dataType: 'json',
+// 		headers: { 'X-CSRF-TOKEN': CSRF_TOKEN },
+// 		success: (data) => {
+// 			window.history.replaceState(null, null, VOTES_INDEX_URI);
+// 			$('#cardLabelTxt').text('List of All Votes');
+// 			$('.spam, .verified, .pending').removeClass('active');
+// 			$('.all').addClass('active');
+// 			displayAllVotes(data);
+// 		},
+// 		error: (xhr, status, error) => {
+// 			const response = JSON.parse(xhr.responseText);
+// 			toastr.error(response.message);
+// 		}
+// 	});
+// };
 
 const loadMoreVotesRecord = (limit, offset) => {
 	$.ajax({
@@ -45,6 +45,10 @@ const loadMoreVotesRecord = (limit, offset) => {
       } else {
         $('#nextPaginateBtn').removeAttr('disabled');
       }
+
+			$('#cardLabelTxt').text('List of All Votes');
+			$('.spam, .verified, .pending').removeClass('active');
+			$('.all').addClass('active');
 
 			displayAllVotes(data);
 		},

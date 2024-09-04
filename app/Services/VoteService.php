@@ -13,21 +13,21 @@ use Illuminate\Support\Facades\DB;
 
 class VoteService {
 
-	public function getAllVotes(string $appVersionName) {
-		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votes:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion) {
-			$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
-				->where('app_version_id', $appVersion->avid)
-				->orderBy('created_at', 'desc')
-				->skip(0)
-				->take(10)
-				->get();
+	// public function getAllVotes(string $appVersionName) {
+	// 	$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
+	// 	return Cache::remember('votes:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion) {
+	// 		$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
+	// 			->where('app_version_id', $appVersion->avid)
+	// 			->orderBy('created_at', 'desc')
+	// 			->skip(0)
+	// 			->take(20)
+	// 			->get();
 
-			return $votes;
-		});
-	}
+	// 		return $votes;
+	// 	});
+	// }
 
-	public function loadMoreVotes(string $appVersionName, int $limit, int $offset) {
+	public function getAllVotes(string $appVersionName, int $limit, int $offset) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
 		$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
 			->where('app_version_id', $appVersion->avid)

@@ -64,8 +64,8 @@ Route::middleware('api')->group(function () {
 
 				# Votes Management
 				Route::controller(VotesController::class)->prefix('/manage/votes')->group(function () {
-					Route::get('/all/records', 'getRecordsAll');
-					Route::get('/limit/records/{limit}/{offset}', 'getRecordsLimit');
+					// Route::get('/all/records', 'getRecordsAll');
+					Route::get('/limit/records/{limit}/{offset}', 'getRecordsAll');
 					Route::get('/id/{votes}', 'getRecordsOne');
 					Route::get('/status/{status}', 'getRecordsByStatus');
 					Route::get('/search/{search}', 'getRecordsBySearch');

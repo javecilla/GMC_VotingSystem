@@ -1,6 +1,10 @@
 (function($) {
 	"use-strict";
 
+	let offset = 0;
+	let page = 1;
+	let limit = 30;
+
 	setTimeout(function() {
 		countAllVotes();
 	}, 500);
@@ -10,8 +14,26 @@
 	}, 1000);
 
 	setTimeout(function() {
-		getAllVotes();
+		loadMoreVotesRecord(limit, offset);
+		writeURI('page', page);
 	}, 2000);
+
+	$(document).on('click', '#nextPaginateBtn', function() {
+		offset += limit;
+		page += 1;
+
+		loadMoreVotesRecord(limit, offset);
+		writeURI('page', page);
+	});
+
+	$(document).on('click', '#prevPaginateBtn', function() {
+		offset -= limit;
+		page -= 1;
+
+		loadMoreVotesRecord(limit, offset);
+		writeURI('page', page);
+	});
+
 
 	$(document).on('click', '.updateStatusBtn', function() {
 		const voteId = $(this).data('id');
@@ -143,25 +165,6 @@
 		  }
 		  deleteVotes(voteId);
 		});
-	});
-
-	let offset = 0;
-	let page = 1;
-	let limit = 10;
-	$(document).on('click', '#nextPaginateBtn', function() {
-		offset += limit;
-		page += 1;
-
-		loadMoreVotesRecord(limit, offset);
-		writeURI('page', page);
-	});
-
-	$(document).on('click', '#prevPaginateBtn', function() {
-		offset -= limit;
-		page -= 1;
-
-		loadMoreVotesRecord(limit, offset);
-		writeURI('page', page);
 	});
 
 })(jQuery)

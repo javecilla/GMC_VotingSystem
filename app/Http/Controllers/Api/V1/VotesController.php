@@ -5,19 +5,19 @@ namespace App\Http\Controllers\Api\V1;
 use App\Services\Auth\RecaptchaService;
 use App\Services\VoteService;
 use App\Http\Requests\Api\V1\VoteCreateRequest as ClientRequest;
-	use App\Http\Requests\App\Admin\VoteCreateRequest as AdminRequest;
-	use App\Exceptions\App\Admin\ChangesOccuredException;
-	use App\Exceptions\App\Admin\CreateDataException;
-	use App\Exceptions\App\Admin\DeleteDataException;
-	use App\Exceptions\App\Admin\UpdateDataException;
-	use App\Exceptions\Auth\InvalidRecaptchaException;
-	use App\Http\Controllers\Controller;
-	use App\Http\Requests\App\Admin\VoteUpdateRequest;
-	use App\Http\Resources\Api\VoteResource;
-	use Illuminate\Http\Facades\ModelNotFoundException;
-	use Illuminate\Http\JsonResponse;
-	use Illuminate\Http\Request;
-	use Illuminate\Support\Facades\Response;
+use App\Http\Requests\App\Admin\VoteCreateRequest as AdminRequest;
+use App\Exceptions\App\Admin\ChangesOccuredException;
+use App\Exceptions\App\Admin\CreateDataException;
+use App\Exceptions\App\Admin\DeleteDataException;
+use App\Exceptions\App\Admin\UpdateDataException;
+use App\Exceptions\Auth\InvalidRecaptchaException;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\App\Admin\VoteUpdateRequest;
+use App\Http\Resources\Api\VoteResource;
+use Illuminate\Http\Facades\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class VotesController extends Controller {
 
@@ -25,23 +25,23 @@ class VotesController extends Controller {
 		protected VoteService $service,
 		protected RecaptchaService $recaptchaService) {}
 
-	public function getRecordsAll(string $appVersionName) {
-		try {
-			$vote = $this->service->getAllVotes($appVersionName);
+	// public function getRecordsAll(string $appVersionName) {
+	// 	try {
+	// 		$vote = $this->service->getAllVotes($appVersionName);
 
-			return VoteResource::collection($vote);
-		} catch (ModelNotFoundException $e) {
-			return Response::json(['success' => false, 'message' => $e->getMessage()]);
-		} catch (\Throwable $e) {
-			return Response::json(['success' => false, 'message' => $e->getMessage()]);
-		} catch (\Exception $e) {
-			return Response::json(['success' => false, 'message' => 'An error occured. Code[VID]']);
-		}
-	}
+	// 		return VoteResource::collection($vote);
+	// 	} catch (ModelNotFoundException $e) {
+	// 		return Response::json(['success' => false, 'message' => $e->getMessage()]);
+	// 	} catch (\Throwable $e) {
+	// 		return Response::json(['success' => false, 'message' => $e->getMessage()]);
+	// 	} catch (\Exception $e) {
+	// 		return Response::json(['success' => false, 'message' => 'An error occured. Code[VID]']);
+	// 	}
+	// }
 
-	public function getRecordsLimit(string $appVersionName, int $limit, int $offset) {
+	public function getRecordsAll(string $appVersionName, int $limit, int $offset) {
 		try {
-			$vote = $this->service->loadMoreVotes($appVersionName, $limit, $offset);
+			$vote = $this->service->getAllVotes($appVersionName, $limit, $offset);
 
 			return VoteResource::collection($vote);
 		} catch (ModelNotFoundException $e) {

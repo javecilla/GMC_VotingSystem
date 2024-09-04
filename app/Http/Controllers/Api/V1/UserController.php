@@ -21,6 +21,7 @@ class UserController extends Controller {
 	// Validate login request
 	public function store(UserLoginRequest $loginRequest): JsonResponse {
 		try {
+			\Log::info(print_r($loginRequest->all(), true));
 			$this->recaptchaService->verify($loginRequest->validated('g-recaptcha-response'));
 			$validationResult = $this->userService->login($loginRequest);
 

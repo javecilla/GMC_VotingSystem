@@ -2,7 +2,7 @@
 	"use-strict";
 
 // Set the countdown duration in seconds
-    const countdownDuration = 46800;
+    const countdownDuration = 10;
 
     // Function to get or set the countdown end time
     function getEndTime() {
@@ -56,7 +56,7 @@
 		    $('#title-vote').removeClass('gradient-blue-text').addClass('gradient-dark-text').text('The system will no longer accept any further votes.');
 
 		    // Update the subtitle to notify users that no further votes will be accepted
-		    $('#subtitle-vote').html('Thank you for participating! The voting period concluded on <b>September 02, 2024, at 12:59 PM</b>. No additional votes can be submitted at this time.<br/><br/>Please stay tuned for the announcement of the winners of the online voting system.');
+		   $('#subtitle-vote').html('Thank you for your participation! The voting period ended on <b>September 03, 2024, at 12:59 AM</b>. No additional votes can be submitted at this time. If your vote is still pending verification, please be patient as our team completes the verification process.<br/><br/>Stay tuned for the upcoming announcement of the winners of the online voting system.');
 
 		    // Optional: Hide the "Cast Your Vote" button if needed
 		    // $('.h-button.btn-primary').hide();
@@ -110,11 +110,11 @@
 		}
 
     // // Start the countdown
-    // startCountdown();
+    startCountdown();
 
-    // if (getEndTime() <= Math.floor(Date.now() / 1000)) {
-    //     disableVoting();
-    // }
+    if (getEndTime() <= Math.floor(Date.now() / 1000)) {
+        disableVoting();
+    }
 
 	const validateReportForm = (name, email, message) => {
 		let isValid = true;

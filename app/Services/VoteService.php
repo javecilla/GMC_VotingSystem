@@ -60,17 +60,15 @@ class VoteService {
 
 	public function getVotesBySearch(string $appVersionName, string $search) {
 		$appVersion = AppVersion::where('name', $appVersionName)->firstOrFail();
-		return Cache::remember('votesBySearch:' . $appVersion->avid, 60 * 60 * 24, function () use ($appVersion, $search) {
-			$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
-				->where('app_version_id', $appVersion->avid)
-				->where(function ($query) use ($search) {
-					$query->where('referrence_no', 'like', '%' . $search . '%');
-				})
-				->orderBy('created_at', 'desc')
-				->get();
+		$votes = Vote::with(['appVersion', 'candidate', 'votePoint'])
+			->where('app_version_id', $appVersion->avid)
+			->where(function ($query) use ($search) {
+				$query->where('referrence_no', 'like', '%' . $search . '%');
+			})
+			->orderBy('created_at', 'desc')
+			->get();
 
-			return $votes;
-		});
+		return $votes;
 	}
 
 	public function countAllVotesByStatus(string $appVersionName) {

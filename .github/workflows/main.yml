@@ -30,7 +30,7 @@ jobs:
             ${{ runner.os }}-composer-
 
       - name: Install Composer Dependencies
-        run: composer install --optimize-autoloader --no-dev --no-progress --prefer-dist
+        run: composer install --optimize-autoloader --no-dev --no-progress --no-interaction --prefer-dist
 
       - name: Set appropriate permissions
         run: |
@@ -38,20 +38,26 @@ jobs:
           chmod -R 755 bootstrap/cache
 
       - name: Sync files
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SOURCE: "."
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: ${{ secrets.SSH_USER }}
+          TARGET: "/home3/gmcbulacan/voting.goldenmindsbulacan.com/"
         with:
-          server: ${{ secrets.FTP_VOTING_SERVER }}
-          username: ${{ secrets.FTP_VOTING_USERNAME }}
-          password: ${{ secrets.FTP_VOTING_PASSWORD }}
-          protocol: ${{ secrets.FTP_VOTING_PROTOCOL }}
-          port: ${{ secrets.FTP_VOTING_PORT }}
-          server-dir: /
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/tests/**
-            .github
-            phpunit.xml
-            LICENSE
-            README.md
+          args: "-v"
+
+      - name: Run remote artisan commands
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd /home3/gmcbulacan/voting.goldenmindsbulacan.com/
+            chmod -R 755 storage
+            chmod -R 755 bootstrap/cache
+            php artisan migrate --force
+            php artisan optimize:clear

@@ -17,4 +17,5 @@ yarn-error.log
 .env
 .env.production
 .tag.production
+.htaccess.production
 requirements.txt

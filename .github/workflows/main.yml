@@ -45,6 +45,15 @@ jobs:
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USER }}
           TARGET: "/home3/gmcbulacan/voting.goldenmindsbulacan.com/"
+          EXCLUDE: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/tests/**
+            .github
+            phpunit.xml
+            LICENSE
+            README.md
         with:
           args: "-v"
 
@@ -58,8 +67,10 @@ jobs:
             chmod -R 755 bootstrap/cache
             php artisan migrate --force
             php artisan optimize:clear
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
           options: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha256'
-

@@ -48,17 +48,18 @@ jobs:
         with:
           args: "-v"
 
-      - name: Run remote artisan commands
-        uses: appleboy/ssh-action@v0.1.6
+      - name: Run remote commands
+        uses: garygrossgarten/github-action-ssh@release
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
+          command: |
             set -e
             cd /home3/gmcbulacan/voting.goldenmindsbulacan.com/
             chmod -R 755 storage
             chmod -R 755 bootstrap/cache
             php artisan migrate --force
             php artisan optimize:clear
-          ssh-extra-args: "-o KexAlgorithms=diffie-hellman-group-exchange-sha256"
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
+          options: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha256'
+

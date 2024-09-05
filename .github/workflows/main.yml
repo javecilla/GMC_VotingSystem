@@ -61,3 +61,4 @@ jobs:
             chmod -R 755 bootstrap/cache
             php artisan migrate --force
             php artisan optimize:clear
+          ssh-extra-args: "-o KexAlgorithms=diffie-hellman-group-exchange-sha256"

@@ -54,7 +54,7 @@ jobs:
         with:
           command: |
             set -e
-            cd ${{ secrets.REMOTE_TARGET }}
+            cd /home3/gmcbulacan/voting.goldenmindsbulacan.com/
             chmod -R 755 storage
             chmod -R 755 bootstrap/cache
             php artisan migrate --force

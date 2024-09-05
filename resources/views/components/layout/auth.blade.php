@@ -18,6 +18,7 @@
   <meta name='Classification' content='Website'/>
   <meta name='identifier-URL' content='{{ env('APP_URL') }}'/>
   <meta name="app-version" content="{{ env('APP_VERSION') }}"/>
+  <meta name="voting-name" content="{{ env('APP_VOTING_NAME') }}"/>
   <meta name="csrf-token" content="{{ csrf_token() }}"/>
   <meta name="msapplication-TileImage" content="{{ asset('/wp-content/uploads/favicon.png') }}" />
   <meta name='author' content='Jerome Avecilla'/>
@@ -58,22 +59,11 @@
   <link rel="stylesheet" href="{{ asset('/wp-plugins/fontawesome/css/all.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('/wp-plugins/wow/wow.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('/wp-plugins/toastr/toastr.min.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/app.css?v=1.4.5') }}" defer/>
-  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/auth.css?v=1.4.5') }}" defer/>
-  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/auth.css?v=1.4.5') }}" defer/>
+  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/app.css?v=1.4.6') }}" defer/>
+  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/auth.css?v=1.4.6') }}" defer/>
+  <link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/auth.css?v=1.4.6') }}" defer/>
 
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  @production
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CH1S28LJ16"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-CH1S28LJ16');
-    </script>
-  @endproduction
 </head>
 <body class="auth-body" >
   <main class="p-2">
@@ -111,11 +101,11 @@
   <script src="{{ asset('/wp-plugins/fontawesome/js/all.min.js') }}"></script>
   <script src="{{ asset('/wp-plugins/wow/wow.min.js') }}"></script>
   <script src="{{ asset('/wp-plugins/toastr/toastr.min.js') }}"></script>
-  <script src="{{ asset('/wp-content/global/scripts/common.js?v=1.4.5') }}"></script>
-  <script src="{{ asset('/wp-content/global/scripts/helpers.js?v=1.4.5') }}"></script>
+  <script src="{{ asset('/wp-content/global/scripts/common.js?v=1.4.6') }}"></script>
+  <script src="{{ asset('/wp-content/global/scripts/helpers.js?v=1.4.6') }}"></script>
   <script src="{{ asset('/wp-content/guest/themes/scripts/auth.js?v=1.4.4') }}"></script>
 </body>
 </html>
-<!-- GMCOVS v1.4.5 -->
-<!-- Last Updated at: August 18, 2024 -->
+<!-- GMCOVS v1.4.6 -->
+<!-- Last Updated at: September 05, 2024 -->
 <!-- (Github)[https://github.com/javecilla/readme] -->

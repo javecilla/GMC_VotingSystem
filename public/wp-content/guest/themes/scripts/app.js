@@ -1,120 +1,114 @@
 (function($) {
 	"use-strict";
 
-// Set the countdown duration in seconds
-    const countdownDuration = 10;
+	// Set the countdown duration in seconds
+  const countdownDuration = 10;
 
-    // Function to get or set the countdown end time
-    function getEndTime() {
-        const now = Math.floor(Date.now() / 1000); // Current time in seconds
-        let endTime = localStorage.getItem('countdownEndTime');
+  // Function to get or set the countdown end time
+  function getEndTime() {
+    const now = Math.floor(Date.now() / 1000); // Current time in seconds
+    let endTime = localStorage.getItem('countdownEndTime');
 
-        // If end time is not set, calculate and store it
-        if (!endTime) {
-            endTime = now + countdownDuration;
-            localStorage.setItem('countdownEndTime', endTime);
-        }
-
-        return parseInt(endTime, 10);
+    // If end time is not set, calculate and store it
+    if(!endTime) {
+      endTime = now + countdownDuration;
+      localStorage.setItem('countdownEndTime', endTime);
     }
 
-    // Function to start the countdown
-    function startCountdown() {
-        const endTime = getEndTime();
-        let remainingTime = endTime - Math.floor(Date.now() / 1000);
+    return parseInt(endTime, 10);
+  }
 
-        // Update countdown every second
-        const timer = setInterval(function () {
-            remainingTime = endTime - Math.floor(Date.now() / 1000);
+  // Function to start the countdown
+  function startCountdown() {
+    const endTime = getEndTime();
+    let remainingTime = endTime - Math.floor(Date.now() / 1000);
 
-            if (remainingTime <= 0) {
-                clearInterval(timer);
-                disableVoting(); // Disable voting when the timer ends
-                return;
-            }
+    // Update countdown every second
+    const timer = setInterval(function () {
+      remainingTime = endTime - Math.floor(Date.now() / 1000);
 
-            // Calculate hours, minutes, and seconds
-            const hours = Math.floor(remainingTime / 3600);
-            const minutes = Math.floor((remainingTime % 3600) / 60);
-            const seconds = remainingTime % 60;
+      if (remainingTime <= 0) {
+          clearInterval(timer);
+          disableVoting();
+          return;
+      }
 
-            // Format the time as HH:MM:SS
-            $('#countdown').text(
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
-            ).removeClass('text-muted').addClass('text-danger');
-        }, 1000);
+      const hours = Math.floor(remainingTime / 3600);
+      const minutes = Math.floor((remainingTime % 3600) / 60);
+      const seconds = remainingTime % 60;
+
+      $('#countdown').text(
+          `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+      ).removeClass('text-muted').addClass('text-danger');
+    }, 1000);
+  }
+
+  // Function to handle disabling of voting buttons and updating UI elements when the countdown ends
+	function disableVoting() {
+    // Update the countdown timer to show that the voting period has ended
+    $('#countdown').removeClass('text-muted').addClass('text-danger').text('00:00:00');
+
+    // Update the main title to indicate that voting is now closed
+    $('#title-vote').removeClass('gradient-blue-text').addClass('gradient-dark-text').text('The system will no longer accept any further votes.');
+
+	  // Update the subtitle to notify users that no further votes will be accepted
+	  $('#subtitle-vote').html('Thank you for your participation in <b>Lakan, Lakambini at Lakandyosa 2024</b>! The voting period ended on <b>September 03, 2024, at 12:59 AM</b>. No additional votes can be submitted at this time. If your vote is still pending verification, please be patient as our team completes the verification process.<br/><br/>Stay tuned for the upcoming announcement of the winners of the online voting system.');
+
+    // $('.h-button.btn-primary').hide();
+
+    // Update the voting button appearance and disable it to prevent further clicks
+    $('#button-vote')
+        .removeClass('btn-primary')
+        .addClass('btn-danger')
+        .attr('disabled', true)
+        .css('pointer-events', 'none')
+        .off('click')
+        .text('Voting is Now Closed');
+	}
+
+
+	function clearBrowserData() {
+    console.log("Cache clearing triggered");
+
+    // Clear cookies
+    document.cookie.split(";").forEach(cookie => {
+      const name = cookie.split("=")[0].trim();
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    });
+
+    // Clear local storage except the flag
+    Object.keys(localStorage).forEach(key => {
+      if(key !== 'cacheCleared') {
+        localStorage.removeItem(key);
+      }
+    });
+
+    // Clear session storage
+    sessionStorage.clear();
+
+    // Clear cache API
+    if('caches' in window) {
+      caches.keys().then(names => {
+        names.forEach(name => {
+            caches.delete(name);
+        });
+      });
     }
 
-    // Function to handle disabling of voting buttons and updating UI elements when the countdown ends
-		function disableVoting() {
+    // Set the flag to indicate that the cache has been cleared
+    localStorage.setItem('cacheCleared', 'true');
+	}
 
+	// Check if the cache clearing has been performed
+	if(localStorage.getItem('cacheCleared') !== 'true') {
+	  clearBrowserData();
+	}
 
-		    // Update the countdown timer to show that the voting period has ended
-		    $('#countdown').removeClass('text-muted').addClass('text-danger').text('00:00:00');
-
-		    // Update the main title to indicate that voting is now closed
-		    $('#title-vote').removeClass('gradient-blue-text').addClass('gradient-dark-text').text('The system will no longer accept any further votes.');
-
-		    // Update the subtitle to notify users that no further votes will be accepted
-		   $('#subtitle-vote').html('Thank you for your participation! The voting period ended on <b>September 03, 2024, at 12:59 AM</b>. No additional votes can be submitted at this time. If your vote is still pending verification, please be patient as our team completes the verification process.<br/><br/>Stay tuned for the upcoming announcement of the winners of the online voting system.');
-
-		    // Optional: Hide the "Cast Your Vote" button if needed
-		    // $('.h-button.btn-primary').hide();
-
-		    // Update the voting button appearance and disable it to prevent further clicks
-		    $('#button-vote')
-		        .removeClass('btn-primary') // Remove the active voting button styles
-		        .addClass('btn-danger')     // Add styles to indicate the button is disabled
-		        .attr('disabled', true)                // Disable the button
-		        .css('pointer-events', 'none')          // Change the cursor to indicate the button is not clickable
-		        .off('click')                          // Remove any click event handlers
-		        .text('Voting is Now Closed');                // Update the button text to reflect that voting is closed
-		}
-
-
-		function clearBrowserData() {
-		    console.log("Cache clearing triggered");
-
-		    // Clear cookies
-		    document.cookie.split(";").forEach(cookie => {
-		        const name = cookie.split("=")[0].trim();
-		        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-		    });
-
-		    // Clear local storage except the flag
-		    Object.keys(localStorage).forEach(key => {
-		        if (key !== 'cacheCleared') {
-		            localStorage.removeItem(key);
-		        }
-		    });
-
-		    // Clear session storage
-		    sessionStorage.clear();
-
-		    // Clear cache API
-		    if ('caches' in window) {
-		        caches.keys().then(names => {
-		            names.forEach(name => {
-		                caches.delete(name);
-		            });
-		        });
-		    }
-
-		    // Set the flag to indicate that the cache has been cleared
-		    localStorage.setItem('cacheCleared', 'true');
-		}
-
-		// Check if the cache clearing has been performed
-		if (localStorage.getItem('cacheCleared') !== 'true') {
-		    clearBrowserData();
-		}
-
-    // // Start the countdown
-    startCountdown();
-
-    if (getEndTime() <= Math.floor(Date.now() / 1000)) {
-        disableVoting();
-    }
+  // Start the countdown
+  startCountdown();
+  if(getEndTime() <= Math.floor(Date.now() / 1000)) {
+    disableVoting();
+  }
 
 	const validateReportForm = (name, email, message) => {
 		let isValid = true;

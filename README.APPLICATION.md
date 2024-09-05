@@ -33,9 +33,6 @@ Routing is a crucial part of both the frontend and backend. It defines how reque
   - `api.php` - for defining RESTful API endpoints.
   - `web.php` - for defining routes that return views.
   - `auth.php` - For defining authentication-related routes.
-- `Frontend Routes:` 
-  - `index.js` - centralizes route definitions for Vue.js components.
-
 
 # Deployment
 The application is configured for continuous deployment using GitHub Actions. On every push to the `main` branch, the application is automatically built and deployed to the production server.

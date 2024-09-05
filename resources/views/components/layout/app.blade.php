@@ -18,6 +18,7 @@
   <meta name='Classification' content='Website'/>
   <meta name='identifier-URL' content='{{ env('APP_URL') }}'/>
   <meta name="app-version" content="{{ env('APP_VERSION') }}"/>
+  <meta name="voting-name" content="{{ env('APP_VOTING_NAME') }}"/>
   <meta name="csrf-token" content="{{ csrf_token() }}"/>
   <meta name="msapplication-TileImage" content="{{ asset('/wp-content/uploads/favicon.png') }}" />
   <meta name='author' content='Jerome Avecilla'/>
@@ -62,19 +63,18 @@
 	<link rel="stylesheet" href="{{ asset('/wp-plugins/fontawesome/css/all.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('/wp-plugins/wow/wow.min.css') }}"/>
   <link rel="stylesheet" href="{{ asset('/wp-plugins/toastr/toastr.min.css') }}"/>
-	<link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/app.css?v=1.4') }}" defer/>
+	<link rel="stylesheet" href="{{ asset('/wp-content/guest/themes/stylesheets/app.css?v=1.4.5') }}" defer/>
 
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-
   @production
-  <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WTRD8NDQ');</script>
-<!-- End Google Tag Manager -->
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WTRD8NDQ');</script>
+    <!-- End Google Tag Manager -->
   @endproduction
 </head>
 <body>
@@ -179,24 +179,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </a>
   </div>
 
-      @production
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTRD8NDQ"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-    @endproduction
+  @production
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTRD8NDQ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+  @endproduction
 
   <script src="{{ asset('/wp-plugins/jquery/jquery@3.7.1/jquery.min.js')}}"></script>
  	<script src="{{ asset('/wp-plugins/bootstrap/bootstrap@5.3.2/js/bootstrap.bundle.min.js') }}"></script>
  	<script src="{{ asset('/wp-plugins/fontawesome/js/all.min.js') }}"></script>
   <script src="{{ asset('/wp-plugins/toastr/toastr.min.js') }}"></script>
   <script src="{{ asset('/wp-plugins/wow/wow.min.js') }}"></script>
- 	<script src="{{ asset('/wp-content/guest/themes/scripts/app.js?v=1.4.5') }}" defer></script>
-  <script src="{{ asset('/wp-content/global/scripts/common.js?v=1.4.5') }}"></script>
-  <script src="{{ asset('/wp-content/global/scripts/helpers.js?v=1.4.5') }}"></script>
-  <script src="{{ asset('/wp-content/guest/themes/scripts/functions.js?v=1.4.5') }}" defer></script>
+ 	<script src="{{ asset('/wp-content/guest/themes/scripts/app.js?v=1.4.6') }}" defer></script>
+  <script src="{{ asset('/wp-content/global/scripts/common.js?v=1.4.6') }}"></script>
+  <script src="{{ asset('/wp-content/global/scripts/helpers.js?v=1.4.6') }}"></script>
+  <script src="{{ asset('/wp-content/guest/themes/scripts/functions.js?v=1.4.6') }}" defer></script>
  </body>
 </html>
-<!-- GMCOVS v1.4.5 -->
-<!-- Last Updated at: August 18, 2024 -->
+<!-- GMCOVS v1.4.6 -->
+<!-- Last Updated at: September 05, 2024 -->
 <!-- (Github)[https://github.com/javecilla/readme] -->

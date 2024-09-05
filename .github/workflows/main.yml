@@ -38,39 +38,28 @@ jobs:
           chmod -R 755 bootstrap/cache
 
       - name: Sync files
-        uses: easingthemes/ssh-deploy@v2.1.5
+        uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rlgoDzvc -i --delete"
           SOURCE: "."
-          REMOTE_HOST: ${{ secrets.SSH_HOST }}
-          REMOTE_USER: ${{ secrets.SSH_USER }}
-          TARGET: "/home3/gmcbulacan/voting.goldenmindsbulacan.com/"
-          EXCLUDE: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            **/tests/**
-            .github
-            phpunit.xml
-            LICENSE
-            README.md
-        with:
-          args: "-v"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          REMOTE_PORT: ${{ secrets.REMOTE_PORT }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}
+          EXCLUDE: "/.git/, /node_modules/, /tests/, /.github/, /phpunit.xml, /LICENSE, /README.md"
 
       - name: Run remote commands
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: |
             set -e
-            cd /home3/gmcbulacan/voting.goldenmindsbulacan.com/
+            cd ${{ secrets.REMOTE_TARGET }}
             chmod -R 755 storage
             chmod -R 755 bootstrap/cache
             php artisan migrate --force
             php artisan optimize:clear
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
           privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
           options: '-o KexAlgorithms=+diffie-hellman-group-exchange-sha256'
